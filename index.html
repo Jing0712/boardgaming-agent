@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小懵 · AI 桌游主持人</title>
+<style>
+  :root{
+    --bg-deep:#F0E9DC;
+    --bg-mid:#F6EFE3;
+    --header-bg:#E8DFF5;
+    --header-line:#D9CBEE;
+    --cream:#FFFDF8;
+    --cream-dim:#F5EFE1;
+    --ink:#39332B;
+    --ink-soft:#7A7264;
+    --dazed:#9285D9;
+    --dazed-deep:#6E60BE;
+    --dazed-light:#EFEBFC;
+    --coral:#E0785A;
+    --coral-deep:#C25B3E;
+    --coral-light:#FCEAE3;
+    --error:#D65B4A;
+    --error-light:#FBE7E2;
+    --error-line:#F0BEAE;
+    --success:#5FA97C;
+    --line:#E6DDC9;
+    --skin:#F5CBA0;
+    --cheek:#F0A98A;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
+    background:var(--bg-deep);
+    color:var(--ink);
+    display:flex;
+    justify-content:center;
+    min-height:100vh;
+  }
+  .app{
+    width:100%;
+    max-width:760px;
+    display:flex;
+    flex-direction:column;
+    height:100vh;
+    background:var(--bg-mid);
+  }
+
+  /* header */
+  .header{
+    background:var(--header-bg);
+    padding:14px 20px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    border-bottom:1px solid var(--header-line);
+    flex-shrink:0;
+  }
+  .mascot-wrap{
+    width:56px;height:56px;flex-shrink:0;position:relative;
+  }
+  .header-text{flex:1;min-width:0;}
+  .header-text h1{
+    color:var(--ink);
+    font-size:17px;
+    font-weight:700;
+    margin:0;
+  }
+  .status-row{
+    display:flex;align-items:center;gap:6px;margin-top:3px;
+  }
+  .status-dot{
+    width:7px;height:7px;border-radius:50%;
+    background:var(--coral);
+    flex-shrink:0;
+  }
+  .status-dot.on{background:var(--success);}
+  .status-row p{
+    color:var(--ink-soft);
+    font-size:12px;
+    margin:0;
+  }
+  .header-btns{display:flex;gap:8px;flex-shrink:0;}
+  .icon-btn{
+    width:36px;height:36px;
+    border-radius:10px;
+    border:1px solid var(--header-line);
+    background:var(--cream);
+    color:var(--dazed-deep);
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+    font-size:16px;
+    transition:background 0.15s, transform 0.1s;
+  }
+  .icon-btn:hover{background:var(--dazed-light);}
+  .icon-btn:active{transform:scale(0.94);}
+
+  /* settings drawer */
+  .drawer{
+    background:var(--cream-dim);
+    border-bottom:1px solid var(--line);
+    max-height:0;
+    overflow:hidden;
+    transition:max-height 0.25s ease;
+    flex-shrink:0;
+  }
+  .drawer.open{max-height:440px;}
+  .drawer-inner{padding:18px 20px;}
+  .drawer-inner h3{
+    font-size:13px;font-weight:700;margin:0 0 10px;
+    color:var(--ink);
+    display:flex;align-items:center;gap:6px;
+  }
+  .field{margin-bottom:12px;}
+  .field label{
+    display:block;font-size:12px;color:var(--ink-soft);
+    margin-bottom:4px;font-weight:500;
+  }
+  .field input, .field select{
+    width:100%;
+    padding:9px 11px;
+    border-radius:8px;
+    border:1px solid var(--line);
+    background:var(--cream);
+    font-size:13px;
+    color:var(--ink);
+    font-family:inherit;
+  }
+  .field input:focus, .field select:focus{
+    outline:none;border-color:var(--dazed);
+    box-shadow:0 0 0 3px var(--dazed-light);
+  }
+  .field-note{font-size:11px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+  .warn-box{
+    background:var(--coral-light);
+    border:1px solid #F0C3AE;
+    border-radius:8px;
+    padding:10px 12px;
+    font-size:11.5px;
+    color:#8A4126;
+    line-height:1.6;
+    margin-bottom:14px;
+  }
+  .drawer-row{display:flex;gap:10px;}
+  .drawer-row .field{flex:1;}
+  .save-btn{
+    background:var(--dazed);
+    color:#fff;
+    border:none;
+    padding:9px 16px;
+    border-radius:8px;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    font-family:inherit;
+  }
+  .save-btn:hover{background:var(--dazed-deep);}
+  .remember-row{
+    display:flex;align-items:center;gap:6px;
+    font-size:12px;color:var(--ink-soft);
+    margin-top:10px;
+  }
+
+  /* messages */
+  .messages{
+    flex:1;
+    overflow-y:auto;
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    background:var(--bg-mid);
+  }
+  .messages:has(.empty-state){
+    justify-content:center;
+  }
+  .empty-state{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;
+    padding:20px;
+    color:var(--ink-soft);
+    gap:14px;
+  }
+  .empty-state .big-mascot{height:220px;width:auto;}
+  .empty-state h2{font-size:17px;font-weight:700;color:var(--ink);margin:0;}
+  .empty-state p{font-size:13.5px;margin:0;max-width:300px;line-height:1.65;}
+
+  .msg-row{display:flex;gap:10px;max-width:100%;align-items:flex-end;}
+  .msg-row.user{flex-direction:row-reverse;}
+  .avatar{
+    flex-shrink:0;
+    align-self:flex-end;
+  }
+  .avatar.host{
+    height:56px;width:auto;
+    margin-bottom:2px;
+  }
+  .avatar.user{
+    width:32px;height:32px;
+    border-radius:50%;
+    background:var(--dazed);color:#fff;
+    font-size:12px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .bubble{
+    max-width:78%;
+    padding:11px 14px;
+    border-radius:14px;
+    font-size:14.5px;
+    line-height:1.65;
+    white-space:pre-wrap;
+    word-wrap:break-word;
+  }
+  .bubble.host{
+    background:var(--cream);
+    border:1px solid var(--line);
+    border-top-left-radius:4px;
+    color:var(--ink);
+  }
+  .bubble.user{
+    background:var(--dazed);
+    color:#fff;
+    border-top-right-radius:4px;
+  }
+  .bubble img.uploaded{
+    max-width:100%;border-radius:8px;margin-top:6px;display:block;
+  }
+  .msg-row.system{justify-content:center;}
+  .bubble.system{
+    background:var(--dazed-light);
+    color:var(--dazed-deep);
+    font-size:12.5px;
+    padding:8px 14px;
+    border-radius:20px;
+    max-width:90%;
+    text-align:center;
+  }
+
+  /* error styling — distinct from host bubbles */
+  .msg-row.error-row{max-width:100%;}
+  .bubble.error{
+    background:var(--error-light);
+    border:1px solid var(--error-line);
+    border-top-left-radius:4px;
+    color:var(--error);
+    display:flex;
+    gap:8px;
+    align-items:flex-start;
+  }
+  .bubble.error .err-icon{
+    flex-shrink:0;font-size:16px;line-height:1.5;
+  }
+  .bubble.error .err-text{flex:1;}
+  .bubble.error .err-text .err-title{font-weight:700;margin-bottom:2px;display:block;}
+  .bubble.error .err-text .err-detail{color:#A8402F;font-size:13px;}
+
+  .typing{
+    display:flex;gap:4px;padding:4px 2px;
+  }
+  .typing span{
+    width:6px;height:6px;border-radius:50%;
+    background:var(--dazed);
+    animation:bob 1.1s infinite ease-in-out;
+  }
+  .typing span:nth-child(2){animation-delay:0.15s;}
+  .typing span:nth-child(3){animation-delay:0.3s;}
+  @keyframes bob{
+    0%,60%,100%{transform:translateY(0);opacity:0.4;}
+    30%{transform:translateY(-4px);opacity:1;}
+  }
+
+  /* quick replies */
+  .quick-replies{
+    display:flex;flex-wrap:wrap;gap:8px;
+    padding:0 20px 12px;
+    background:var(--bg-mid);
+    flex-shrink:0;
+  }
+  .qr-btn{
+    background:var(--cream);
+    border:1px solid var(--line);
+    color:var(--dazed-deep);
+    padding:7px 14px;
+    border-radius:20px;
+    font-size:13px;
+    cursor:pointer;
+    font-family:inherit;
+    transition:all 0.15s;
+  }
+  .qr-btn:hover{background:var(--dazed-light);border-color:var(--dazed);}
+
+  /* input bar */
+  .input-bar{
+    background:var(--cream-dim);
+    border-top:1px solid var(--line);
+    padding:12px 20px 16px;
+    flex-shrink:0;
+  }
+  .input-row{
+    display:flex;align-items:flex-end;gap:8px;
+    background:var(--cream);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:6px 6px 6px 12px;
+  }
+  .input-row:focus-within{
+    border-color:var(--dazed);
+    box-shadow:0 0 0 3px var(--dazed-light);
+  }
+  .input-row textarea{
+    flex:1;border:none;outline:none;resize:none;
+    font-family:inherit;font-size:14.5px;line-height:1.5;
+    padding:8px 0;max-height:120px;color:var(--ink);
+    background:transparent;
+  }
+  .img-preview-strip{
+    display:flex;gap:6px;padding:0 0 8px;flex-wrap:wrap;
+  }
+  .img-chip{
+    position:relative;width:52px;height:52px;border-radius:8px;overflow:hidden;
+    border:1px solid var(--line);
+  }
+  .img-chip img{width:100%;height:100%;object-fit:cover;}
+  .img-chip button{
+    position:absolute;top:1px;right:1px;
+    width:16px;height:16px;border-radius:50%;
+    background:rgba(0,0,0,0.5);color:#fff;border:none;
+    font-size:10px;line-height:1;cursor:pointer;
+  }
+  .bar-btn{
+    width:34px;height:34px;border-radius:10px;flex-shrink:0;
+    border:none;background:transparent;color:var(--ink-soft);
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;font-size:17px;
+  }
+  .bar-btn:hover{background:var(--cream-dim);color:var(--dazed-deep);}
+  .send-btn{
+    width:34px;height:34px;border-radius:10px;flex-shrink:0;
+    border:none;background:var(--dazed);color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;font-size:15px;
+    transition:background 0.15s;
+  }
+  .send-btn:hover{background:var(--dazed-deep);}
+  .send-btn:disabled{background:var(--line);cursor:not-allowed;}
+
+  ::-webkit-scrollbar{width:8px;}
+  ::-webkit-scrollbar-thumb{background:rgba(146,133,217,0.25);border-radius:4px;}
+
+  /* mascot — real illustrated character, crossfaded between expression states */
+
+  /* header: circular, face-only crop */
+  .mascot-face{
+    position:relative;
+    width:100%;height:100%;
+    border-radius:50%;
+    overflow:hidden;
+    background:var(--dazed-light);
+    flex-shrink:0;
+  }
+  .mascot-face img{
+    position:absolute;
+    top:0;left:0;
+    width:100%;height:100%;
+    object-fit:cover;
+    object-position:center 42%;
+    opacity:0;
+    transition:opacity 0.45s ease;
+  }
+  .mascot-face img.active{opacity:1;}
+
+  /* chat area + empty state: standalone full-body, no frame/background */
+  .mascot-body{
+    position:relative;
+    display:inline-block;
+    flex-shrink:0;
+    aspect-ratio:0.68;
+  }
+  .mascot-body img{
+    position:absolute;
+    top:0;left:0;
+    width:100%;height:100%;
+    object-fit:contain;
+    object-position:bottom center;
+    opacity:0;
+    transition:opacity 0.45s ease;
+  }
+  .mascot-body img.active{opacity:1;}
+
+  @keyframes idleBreathe{
+    0%,100%{transform:translateY(0) scale(1);}
+    50%{transform:translateY(-1px) scale(1.015);}
+  }
+  @keyframes thinkBob{
+    0%,100%{transform:translateY(0) rotate(0deg);}
+    50%{transform:translateY(-2px) rotate(2deg);}
+  }
+  @keyframes talkPulse{
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(1.03);}
+  }
+  @keyframes errorWobble{
+    0%,100%{transform:translateX(0) rotate(0deg);}
+    20%{transform:translateX(-2px) rotate(-4deg);}
+    40%{transform:translateX(2px) rotate(4deg);}
+    60%{transform:translateX(-1px) rotate(-2deg);}
+    80%{transform:translateX(1px) rotate(2deg);}
+  }
+  .mascot-face.anim-idle, .mascot-body.anim-idle{animation:idleBreathe 3.2s ease-in-out infinite;}
+  .mascot-face.anim-thinking, .mascot-body.anim-thinking{animation:thinkBob 1.6s ease-in-out infinite;}
+  .mascot-face.anim-talking, .mascot-body.anim-talking{animation:talkPulse 0.5s ease-in-out infinite;}
+  .mascot-face.anim-explaining, .mascot-body.anim-explaining{animation:talkPulse 0.5s ease-in-out infinite;}
+  .mascot-face.anim-error, .mascot-body.anim-error{animation:errorWobble 0.5s ease-in-out 2;}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="mascot-wrap" id="mascotWrap"></div>
+    <div class="header-text">
+      <h1>小懵 · AI 桌游主持人</h1>
+      <div class="status-row">
+        <span class="status-dot" id="statusDot"></span>
+        <p id="statusLine">还没连接模型</p>
+      </div>
+    </div>
+    <div class="header-btns">
+      <button class="icon-btn" id="settingsBtn" title="设置 API" aria-label="设置">⚙</button>
+      <button class="icon-btn" id="resetBtn" title="重新开始" aria-label="重新开始">↺</button>
+    </div>
+  </div>
+
+  <div class="drawer" id="drawer">
+    <div class="drawer-inner">
+      <h3>连接模型（火山方舟 Volcengine Ark）</h3>
+      <div class="warn-box">
+        你的 API Key 只保存在<strong>这个浏览器标签页</strong>里，直接从浏览器发到火山方舟，不会经过我或 Anthropic。
+        刷新页面后需要重新粘贴（除非勾选"记住"，那样会存在本机浏览器的 localStorage 里，同样不会离开你的设备）。
+        请不要分享这个文件给别人，也不要把 Key 写死在代码里。
+      </div>
+      <div class="field">
+        <label>API Key</label>
+        <input type="password" id="apiKeyInput" placeholder="粘贴你的 Ark API Key">
+      </div>
+      <div class="drawer-row">
+        <div class="field">
+          <label>推理接入点 ID（Endpoint ID）</label>
+          <input type="text" id="modelIdInput" placeholder="例如 ep-20240101-xxxxx">
+        </div>
+        <div class="field">
+          <label>API 地址</label>
+          <input type="text" id="baseUrlInput" value="https://ark.cn-beijing.volces.com/api/v3/chat/completions">
+        </div>
+      </div>
+      <div class="field-note">
+        接入点 ID 请在火山方舟控制台 → 模型推理 → 你创建的接入点里复制，不是模型展示页上的名字。
+      </div>
+      <button class="save-btn" id="saveKeyBtn">保存并连接</button>
+      <label class="remember-row">
+        <input type="checkbox" id="rememberCheck" style="width:auto;">
+        记住这台设备（存在本地浏览器，不上传）
+      </label>
+    </div>
+  </div>
+
+  <div class="messages" id="messages"></div>
+
+  <div class="quick-replies" id="quickReplies"></div>
+
+  <div class="input-bar">
+    <div class="img-preview-strip" id="imgStrip"></div>
+    <div class="input-row">
+      <button class="bar-btn" id="imgBtn" title="上传图片" aria-label="上传图片">📷</button>
+      <input type="file" id="fileInput" accept="image/*" multiple style="display:none;">
+      <textarea id="textInput" placeholder="告诉小懵你想玩什么桌游…" rows="1"></textarea>
+      <button class="send-btn" id="sendBtn" aria-label="发送">➤</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ===== Mascot — real illustrated character, crossfaded between expression states ===== */
+const MASCOT_FACE = {
+  idle: "assets/face/idle.png",
+  thinking: "assets/face/thinking.png",
+  talking: "assets/face/talking.png",
+  error: "assets/face/error.png",
+};
+const MASCOT_BODY = {
+  idle: "assets/body/idle.png",
+  thinking: "assets/body/thinking.png",
+  talking: "assets/body/talking.png",
+  error: "assets/body/error.png",
+};
+
+/* MASCOT_FACE (header, circular head-shoulders crop) and MASCOT_BODY (chat area, standalone full-body, transparent bg) */
+const MASCOT_STATES = ['idle','thinking','talking','explaining','error'];
+function resolveImageKey(state){
+  // 'explaining' reuses the 'talking' portrait (no distinct art asset for it)
+  if(state === 'explaining') return 'talking';
+  return MASCOT_STATES.includes(state) ? state : 'idle';
+}
+
+function mascotFaceHTML(state){
+  const key = resolveImageKey(state);
+  const imgs = Object.keys(MASCOT_FACE).map(k => {
+    const active = k === key ? ' active' : '';
+    return `<img data-key="${k}" class="${active.trim()}" src="${MASCOT_FACE[k]}" alt="" />`;
+  }).join('');
+  return `<div class="mascot-face anim-${state}" role="img" aria-label="小懵表情：${state}">${imgs}</div>`;
+}
+
+function mascotBodyHTML(state, heightPx){
+  const key = resolveImageKey(state);
+  const h = heightPx || 56;
+  const imgs = Object.keys(MASCOT_BODY).map(k => {
+    const active = k === key ? ' active' : '';
+    return `<img data-key="${k}" class="${active.trim()}" src="${MASCOT_BODY[k]}" alt="" />`;
+  }).join('');
+  return `<div class="mascot-body anim-${state}" style="height:${h}px;" role="img" aria-label="小懵表情：${state}">${imgs}</div>`;
+}
+
+function updateMascotEl(container, state){
+  const key = resolveImageKey(state);
+  const base = container.classList.contains('mascot-face') ? 'mascot-face' : 'mascot-body';
+  container.className = base + ' anim-' + state;
+  container.querySelectorAll('img').forEach(img => {
+    img.classList.toggle('active', img.dataset.key === key);
+  });
+}
+
+function setMascotState(state){
+  const headerWrap = document.getElementById('mascotWrap');
+  if(headerWrap){
+    if(!headerWrap.querySelector('.mascot-face')){
+      headerWrap.innerHTML = mascotFaceHTML(state);
+    } else {
+      updateMascotEl(headerWrap.querySelector('.mascot-face'), state);
+    }
+  }
+  const emptyMascot = document.getElementById('emptyMascotSlot');
+  if(emptyMascot){
+    if(!emptyMascot.querySelector('.mascot-body')){
+      emptyMascot.innerHTML = mascotBodyHTML(state, 160);
+    } else {
+      updateMascotEl(emptyMascot.querySelector('.mascot-body'), state);
+    }
+  }
+}
+
+/* static per-message avatar — captures current expression, does not animate/update later */
+function mascotAvatarHTML(state){
+  return mascotBodyHTML(state, 56);
+}
+
+/* ===== System prompt ===== */
+const SYSTEM_PROMPT = `# 角色设定
+
+你是一名名叫"小懵"的 AI 桌游主持人。你的性格有点小迷糊、偶尔会歪头愣一下，但对规则非常认真负责——你会诚实说"这条我不确定"，绝不会瞎编。你不是冷冰冰的规则说明书，而是坐在桌边陪玩家玩的主持人搭子。
+
+你的任务是帮助第一次接触某款桌游的玩家快速开始游戏，并在整局游戏中持续提供主持、规则解释、流程提醒、状态记录和结算帮助。
+
+# 核心目标
+
+1. 让玩家尽快理解"怎样获胜"
+2. 帮助玩家正确完成游戏摆放
+3. 只讲开始游戏必须知道的规则
+4. 在实际进行过程中逐步讲解新规则
+5. 每个回合告诉玩家现在应该做什么
+6. 回答规则争议，但不替玩家进行策略决策
+7. 在玩家需要时记录轮次、分数、资源和特殊状态
+8. 游戏结束时协助完成结算
+
+# 对话原则
+
+## 篇幅与格式（硬性要求）
+
+这个产品的核心价值就是"不用读规则书"，所以你的每一条回复必须短、能扫一眼看懂：
+
+- 每条回复正文原则上不超过 4-5 行。只讲玩家"现在"要做的那一件事，不要提前铺垫后面的规则。
+- 优先用短句和简短的项目符号（- 或数字列表），不要写大段说明性文字。
+- 一次只问玩家一个问题或给一组选项，不要连续抛出多个问题。
+- 背景解释、原因、术语来源等"为什么"的内容，默认省略，除非玩家主动问"为什么"或"这是什么意思"。
+- 不要在同一条消息里预告后面还有哪些阶段或规则，那些留到需要的时候再说。
+- 规则问答（第六阶段）也要精简：结论 1 行，原因最多 1-2 句，下一步 1 行，不需要每次都写满三段。
+- 如果玩家明确要求"讲详细一点/完整规则"，才可以展开成更长的说明，否则默认精简模式。
+
+## 其他原则
+
+- 每次只讲一个阶段或一个操作，不要一次输出整份规则。
+- 使用简单、口语化、适合新手理解的表达，偶尔可以带点"呃我想想"式的小迷糊语气，但内容必须准确。
+- 先说"现在要做什么"，再解释"为什么"（如果需要解释的话，见上方篇幅要求）。
+- 每完成一步，都等待玩家确认后再继续。
+- 尽量使用简短选项让玩家回答，例如："完成了 / 还没有 / 我有问题"
+- 如果规则较复杂，先给出一句话的简化结论，再根据玩家提问补充细节，不要一次性展开。
+- 不要过早介绍暂时用不到的特殊规则。
+- 不要替玩家选择策略，但可以说明合法操作及其可能影响，一句话说清楚就好。
+- 保持轻松、有陪伴感的主持人口吻，但语气轻松不等于话多。
+
+# 准确性要求
+
+在开始主持前，必须确认：
+1. 桌游的完整名称
+2. 游戏版本或出版年份
+3. 是否包含扩展包
+4. 玩家人数
+5. 玩家是否第一次玩
+6. 玩家希望使用"快速教学模式"还是"完整规则模式"
+
+如果存在同名游戏、不同版本或扩展规则，必须先向玩家确认，不能自行猜测。
+
+如果你不确定某条规则，请明确说："这条规则我还不能完全确认。请拍一下对应的规则书页面、卡牌或组件，我帮你核对。"
+
+禁止编造规则、卡牌效果、组件数量或胜利条件。
+
+# 图片识别
+
+玩家可以上传游戏盒封面、规则书页面、当前桌面摆放、卡牌或角色能力、计分板、不认识的组件。
+收到图片后，先说明识别到了什么，再回答问题。如果摆放有误，指出具体位置，一步步指导调整。
+
+# 主持流程
+
+第一阶段（识别游戏）：先确认玩家人数、版本、扩展、是否第一次玩，再决定教学模式。
+第二阶段（30秒介绍）：角色、目标、胜利条件、大致轮次、每回合做什么。
+第三阶段（摆放指导）：每次一小步，等待"完成了"再继续。
+第四阶段（开局教学）：只讲第一回合需要的内容。
+第五阶段（逐回合主持）：格式为（每项都只写一行，不展开）——
+
+【第 X 轮｜玩家名称的回合】
+当前阶段：（一行）
+玩家现在需要做什么：（一行）
+可以选择：
+1. 操作 A
+2. 操作 B
+完成后请告诉我你选择了什么。
+
+第六阶段（规则问答）：格式为（每项限 1 句话，除非玩家追问）——
+【规则结论】一句话直接给结论
+【原因】最多 1-2 句，简单说明
+【现在怎么做】一句话，下一步动作
+
+第七阶段（状态记录）：维护轮次、玩家、分数、资源、公共目标、已触发事件等，每次更新用一行简短确认，不写额外说明。
+
+第八阶段（结算）：触发结束条件时主动提醒，逐项指导计算基础分、目标分、资源换算、奖励分、扣分项、平局规则，每项一行数字，最后公布结果，总结控制在 2-3 句话内。
+
+# 模式设置
+
+快速教学模式 / 完整主持模式 / 规则助手模式。玩家未选择时默认推荐快速教学模式。
+
+# 首次开场白
+
+"嗨，我是你们今天的 AI 桌游主持人小懵 🎲（呃，稍等我晃个神——好啦准备好了！）
+把桌游名称告诉我，或者拍一下游戏盒封面，我可以带你们完成规则介绍、桌面摆放和整局游戏。
+今天有几位玩家？你们想选择：
+1. 快速学会并马上开玩
+2. 从摆放开始全程主持
+3. 只查询某条规则"`;
+
+let apiKey = '';
+let modelId = '';
+let baseUrl = '';
+let history = [];
+let pendingImages = [];
+let connected = false;
+
+const el = id => document.getElementById(id);
+const messagesEl = el('messages');
+const drawer = el('drawer');
+
+function showEmptyState(){
+  messagesEl.innerHTML = `
+    <div class="empty-state">
+      <div class="big-mascot" id="emptyMascotSlot"></div>
+      <h2>小懵还在等你连接模型</h2>
+      <p>点右上角 ⚙ 填一下火山方舟的 API Key，小懵就能陪你摆棋盘、讲规则、算分数啦</p>
+    </div>`;
+  setMascotState('idle');
+}
+
+function clearEmptyState(){
+  if(messagesEl.querySelector('.empty-state')){
+    messagesEl.innerHTML = '';
+  }
+}
+
+function loadSaved(){
+  const saved = localStorage.getItem('xiaomeng_config');
+  if(saved){
+    try{
+      const cfg = JSON.parse(saved);
+      el('apiKeyInput').value = cfg.apiKey || '';
+      if(cfg.modelId) el('modelIdInput').value = cfg.modelId;
+      if(cfg.baseUrl) el('baseUrlInput').value = cfg.baseUrl;
+      el('rememberCheck').checked = true;
+      if(cfg.apiKey){
+        applyConfig(false);
+      }
+    }catch(e){}
+  }
+}
+
+function applyConfig(showDrawerAfter){
+  apiKey = el('apiKeyInput').value.trim();
+  modelId = el('modelIdInput').value.trim();
+  baseUrl = el('baseUrlInput').value.trim();
+  if(el('rememberCheck').checked && apiKey){
+    localStorage.setItem('xiaomeng_config', JSON.stringify({apiKey, modelId, baseUrl}));
+  } else {
+    localStorage.removeItem('xiaomeng_config');
+  }
+  if(apiKey && modelId && baseUrl){
+    connected = true;
+    el('statusLine').textContent = '已连接 · ' + modelId;
+    el('statusDot').classList.add('on');
+    if(history.length === 0){
+      sendToModel(null, true);
+    }
+  }
+  if(showDrawerAfter === false){
+    drawer.classList.remove('open');
+  }
+}
+
+el('settingsBtn').onclick = () => drawer.classList.toggle('open');
+el('saveKeyBtn').onclick = () => { applyConfig(false); };
+
+el('resetBtn').onclick = () => {
+  if(confirm('重新开始会清空当前对话记录，确定吗？')){
+    history = [];
+    if(connected){
+      sendToModel(null, true);
+    } else {
+      showEmptyState();
+    }
+  }
+};
+
+function addBubble(role, text, images){
+  clearEmptyState();
+  const row = document.createElement('div');
+  row.className = 'msg-row ' + (role === 'user' ? 'user' : 'host');
+  const avatar = document.createElement('div');
+  avatar.className = 'avatar';
+  if(role === 'user'){
+    avatar.classList.add('user');
+    avatar.textContent = '你';
+  } else {
+    avatar.classList.add('host');
+    avatar.innerHTML = mascotAvatarHTML('idle');
+  }
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble ' + (role === 'user' ? 'user' : 'host');
+  bubble.textContent = text;
+  if(images && images.length){
+    images.forEach(src => {
+      const img = document.createElement('img');
+      img.className = 'uploaded';
+      img.src = src;
+      bubble.appendChild(img);
+    });
+  }
+  row.appendChild(avatar);
+  row.appendChild(bubble);
+  messagesEl.appendChild(row);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+  return bubble;
+}
+
+function addSystemNote(text){
+  clearEmptyState();
+  const row = document.createElement('div');
+  row.className = 'msg-row system';
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble system';
+  bubble.textContent = text;
+  row.appendChild(bubble);
+  messagesEl.appendChild(row);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function addErrorBubble(title, detail){
+  clearEmptyState();
+  setMascotState('error');
+  const row = document.createElement('div');
+  row.className = 'msg-row host error-row';
+  const avatar = document.createElement('div');
+  avatar.className = 'avatar host';
+  avatar.innerHTML = mascotAvatarHTML('error');
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble error';
+  bubble.innerHTML = `
+    <span class="err-icon">⚠</span>
+    <span class="err-text">
+      <span class="err-title">${title}</span>
+      <span class="err-detail">${detail}</span>
+    </span>`;
+  row.appendChild(avatar);
+  row.appendChild(bubble);
+  messagesEl.appendChild(row);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+  setTimeout(() => setMascotState('idle'), 1500);
+}
+
+function showQuickReplies(options){
+  const qr = el('quickReplies');
+  qr.innerHTML = '';
+  options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'qr-btn';
+    btn.textContent = opt;
+    btn.onclick = () => {
+      el('textInput').value = opt;
+      handleSend();
+    };
+    qr.appendChild(btn);
+  });
+}
+
+function addTypingIndicator(){
+  clearEmptyState();
+  setMascotState('thinking');
+  const row = document.createElement('div');
+  row.className = 'msg-row host';
+  row.id = 'typingRow';
+  const avatar = document.createElement('div');
+  avatar.className = 'avatar host';
+  avatar.innerHTML = mascotAvatarHTML('thinking');
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble host';
+  bubble.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
+  row.appendChild(avatar);
+  row.appendChild(bubble);
+  messagesEl.appendChild(row);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function removeTypingIndicator(){
+  const t = el('typingRow');
+  if(t) t.remove();
+}
+
+function detectReplyState(text){
+  if(/【规则结论】|【原因】/.test(text)) return 'explaining';
+  return 'talking';
+}
+
+async function sendToModel(userText, isFirstTurn, images){
+  if(!connected){
+    addErrorBubble('还没连接模型', '请先点右上角 ⚙ 设置并保存你的 API Key');
+    drawer.classList.add('open');
+    return;
+  }
+  el('quickReplies').innerHTML = '';
+  const userContent = [];
+  if(userText){
+    userContent.push({type:'text', text: userText});
+  }
+  if(images && images.length){
+    images.forEach(src => {
+      userContent.push({type:'image_url', image_url:{url: src}});
+    });
+  }
+  if(!isFirstTurn){
+    history.push({role:'user', content: userText && !images ? userText : userContent});
+  }
+
+  addTypingIndicator();
+  el('sendBtn').disabled = true;
+
+  const messagesPayload = [
+    {role:'system', content: SYSTEM_PROMPT},
+    ...history
+  ];
+
+  try{
+    const res = await fetch(baseUrl, {
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':'Bearer ' + apiKey
+      },
+      body: JSON.stringify({
+        model: modelId,
+        messages: isFirstTurn ? [{role:'system', content: SYSTEM_PROMPT},{role:'user', content:'（开始）'}] : messagesPayload,
+        temperature: 0.7
+      })
+    });
+
+    if(!res.ok){
+      const errText = await res.text();
+      throw new Error(`HTTP ${res.status}: ${errText.slice(0,200)}`);
+    }
+
+    const data = await res.json();
+    const reply = data.choices && data.choices[0] && data.choices[0].message ? data.choices[0].message.content : null;
+    if(!reply){
+      throw new Error('模型没有返回内容，请检查接入点 ID 是否正确');
+    }
+
+    removeTypingIndicator();
+    const replyState = detectReplyState(reply);
+    setMascotState(replyState);
+    addBubble('assistant', reply);
+    history.push({role:'assistant', content: reply});
+    setTimeout(() => setMascotState('idle'), 2200);
+
+    const nums = reply.match(/^\d+\.\s*.+$/gm);
+    if(nums && nums.length <= 4){
+      showQuickReplies(nums.map(n => n.replace(/^\d+\.\s*/, '').slice(0,14)));
+    } else if(/完成了|还没有|我有问题/.test(reply)){
+      showQuickReplies(['完成了','还没有','我有问题']);
+    }
+
+  }catch(err){
+    removeTypingIndicator();
+    let detail = err.message;
+    if(/Failed to fetch/i.test(detail)){
+      detail = 'Failed to fetch —— 很可能是浏览器 CORS 限制，浏览器不允许网页直接调用火山方舟接口。需要一个服务器中转（proxy）才能绕开，不是你的 Key 或模型 ID 填错了。';
+    }
+    addErrorBubble('请求失败', detail);
+  } finally {
+    el('sendBtn').disabled = false;
+  }
+}
+
+function handleSend(){
+  const text = el('textInput').value.trim();
+  if(!text && pendingImages.length === 0) return;
+  if(!connected){
+    addErrorBubble('还没连接模型', '请先点右上角 ⚙ 设置并保存你的 API Key');
+    drawer.classList.add('open');
+    return;
+  }
+  addBubble('user', text, pendingImages.map(p => p.dataUrl));
+  const imgsToSend = pendingImages.map(p => p.dataUrl);
+  el('textInput').value = '';
+  autoGrow();
+  pendingImages = [];
+  renderImgStrip();
+  sendToModel(text, false, imgsToSend);
+}
+
+el('sendBtn').onclick = handleSend;
+el('textInput').addEventListener('keydown', e => {
+  if(e.key === 'Enter' && !e.shiftKey){
+    e.preventDefault();
+    handleSend();
+  }
+});
+function autoGrow(){
+  const t = el('textInput');
+  t.style.height = 'auto';
+  t.style.height = Math.min(t.scrollHeight, 120) + 'px';
+}
+el('textInput').addEventListener('input', autoGrow);
+
+el('imgBtn').onclick = () => el('fileInput').click();
+el('fileInput').addEventListener('change', e => {
+  const files = Array.from(e.target.files);
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      pendingImages.push({dataUrl: ev.target.result});
+      renderImgStrip();
+    };
+    reader.readAsDataURL(file);
+  });
+  el('fileInput').value = '';
+});
+
+function renderImgStrip(){
+  const strip = el('imgStrip');
+  strip.innerHTML = '';
+  pendingImages.forEach((img, i) => {
+    const chip = document.createElement('div');
+    chip.className = 'img-chip';
+    chip.innerHTML = `<img src="${img.dataUrl}"><button onclick="removeImg(${i})" aria-label="移除图片">×</button>`;
+    strip.appendChild(chip);
+  });
+}
+function removeImg(i){
+  pendingImages.splice(i,1);
+  renderImgStrip();
+}
+window.removeImg = removeImg;
+
+/* init */
+setMascotState('idle');
+showEmptyState();
+loadSaved();
+if(!connected){
+  drawer.classList.add('open');
+}
+</script>
+</body>
+</html>
