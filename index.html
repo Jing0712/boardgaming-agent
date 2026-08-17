@@ -6,33 +6,34 @@
 <title>小懵 · AI 桌游主持人</title>
 <style>
   :root{
-    --bg-deep:#F0E9DC;
-    --bg-mid:#F6EFE3;
-    --header-bg:#E8DFF5;
-    --header-line:#D9CBEE;
-    --cream:#FFFDF8;
-    --cream-dim:#F5EFE1;
-    --ink:#39332B;
-    --ink-soft:#7A7264;
-    --dazed:#9285D9;
-    --dazed-deep:#6E60BE;
-    --dazed-light:#EFEBFC;
-    --coral:#E0785A;
-    --coral-deep:#C25B3E;
-    --coral-light:#FCEAE3;
-    --error:#D65B4A;
-    --error-light:#FBE7E2;
-    --error-line:#F0BEAE;
-    --success:#5FA97C;
-    --line:#E6DDC9;
-    --skin:#F5CBA0;
-    --cheek:#F0A98A;
+    --bg-deep:#E7DFC9;
+    --bg-mid:#F1EAD9;
+    --header-bg:#EDE4CE;
+    --header-line:#D9CBA6;
+    --cream:#FBF7EC;
+    --cream-dim:#F3EBD8;
+    --ink:#332B22;
+    --ink-soft:#7D7461;
+    --dazed:#4A3F66;
+    --dazed-deep:#332C49;
+    --dazed-light:#E7E2ED;
+    --coral:#A8432B;
+    --coral-deep:#7C3120;
+    --coral-light:#F2E0D6;
+    --error:#B23B28;
+    --error-light:#F5E1DA;
+    --error-line:#DBB29E;
+    --success:#4B6B45;
+    --success-light:#E5EBDD;
+    --line:#DDD0AE;
+    --teal:#3A6E76;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;height:100%;}
   body{
     font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
-    background:var(--bg-deep);
+    background-color:var(--bg-deep);
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.2  0 0 0 0 0.17  0 0 0 0 0.13  0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     color:var(--ink);
     display:flex;
     justify-content:center;
@@ -44,7 +45,8 @@
     display:flex;
     flex-direction:column;
     height:100vh;
-    background:var(--bg-mid);
+    background-color:var(--bg-mid);
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.2  0 0 0 0 0.17  0 0 0 0 0.13  0 0 0 0.045 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
   /* header */
@@ -66,9 +68,11 @@
     font-size:17px;
     font-weight:700;
     margin:0;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   }
   .status-row{
     display:flex;align-items:center;gap:6px;margin-top:3px;
+    min-width:0;
   }
   .status-dot{
     width:7px;height:7px;border-radius:50%;
@@ -77,24 +81,30 @@
   }
   .status-dot.on{background:var(--success);}
   .status-row p{
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
     color:var(--ink-soft);
     font-size:12px;
     margin:0;
   }
-  .header-btns{display:flex;gap:8px;flex-shrink:0;}
+  .header-btns{display:flex;gap:6px;flex-shrink:0;}
   .icon-btn{
-    width:36px;height:36px;
+    width:32px;height:32px;
     border-radius:10px;
     border:1px solid var(--header-line);
     background:var(--cream);
     color:var(--dazed-deep);
     display:flex;align-items:center;justify-content:center;
     cursor:pointer;
-    font-size:16px;
+    font-size:14px;
     transition:background 0.15s, transform 0.1s;
   }
   .icon-btn:hover{background:var(--dazed-light);}
   .icon-btn:active{transform:scale(0.94);}
+  .icon-btn.on{background:var(--dazed);color:#fff;border-color:var(--dazed);}
+  .voice-mode-status{
+    font-size:12px;color:var(--ink-soft);text-align:center;
+    padding:0 0 6px;
+  }
 
   /* settings drawer */
   .drawer{
@@ -134,11 +144,11 @@
   .field-note{font-size:11px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
   .warn-box{
     background:var(--coral-light);
-    border:1px solid #F0C3AE;
+    border:1px solid var(--coral-deep);
     border-radius:8px;
     padding:10px 12px;
     font-size:11.5px;
-    color:#8A4126;
+    color:var(--ink);
     line-height:1.6;
     margin-bottom:14px;
   }
@@ -253,7 +263,7 @@
   }
   .bubble.error .err-text{flex:1;}
   .bubble.error .err-text .err-title{font-weight:700;margin-bottom:2px;display:block;}
-  .bubble.error .err-text .err-detail{color:#A8402F;font-size:13px;}
+  .bubble.error .err-text .err-detail{color:var(--ink-soft);font-size:13px;}
 
   .typing{
     display:flex;gap:4px;padding:4px 2px;
@@ -335,6 +345,17 @@
     cursor:pointer;font-size:17px;
   }
   .bar-btn:hover{background:var(--cream-dim);color:var(--dazed-deep);}
+  .bar-btn:disabled{opacity:0.35;cursor:not-allowed;}
+  .bar-btn:disabled:hover{background:transparent;}
+  .bar-btn.on{background:var(--dazed);color:#fff;}
+  @keyframes micPulse{
+    0%,100%{box-shadow:0 0 0 0 rgba(224,120,90,0.45);}
+    50%{box-shadow:0 0 0 7px rgba(224,120,90,0);}
+  }
+  .bar-btn.listening{
+    background:var(--coral-light);color:var(--coral-deep);
+    animation:micPulse 1.2s ease-in-out infinite;
+  }
   .send-btn{
     width:34px;height:34px;border-radius:10px;flex-shrink:0;
     border:none;background:var(--dazed);color:#fff;
@@ -358,35 +379,19 @@
     overflow:hidden;
     background:var(--dazed-light);
     flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
   }
-  .mascot-face img{
-    position:absolute;
-    top:0;left:0;
-    width:100%;height:100%;
-    object-fit:cover;
-    object-position:center 42%;
-    opacity:0;
-    transition:opacity 0.45s ease;
-  }
-  .mascot-face img.active{opacity:1;}
+  .mascot-face svg{width:76%;height:76%;}
 
-  /* chat area + empty state: standalone full-body, no frame/background */
+  /* chat area + empty state: standalone pixel-cat, no frame/background */
   .mascot-body{
     position:relative;
-    display:inline-block;
+    display:inline-flex;
+    align-items:center;justify-content:center;
     flex-shrink:0;
-    aspect-ratio:0.68;
+    aspect-ratio:1;
   }
-  .mascot-body img{
-    position:absolute;
-    top:0;left:0;
-    width:100%;height:100%;
-    object-fit:contain;
-    object-position:bottom center;
-    opacity:0;
-    transition:opacity 0.45s ease;
-  }
-  .mascot-body img.active{opacity:1;}
+  .mascot-body svg{width:100%;height:100%;}
 
   @keyframes idleBreathe{
     0%,100%{transform:translateY(0) scale(1);}
@@ -412,57 +417,628 @@
   .mascot-face.anim-talking, .mascot-body.anim-talking{animation:talkPulse 0.5s ease-in-out infinite;}
   .mascot-face.anim-explaining, .mascot-body.anim-explaining{animation:talkPulse 0.5s ease-in-out infinite;}
   .mascot-face.anim-error, .mascot-body.anim-error{animation:errorWobble 0.5s ease-in-out 2;}
+
+  /* ===== Full-page Dashboard ===== */
+  .shell{
+    display:flex;
+    justify-content:center;
+    width:100%;
+  }
+  .app-shell-hidden{display:none !important;}
+
+  .dashboard-view{
+    width:100%;min-height:100vh;
+    background:var(--bg-deep);
+    overflow-y:auto;
+  }
+  .dashboard-inner{
+    max-width:920px;margin:0 auto;
+    padding:20px 20px 60px;
+  }
+  .dash-topbar{
+    display:flex;align-items:center;gap:12px;
+    padding:6px 0 18px;
+  }
+  .dash-topbar .mascot-wrap{width:44px;height:44px;flex-shrink:0;}
+  .dash-topbar h1{font-size:17px;margin:0;color:var(--ink);}
+  .dash-topbar .status-row p{margin:0;font-size:11.5px;color:var(--ink-soft);}
+  .dash-topbar-btns{margin-left:auto;display:flex;gap:8px;}
+
+  .dash-hero-btn{
+    background:var(--dazed);color:#fff;border:none;
+    padding:13px 22px;border-radius:12px;
+    font-size:14.5px;font-weight:700;cursor:pointer;font-family:inherit;
+    flex-shrink:0;white-space:nowrap;
+    transition:background 0.15s, transform 0.1s;
+  }
+  .dash-hero-btn:hover{background:var(--dazed-deep);}
+  .dash-hero-btn:active{transform:scale(0.97);}
+
+  /* ===== Genre map — paper-textured "map sheet" with tappable location pins ===== */
+  .dash-map-card{
+    position:relative;
+    background-color:var(--cream);
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.2  0 0 0 0 0.17  0 0 0 0 0.13  0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    border:1px solid var(--line);
+    border-radius:16px;
+    box-shadow:0 1px 0 var(--line);
+    aspect-ratio:3/4;
+    overflow:hidden;
+  }
+  .dash-map-path{
+    position:absolute;top:0;left:0;width:100%;height:100%;
+  }
+  .dash-map-path .route{
+    stroke:var(--ink-soft);stroke-width:0.5;stroke-dasharray:2 2.2;
+    fill:none;opacity:0.6;stroke-linecap:round;
+  }
+  .dash-map-path .region{opacity:0.55;}
+  .dash-map-path .sparkle{fill:var(--coral);opacity:0.5;}
+  .dash-map-canvas{
+    position:absolute;top:0;left:0;width:100%;height:100%;
+  }
+  .dash-map-compass{
+    position:absolute;top:10px;right:10px;width:15%;height:15%;
+    opacity:0.7;pointer-events:none;
+  }
+  .dash-map-pin{
+    position:absolute;transform:translate(-50%,-50%);
+    display:flex;flex-direction:column;align-items:center;gap:4px;
+    background:none;border:none;cursor:pointer;font-family:inherit;
+    padding:0;
+  }
+  .dash-map-pin-icon{
+    position:relative;
+    width:19%;aspect-ratio:1;
+    display:flex;align-items:center;justify-content:center;
+    background:var(--dazed-light);
+    border:1px solid var(--header-line);
+    border-radius:50%;
+    font-size:clamp(18px,5.5vw,26px);
+    box-shadow:0 2px 0 var(--line);
+    transition:transform 0.15s;
+  }
+  /* real sticker-style illustration loaded: drop the circular badge chrome so
+     the irregular die-cut artwork shows uncropped instead of being clipped */
+  .dash-map-pin-icon.has-image{
+    width:30%;
+    background:none;border:none;box-shadow:none;
+  }
+  .dash-map-pin-icon.has-image .pin-emoji{display:none;}
+  .dash-map-pin:active .dash-map-pin-icon{transform:scale(0.94);}
+  .dash-map-pin-icon img{
+    position:absolute;top:0;left:0;width:100%;height:100%;
+    border-radius:50%;object-fit:cover;
+  }
+  .dash-map-pin-icon.has-image img{
+    position:static;border-radius:0;object-fit:contain;
+    filter:drop-shadow(0 2px 3px rgba(0,0,0,0.22));
+  }
+  .dash-map-pin-label{
+    font-size:11.5px;font-weight:700;color:var(--ink);
+    background:var(--cream);border:1px solid var(--line);
+    border-radius:8px;padding:2px 7px;white-space:nowrap;
+  }
+
+  .dash-entry-row{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:8px;
+    margin-bottom:30px;
+  }
+  .dash-entry-btn{
+    display:flex;flex-direction:column;align-items:center;gap:5px;
+    background:var(--cream);border:1px solid var(--line);
+    border-radius:12px;padding:12px 4px;
+    cursor:pointer;font-family:inherit;font-size:11px;font-weight:600;color:var(--ink);
+    transition:border-color 0.15s, transform 0.1s;
+  }
+  .dash-entry-btn:hover{border-color:var(--dazed);}
+  .dash-entry-btn:active{transform:scale(0.96);}
+  .dash-entry-btn .entry-icon{font-size:20px;}
+
+  .dash-section{margin-bottom:30px;}
+  .dash-section-head{
+    display:flex;align-items:baseline;justify-content:space-between;
+    margin-bottom:12px;
+  }
+  .dash-section-head h3{margin:0;font-size:15px;color:var(--ink);}
+  .dash-section-head .count-note{font-size:11.5px;color:var(--ink-soft);}
+  .dash-empty-note{
+    color:var(--ink-soft);font-size:12.5px;
+    background:var(--cream);border:1px dashed var(--line);
+    border-radius:10px;padding:16px;text-align:center;line-height:1.6;
+  }
+
+  .continue-row{
+    display:flex;gap:12px;overflow-x:auto;padding-bottom:4px;
+  }
+  .continue-card{
+    background:var(--cream);border:1px solid var(--line);
+    border-radius:12px;padding:13px 14px;
+    min-width:200px;flex-shrink:0;
+    cursor:pointer;transition:border-color 0.15s;
+  }
+  .continue-card:hover{border-color:var(--dazed);}
+  .continue-card .cc-name{font-size:13.5px;font-weight:700;color:var(--ink);margin-bottom:4px;}
+  .continue-card .cc-meta{font-size:11.5px;color:var(--ink-soft);}
+  .continue-card .cc-time{font-size:11px;color:var(--dazed-deep);margin-top:6px;font-weight:600;}
+
+
+  .example-chip{
+    background:var(--dazed-light);color:var(--dazed-deep);
+    font-size:11.5px;padding:4px 10px;border-radius:14px;
+    border:none;cursor:pointer;font-family:inherit;
+    display:inline-flex;align-items:center;gap:5px;
+  }
+  .example-chip:hover{background:var(--dazed);color:#fff;}
+  .example-chip .sub-label{opacity:0.75;font-size:10.5px;}
+
+  .mode-badge{
+    display:inline-flex;align-items:center;gap:4px;
+    background:var(--dazed-light);color:var(--dazed-deep);
+    font-size:11px;font-weight:600;
+    border-radius:10px;padding:2px 8px;flex-shrink:0;
+  }
+  .genre-tag{
+    display:inline-flex;
+    background:var(--cream-dim);color:var(--ink-soft);
+    border:1px solid var(--line);
+    font-size:10.5px;border-radius:8px;padding:2px 7px;
+  }
+  .mode-card-keywords{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:2px;}
+
+  /* genre definition + recommendation modal */
+  .genre-def-block{margin-bottom:16px;}
+  .genre-def-label{font-size:11px;font-weight:700;color:var(--dazed-deep);margin-bottom:4px;}
+  .genre-def-text{font-size:12.5px;color:var(--ink);line-height:1.65;margin:0 0 4px;}
+  .genre-req-form{
+    background:var(--cream-dim);border:1px solid var(--line);border-radius:10px;
+    padding:12px;margin-bottom:16px;display:flex;flex-direction:column;gap:10px;
+  }
+  .genre-req-row{display:flex;gap:10px;}
+  .genre-req-row .field{flex:1;margin-bottom:0;}
+  .genre-recommend-list{display:flex;flex-direction:column;gap:8px;}
+  .recommend-card{
+    background:var(--cream);border:1px solid var(--line);border-radius:10px;
+    padding:11px 13px;
+  }
+  .recommend-card-head{display:flex;align-items:center;gap:10px;margin-bottom:4px;}
+  .recommend-cover{
+    flex-shrink:0;width:48px;height:48px;border-radius:10px;
+    display:flex;align-items:center;justify-content:center;font-size:24px;
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,0.06);
+  }
+  .recommend-card-headtext{flex:1;display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;}
+  .recommend-card-head .rc-title{font-weight:700;font-size:13.5px;color:var(--ink);}
+  .recommend-card-meta{font-size:11px;color:var(--ink-soft);margin-bottom:6px;}
+  .recommend-card-blurb{font-size:12px;color:var(--ink);line-height:1.6;margin-bottom:8px;}
+  .recommend-reasons{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;}
+  .reason-chip{
+    display:inline-flex;background:var(--success-light);color:var(--success);border:1px solid var(--success);
+    font-size:10.5px;border-radius:8px;padding:2px 7px;
+  }
+  .recommend-start-btn{
+    background:var(--dazed);color:#fff;border:none;padding:7px 14px;
+    border-radius:8px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;
+  }
+  .recommend-start-btn:hover{background:var(--dazed-deep);}
+  .recommend-empty{color:var(--ink-soft);font-size:12px;text-align:center;padding:10px;}
+  .recommend-no-match-note{font-size:11px;color:var(--ink-soft);text-align:center;padding:4px 0 2px;}
+  .player-count-note{font-size:11px;color:var(--ink-soft);margin-top:-4px;}
+  .lang-toggle{display:flex;gap:4px;flex-shrink:0;}
+  .lang-btn{
+    font-size:11.5px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);
+    background:var(--cream);color:var(--ink-soft);cursor:pointer;
+  }
+  .lang-btn.active{background:var(--dazed);color:#fff;border-color:var(--dazed);}
+  .lang-btn:hover{opacity:0.85;}
+
+  .search-box-wrap{position:relative;}
+  .search-box-icon{
+    position:absolute;left:13px;top:50%;transform:translateY(-50%);
+    font-size:14px;color:var(--ink-soft);pointer-events:none;
+  }
+  .search-box-input{
+    width:100%;box-sizing:border-box;padding:11px 14px 11px 36px;
+    border-radius:12px;border:1px solid var(--line);background:var(--cream);
+    font-size:13px;color:var(--ink);font-family:inherit;
+  }
+  .search-box-input:focus{outline:none;border-color:var(--dazed);}
+  .search-results-panel{display:flex;flex-direction:column;gap:8px;margin-top:10px;}
+  .search-result-genre-badge{
+    display:inline-flex;align-items:center;gap:3px;font-size:10.5px;
+    color:var(--ink-soft);background:var(--cream-dim);border:1px solid var(--line);
+    border-radius:8px;padding:2px 7px;margin-bottom:4px;
+  }
+  .search-empty{color:var(--ink-soft);font-size:12px;text-align:center;padding:14px 0;}
+
+  .dash-toolbar{
+    display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;
+  }
+  .filters-toggle-btn{
+    background:var(--cream-dim);border:1px solid var(--line);
+    color:var(--ink-soft);padding:6px 12px;border-radius:8px;
+    font-size:12px;cursor:pointer;font-family:inherit;
+  }
+  .filters-toggle-btn.active{background:var(--dazed-light);color:var(--dazed-deep);border-color:var(--dazed);}
+  .filters-bar{
+    display:none;flex-wrap:wrap;gap:8px;
+    background:var(--cream);border:1px solid var(--line);
+    border-radius:10px;padding:12px;margin-bottom:14px;
+  }
+  .filters-bar.show{display:flex;}
+  .filters-bar select{
+    padding:6px 9px;border-radius:7px;border:1px solid var(--line);
+    background:var(--cream-dim);font-size:12px;color:var(--ink);font-family:inherit;
+  }
+
+  .games-grid{display:flex;flex-direction:column;gap:8px;}
+  .game-item{
+    border-radius:12px;overflow:hidden;
+    border:1px solid var(--line);
+    background:var(--cream);
+  }
+  .game-item.active{border-color:var(--dazed);background:var(--dazed-light);}
+  .game-item-main{
+    display:flex;align-items:center;gap:10px;
+    padding:11px 12px;cursor:pointer;
+  }
+  .game-item-main:hover{background:var(--cream-dim);}
+  .game-icon{
+    width:36px;height:36px;border-radius:9px;flex-shrink:0;
+    background:var(--dazed-light);color:var(--dazed-deep);
+    display:flex;align-items:center;justify-content:center;
+    font-size:17px;
+  }
+  .game-info{flex:1;min-width:0;}
+  .game-name-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+  .game-name{
+    font-size:13.5px;font-weight:600;color:var(--ink);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .game-meta{font-size:11px;color:var(--ink-soft);margin-top:3px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
+  .game-count-badge{
+    background:var(--coral-light);color:var(--coral-deep);
+    font-size:11px;font-weight:700;
+    border-radius:10px;padding:2px 7px;flex-shrink:0;
+  }
+  .session-list{padding:0 12px 10px 58px;}
+  .session-item{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:7px 9px;border-radius:7px;cursor:pointer;
+    font-size:12px;color:var(--ink-soft);
+  }
+  .session-item:hover{background:var(--cream-dim);color:var(--ink);}
+  .session-item .s-date{color:var(--ink);}
+  .session-item .s-status{font-size:10.5px;padding:1px 6px;border-radius:8px;background:var(--success);color:#fff;margin-left:6px;}
+  .session-item .s-status.ended{background:var(--line);color:var(--ink-soft);}
+
+  /* home button in chat header, returns to dashboard */
+  .home-btn{font-size:15px;}
+
+  /* live session status bar (round + player counters) */
+  .session-status{
+    display:flex;align-items:center;gap:8px;
+    padding:8px 20px;
+    background:var(--dazed-light);
+    color:var(--dazed-deep);
+    font-size:12.5px;font-weight:600;
+    border-bottom:1px solid var(--header-line);
+    flex-shrink:0;
+  }
+  .dot-sep{opacity:0.5;}
+
+  /* modals */
+  .modal-overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(30,26,20,0.45);
+    z-index:100;
+    align-items:center;justify-content:center;
+    padding:20px;
+  }
+  .modal-overlay.show{display:flex;}
+  .modal-box{
+    background:var(--cream);
+    border-radius:14px;
+    padding:20px;
+    width:100%;max-width:340px;
+    max-height:80vh;overflow-y:auto;
+  }
+  .modal-box-wide{max-width:480px;}
+  .modal-box h3{margin:0 0 14px;font-size:15px;color:var(--ink);}
+  .modal-header-row{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:12px;
+  }
+  .modal-header-row h3{margin:0;}
+  .modal-actions{
+    display:flex;justify-content:flex-end;gap:8px;margin-top:6px;
+  }
+  .modal-cancel-btn{
+    background:transparent;border:1px solid var(--line);
+    color:var(--ink-soft);padding:9px 16px;border-radius:8px;
+    font-size:13px;cursor:pointer;font-family:inherit;
+  }
+  .modal-cancel-btn:hover{background:var(--cream-dim);}
+  .round-log-item{
+    border-bottom:1px solid var(--line);
+    padding:10px 0;font-size:12.5px;
+  }
+  .round-log-item:last-child{border-bottom:none;}
+  .round-log-head{
+    display:flex;justify-content:space-between;
+    font-weight:700;color:var(--dazed-deep);margin-bottom:4px;
+  }
+  .round-log-row{color:var(--ink-soft);margin-top:2px;line-height:1.5;}
+  .round-log-row b{color:var(--ink);font-weight:600;}
+  .action-log-list{display:flex;flex-direction:column;gap:6px;margin-bottom:6px;}
+  .action-log-row{
+    background:var(--cream-dim);
+    border-left:3px solid var(--dazed);
+    border-radius:0 6px 6px 0;
+    padding:6px 9px;
+  }
+  .action-log-row.unconfirmed{border-left-color:var(--coral);}
+  .a-line{font-size:12.5px;color:var(--ink);font-weight:600;}
+  .a-actor{color:var(--dazed-deep);}
+  .a-arrow{margin:0 4px;color:var(--ink-soft);font-weight:400;}
+  .a-target{color:var(--coral-deep);}
+  .a-action{margin-left:6px;font-weight:400;color:var(--ink);}
+  .a-result{font-size:12px;color:var(--ink-soft);margin-top:2px;}
+  .a-flag{color:var(--coral-deep);font-weight:700;}
+
+  /* ===== Invite modal / join view / room ===== */
+  .setup-banner{
+    background:var(--coral-light);border:1px solid var(--coral-deep);color:var(--ink);
+    font-size:11.5px;line-height:1.6;border-radius:8px;padding:9px 11px;margin-bottom:12px;
+  }
+  .invite-head{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+  .invite-head .game-icon{width:40px;height:40px;font-size:19px;}
+  .invite-head-text{flex:1;min-width:0;}
+  .invite-head-text .ih-name{font-weight:700;font-size:14.5px;color:var(--ink);}
+  .invite-head-text .ih-meta{font-size:11.5px;color:var(--ink-soft);margin-top:2px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
+  .room-code-box{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    background:var(--dazed-light);border:1px dashed var(--dazed);
+    border-radius:10px;padding:10px 14px;margin-bottom:12px;
+  }
+  .room-code-box .rc-code{font-size:22px;font-weight:700;letter-spacing:3px;color:var(--dazed-deep);}
+  .room-code-box .rc-label{font-size:11px;color:var(--ink-soft);}
+  .copy-link-row{display:flex;gap:8px;margin-bottom:12px;}
+  .copy-link-row input{
+    flex:1;padding:9px 11px;border-radius:8px;border:1px solid var(--line);
+    background:var(--cream-dim);font-size:12px;color:var(--ink-soft);font-family:inherit;
+  }
+  .copy-link-row button{
+    background:var(--dazed);color:#fff;border:none;padding:0 16px;border-radius:8px;
+    font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;flex-shrink:0;
+  }
+  .qr-box{display:flex;justify-content:center;margin-bottom:14px;}
+  .qr-box img{width:130px;height:130px;border-radius:8px;border:1px solid var(--line);background:#fff;}
+  .invite-players-list{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+  .invite-player-row{
+    display:flex;align-items:center;gap:8px;
+    background:var(--cream-dim);border-radius:8px;padding:7px 10px;font-size:12.5px;color:var(--ink);
+  }
+  .invite-player-row .ip-name{flex:1;}
+  .ip-ready{font-size:10.5px;padding:2px 7px;border-radius:8px;background:var(--success);color:#fff;}
+  .ip-ready.waiting{background:var(--line);color:var(--ink-soft);}
+  .invite-slot-open{
+    border:1px dashed var(--line);border-radius:8px;padding:7px 10px;
+    font-size:12px;color:var(--ink-soft);
+  }
+  .join-name-row{display:flex;gap:8px;margin-bottom:12px;}
+  .join-name-row input{flex:1;}
+
+  /* full-page join view (opened via shared invite link) */
+  .join-view{width:100%;min-height:100vh;background:var(--bg-deep);display:flex;align-items:center;justify-content:center;padding:20px;}
+  .join-card{background:var(--cream);border:1px solid var(--line);border-radius:16px;padding:24px;max-width:380px;width:100%;}
+  .join-card h2{margin:0 0 6px;font-size:17px;color:var(--ink);}
+  .join-card .jc-sub{font-size:12.5px;color:var(--ink-soft);margin:0 0 16px;line-height:1.6;}
+  .my-role-box{
+    background:var(--dazed-light);border:1px solid var(--dazed);border-radius:12px;
+    padding:16px;text-align:center;margin-top:14px;
+  }
+  .my-role-box .mr-label{font-size:11px;color:var(--dazed-deep);margin-bottom:6px;}
+  .my-role-box .mr-role{font-size:19px;font-weight:700;color:var(--ink);}
+  .ready-toggle-btn{
+    width:100%;padding:11px;border-radius:10px;border:1px solid var(--dazed);
+    background:var(--cream);color:var(--dazed-deep);font-size:13.5px;font-weight:700;
+    cursor:pointer;font-family:inherit;margin-top:14px;
+  }
+  .ready-toggle-btn.on{background:var(--success);border-color:var(--success);color:#fff;}
+  .join-messages{
+    max-height:320px;overflow-y:auto;
+    display:flex;flex-direction:column;gap:10px;
+    margin-top:14px;padding-right:2px;
+  }
+  .join-input-row{
+    display:flex;align-items:flex-end;gap:8px;
+    background:var(--cream-dim);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:6px 6px 6px 12px;
+    margin-top:10px;
+  }
+  .join-input-row:focus-within{
+    border-color:var(--dazed);
+    box-shadow:0 0 0 3px var(--dazed-light);
+  }
+  .join-input-row textarea{
+    flex:1;border:none;outline:none;resize:none;
+    font-family:inherit;font-size:14.5px;line-height:1.5;
+    padding:8px 0;max-height:100px;color:var(--ink);
+    background:transparent;
+  }
 </style>
 </head>
 <body>
+
+<!-- ===== Home dashboard ===== -->
+<div class="dashboard-view" id="dashboardView">
+  <div class="dashboard-inner">
+    <div class="dash-topbar">
+      <div class="mascot-wrap" id="dashMascotWrap"></div>
+      <h1 data-i18n="pageTitle">小懵 · AI 桌游主持人</h1>
+      <div class="dash-topbar-btns">
+        <button class="icon-btn" id="dashSettingsBtn" data-i18n-title="settingsBtnTitle" data-i18n-aria="settingsBtnAria" title="设置 API" aria-label="设置">⚙</button>
+      </div>
+    </div>
+
+    <div class="dash-section">
+      <div class="dash-section-head">
+        <h3 id="genreSectionTitle">按桌游类型找游戏</h3>
+        <div class="lang-toggle" id="langToggle"></div>
+      </div>
+      <div class="dash-map-card">
+        <svg class="dash-map-path" id="genreMapPath" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+        <div class="dash-map-canvas" id="genreMap"></div>
+        <svg class="dash-map-compass" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="47" fill="none" stroke="var(--dazed)" stroke-width="1.5"/>
+          <polygon points="50.0,8.0 56.1,35.2 79.7,20.3 64.8,43.9 92.0,50.0 64.8,56.1 79.7,79.7 56.1,64.8 50.0,92.0 43.9,64.8 20.3,79.7 35.2,56.1 8.0,50.0 35.2,43.9 20.3,20.3 43.9,35.2" fill="var(--dazed)"/>
+          <circle cx="50" cy="50" r="5" fill="var(--coral)"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="dash-entry-row">
+      <button class="dash-entry-btn" id="entryNewSessionBtn">
+        <span class="entry-icon">🎲</span><span data-i18n="entryNewSessionLabel">新建对局</span>
+      </button>
+      <button class="dash-entry-btn" id="entrySearchBtn">
+        <span class="entry-icon">🔍</span><span data-i18n="entrySearchLabel">搜索</span>
+      </button>
+      <button class="dash-entry-btn" id="entryContinueBtn">
+        <span class="entry-icon">🕐</span><span data-i18n="entryContinueLabel">继续对局</span>
+      </button>
+      <button class="dash-entry-btn" id="entryLibraryBtn">
+        <span class="entry-icon">📚</span><span data-i18n="entryLibraryLabel">我的桌游</span>
+      </button>
+    </div>
+
+    <div class="dash-section" id="searchSection" style="display:none;">
+      <div class="search-box-wrap">
+        <span class="search-box-icon">🔍</span>
+        <input type="text" id="gameSearchInput" class="search-box-input" data-i18n-placeholder="searchPh" placeholder="搜索桌游名称或标签，比如「UNO」「合作」「烧脑」…">
+      </div>
+      <div class="search-results-panel" id="searchResultsPanel"></div>
+    </div>
+
+    <div class="dash-section" id="continueSection">
+      <div class="dash-section-head"><h3 data-i18n="continueTitle">继续最近的对局</h3></div>
+      <div class="continue-row" id="continueRow"></div>
+    </div>
+
+    <div class="dash-section" id="myGamesSection">
+      <div class="dash-section-head">
+        <h3 data-i18n="myGamesTitle">我的桌游</h3>
+        <span class="count-note" id="gamesCountNote"></span>
+      </div>
+      <div class="dash-toolbar">
+        <button class="filters-toggle-btn" id="filtersToggleBtn" data-i18n="filtersToggle">筛选 ▾</button>
+      </div>
+      <div class="filters-bar" id="filtersBar">
+        <select id="filterMode"><option value="" data-i18n="filterModeAll">全部方式</option></select>
+        <select id="filterPlayers">
+          <option value="" data-i18n="filterPlayersAny">不限人数</option>
+          <option value="2" data-i18n="filterPlayers2">2 人</option>
+          <option value="3-4" data-i18n="filterPlayers34">3-4 人</option>
+          <option value="5-8" data-i18n="filterPlayers58">5-8 人</option>
+          <option value="8+" data-i18n="filterPlayers8plus">8 人以上</option>
+        </select>
+      </div>
+      <div class="games-grid" id="gamesGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Invite-link join view (opened on a second device via ?room=CODE) ===== -->
+<div class="join-view app-shell-hidden" id="joinView">
+  <div class="join-card" id="joinCard"></div>
+</div>
+
+<div class="shell app-shell-hidden" id="chatShell">
+
 <div class="app">
 
   <div class="header">
+    <button class="icon-btn home-btn" id="menuBtn" data-i18n-title="homeBtnTitle" data-i18n-aria="homeBtnTitle" title="返回主页" aria-label="返回主页">🏠</button>
     <div class="mascot-wrap" id="mascotWrap"></div>
     <div class="header-text">
-      <h1>小懵 · AI 桌游主持人</h1>
+      <h1 data-i18n="pageTitle">小懵 · AI 桌游主持人</h1>
       <div class="status-row">
         <span class="status-dot" id="statusDot"></span>
-        <p id="statusLine">还没连接模型</p>
+        <p id="statusLine" data-i18n="notConnected">还没连接模型</p>
       </div>
     </div>
     <div class="header-btns">
-      <button class="icon-btn" id="settingsBtn" title="设置 API" aria-label="设置">⚙</button>
-      <button class="icon-btn" id="resetBtn" title="重新开始" aria-label="重新开始">↺</button>
+      <button class="icon-btn" id="voiceToggleBtn" data-i18n-title="voiceToggleTitle" data-i18n-aria="voiceToggleAria" title="语音朗读" aria-label="语音朗读开关">🔇</button>
+      <button class="icon-btn" id="settingsBtn" data-i18n-title="settingsBtnTitle" data-i18n-aria="settingsBtnAria" title="设置 API" aria-label="设置">⚙</button>
+      <button class="icon-btn" id="resetBtn" data-i18n-title="resetBtnTitle" data-i18n-aria="resetBtnTitle" title="重新开始" aria-label="重新开始">↺</button>
     </div>
   </div>
 
   <div class="drawer" id="drawer">
     <div class="drawer-inner">
-      <h3>连接模型（火山方舟 Volcengine Ark）</h3>
-      <div class="warn-box">
+      <h3 data-i18n="agentNameSectionTitle">给 AI 主持人取个名字</h3>
+      <div class="drawer-row">
+        <div class="field" style="flex:1;">
+          <input type="text" id="agentNameInput" data-i18n-placeholder="agentNamePh" placeholder="小懵" maxlength="12">
+        </div>
+        <button class="save-btn" id="saveAgentNameBtn" data-i18n="agentNameSaveBtn" style="flex-shrink:0;">改名</button>
+      </div>
+
+      <h3 data-i18n="drawerTitle">连接模型（火山方舟 Volcengine Ark）</h3>
+      <div class="warn-box" data-i18n-html="drawerWarn">
         你的 API Key 只保存在<strong>这个浏览器标签页</strong>里，直接从浏览器发到火山方舟，不会经过我或 Anthropic。
         刷新页面后需要重新粘贴（除非勾选"记住"，那样会存在本机浏览器的 localStorage 里，同样不会离开你的设备）。
         请不要分享这个文件给别人，也不要把 Key 写死在代码里。
       </div>
       <div class="field">
-        <label>API Key</label>
-        <input type="password" id="apiKeyInput" placeholder="粘贴你的 Ark API Key">
+        <label data-i18n="apiKeyLabel">API Key</label>
+        <input type="password" id="apiKeyInput" data-i18n-placeholder="apiKeyPh" placeholder="粘贴你的 Ark API Key">
       </div>
       <div class="drawer-row">
         <div class="field">
-          <label>推理接入点 ID（Endpoint ID）</label>
-          <input type="text" id="modelIdInput" placeholder="例如 ep-20240101-xxxxx">
+          <label data-i18n="endpointLabel">推理接入点 ID（Endpoint ID）</label>
+          <input type="text" id="modelIdInput" data-i18n-placeholder="endpointPh" placeholder="例如 ep-20240101-xxxxx">
         </div>
         <div class="field">
-          <label>API 地址</label>
+          <label data-i18n="baseUrlLabel">API 地址</label>
           <input type="text" id="baseUrlInput" value="https://ark.cn-beijing.volces.com/api/v3/chat/completions">
         </div>
       </div>
-      <div class="field-note">
+      <div class="field-note" data-i18n="fieldNote">
         接入点 ID 请在火山方舟控制台 → 模型推理 → 你创建的接入点里复制，不是模型展示页上的名字。
       </div>
-      <button class="save-btn" id="saveKeyBtn">保存并连接</button>
+
+      <h3 style="margin-top:18px;" data-i18n="voiceApiTitle">语音 API（可选）</h3>
+      <div class="field-note" data-i18n="voiceApiNote">
+        不填的话，语音输入/朗读会用浏览器自带的语音功能（仅 Chrome/Edge 支持语音输入）。填了之后会改用真正的语音识别和语音合成 API，所有浏览器都能用。目前示例接的是 OpenAI 格式的接口（/v1/audio/transcriptions、/v1/audio/speech），如果你用的是兼容这个格式的代理地址，把下面的地址换掉就行。
+      </div>
+      <div class="field">
+        <label data-i18n="voiceApiKeyLabel">语音 API Key</label>
+        <input type="password" id="voiceApiKeyInput" data-i18n-placeholder="voiceApiKeyPh" placeholder="粘贴你的语音 API Key（可选）">
+      </div>
+      <div class="field">
+        <label data-i18n="voiceApiBaseUrlLabel">语音 API 地址</label>
+        <input type="text" id="voiceApiBaseUrlInput" value="https://api.openai.com">
+      </div>
+
+      <button class="save-btn" id="saveKeyBtn" data-i18n="saveKeyBtn">保存并连接</button>
       <label class="remember-row">
         <input type="checkbox" id="rememberCheck" style="width:auto;">
-        记住这台设备（存在本地浏览器，不上传）
+        <span data-i18n="rememberLabel">记住这台设备（存在本地浏览器，不上传）</span>
       </label>
     </div>
+  </div>
+
+  <div class="session-status" id="sessionStatus" style="display:none;">
+    <span id="statusRoundText">第 0 轮</span>
+    <span class="dot-sep">·</span>
+    <span id="statusPlayersText">0 位玩家</span>
+    <button class="icon-btn" id="inviteBtn" data-i18n-title="inviteBtnTitle" data-i18n-aria="inviteBtnTitle" title="邀请好友" aria-label="邀请好友" style="width:26px;height:26px;font-size:13px;margin-left:auto;">🔗</button>
+    <button class="icon-btn" id="myRoleBtn" data-i18n-title="myRoleBtnTitle" data-i18n-aria="myRoleBtnTitle" title="我的身份" aria-label="我的身份" style="width:26px;height:26px;font-size:13px;display:none;">🎭</button>
   </div>
 
   <div class="messages" id="messages"></div>
@@ -470,66 +1046,350 @@
   <div class="quick-replies" id="quickReplies"></div>
 
   <div class="input-bar">
+    <div class="voice-mode-status" id="voiceModeStatus" style="display:none;"></div>
     <div class="img-preview-strip" id="imgStrip"></div>
     <div class="input-row">
-      <button class="bar-btn" id="imgBtn" title="上传图片" aria-label="上传图片">📷</button>
+      <button class="bar-btn" id="imgBtn" data-i18n-title="uploadImgTitle" data-i18n-aria="uploadImgTitle" title="上传图片" aria-label="上传图片">📷</button>
+      <button class="bar-btn" id="voiceModeBtn" data-i18n-title="voiceModeBtnTitle" data-i18n-aria="voiceModeBtnTitle" title="智能语音对话" aria-label="智能语音对话">🎙️</button>
+      <button class="bar-btn" id="micBtn" data-i18n-title="micTitle" data-i18n-aria="micAria" title="按一下说话" aria-label="语音输入">🎤</button>
       <input type="file" id="fileInput" accept="image/*" multiple style="display:none;">
-      <textarea id="textInput" placeholder="告诉小懵你想玩什么桌游…" rows="1"></textarea>
-      <button class="send-btn" id="sendBtn" aria-label="发送">➤</button>
+      <textarea id="textInput" data-i18n-placeholder="textInputPh" placeholder="告诉小懵你想玩什么桌游…" rows="1"></textarea>
+      <button class="send-btn" id="sendBtn" data-i18n-aria="sendBtnAria" aria-label="发送">➤</button>
     </div>
   </div>
 
 </div>
 
-<script>
-/* ===== Mascot — real illustrated character, crossfaded between expression states ===== */
-const MASCOT_FACE = {
-  idle: "assets/face/idle.png",
-  thinking: "assets/face/thinking.png",
-  talking: "assets/face/talking.png",
-  error: "assets/face/error.png",
-};
-const MASCOT_BODY = {
-  idle: "assets/body/idle.png",
-  thinking: "assets/body/thinking.png",
-  talking: "assets/body/talking.png",
-  error: "assets/body/error.png",
-};
+</div>
 
-/* MASCOT_FACE (header, circular head-shoulders crop) and MASCOT_BODY (chat area, standalone full-body, transparent bg) */
+<div class="modal-overlay" id="newSessionModal">
+  <div class="modal-box">
+    <h3 data-i18n="heroTitle">开始新的一局</h3>
+    <div class="field">
+      <label data-i18n="gameNameLabel">桌游名称</label>
+      <input type="text" id="newGameNameInput" data-i18n-placeholder="gameNamePh" placeholder="例如：卡坦岛">
+    </div>
+    <div class="field">
+      <label data-i18n="modeLabel">主持方式</label>
+      <select id="newGameModeInput"></select>
+    </div>
+    <div class="field">
+      <label data-i18n="playersFieldLabel">玩家（用逗号分隔，第一位默认是房主）</label>
+      <input type="text" id="newGamePlayersInput" data-i18n-placeholder="playersFieldPh" placeholder="例如：小明, 小红, 小刚">
+    </div>
+    <label class="remember-row">
+      <input type="checkbox" id="newGameOnlineInput" style="width:auto;">
+      <span data-i18n="createRoomLabel">创建在线房间，邀请好友用各自的手机加入</span>
+    </label>
+    <div class="modal-actions">
+      <button class="modal-cancel-btn" id="cancelNewSessionBtn" data-i18n="cancelBtn">取消</button>
+      <button class="save-btn" id="confirmNewSessionBtn" data-i18n="startBtn">开始</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="historyModal">
+  <div class="modal-box modal-box-wide">
+    <div class="modal-header-row">
+      <h3 id="historyModalTitle" data-i18n="historyModalTitle">对局记录</h3>
+      <button class="icon-btn" id="closeHistoryModalBtn" data-i18n-aria="closeAria" aria-label="关闭">×</button>
+    </div>
+    <div class="modal-content" id="historyModalContent"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="inviteModal">
+  <div class="modal-box modal-box-wide">
+    <div class="modal-header-row">
+      <h3 data-i18n="inviteModalTitle">邀请好友</h3>
+      <button class="icon-btn" id="closeInviteModalBtn" data-i18n-aria="closeAria" aria-label="关闭">×</button>
+    </div>
+    <div class="modal-content" id="inviteModalContent"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="myRoleModal">
+  <div class="modal-box">
+    <div class="modal-header-row">
+      <h3 data-i18n="myRoleModalTitle">我的身份</h3>
+      <button class="icon-btn" id="closeMyRoleModalBtn" data-i18n-aria="closeAria" aria-label="关闭">×</button>
+    </div>
+    <div class="modal-content" id="myRoleModalContent"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="genreModal">
+  <div class="modal-box modal-box-wide">
+    <div class="modal-header-row">
+      <h3 id="genreModalTitle">桌游类型</h3>
+      <button class="icon-btn" id="closeGenreModalBtn" data-i18n-aria="closeAria" aria-label="关闭">×</button>
+    </div>
+    <div class="modal-content" id="genreModalContent"></div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+/* ===== Real backend: Firebase Firestore =====
+   This is what makes invites actually cross-device: a room document lives
+   in the cloud, and a second phone opening the invite link reads it live.
+
+   To turn this on:
+   1. Go to https://console.firebase.google.com → create a free project.
+   2. Inside it, add a "Web app" (</> icon) — no billing needed for this scale.
+   3. It will show you a firebaseConfig object. Paste its contents below.
+   4. In the Firebase console, go to Firestore Database → Create database
+      (start in test mode is fine to try it, then lock down rules later).
+   These values are safe to expose in client-side code — Firestore security
+   is enforced by server-side rules, not by keeping this object secret.
+
+   Until this is filled in, the app still runs fine: game hosting, chat,
+   round logging etc. all work as before. Only the "invite a friend on
+   their own phone" feature needs this — without it, the invite modal
+   shows a setup banner and falls back to a local-only (this device only)
+   room so nothing breaks. */
+const firebaseConfig = {
+  apiKey: "AIzaSyBhc6z7dgU-pwD9sCpG_NL1Lb38e9qxrHE",
+  authDomain: "boardgame-2c64c.firebaseapp.com",
+  projectId: "boardgame-2c64c",
+  storageBucket: "boardgame-2c64c.firebasestorage.app",
+  messagingSenderId: "273207734322",
+  appId: "1:273207734322:web:262d7e7947c3eda0320c2b",
+};
+let fbDb = null;
+let firebaseReady = false;
+try{
+  if(firebaseConfig.apiKey && window.firebase){
+    firebase.initializeApp(firebaseConfig);
+    fbDb = firebase.firestore();
+    firebaseReady = true;
+  }
+}catch(e){
+  console.warn('Firebase 初始化失败，邀请功能会退回本机模式：', e);
+}
+
+/* Firestore calls can hang indefinitely (no resolve, no reject) on some
+   networks/browsers instead of failing fast — race against a timeout so
+   the UI always ends up in a resolved state instead of stuck spinners. */
+function withTimeout(promise, ms, label){
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error((label || 'operation') + ' timed out')), ms))
+  ]);
+}
+
+function genRoomCode(){
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let s = '';
+  for(let i=0;i<5;i++) s += chars[Math.floor(Math.random()*chars.length)];
+  return s;
+}
+
+/* Creates (or re-fetches) the cloud room doc for a session. Falls back to
+   a local-only room object (works only on this device/tab) if Firebase
+   isn't configured yet — the UI treats both the same way except for a
+   setup banner. */
+async function ensureRoom(game, session){
+  if(session.roomCode){
+    if(firebaseReady){
+      try{
+        const doc = await withTimeout(fbDb.collection('rooms').doc(session.roomCode).get(), 10000, 'read room');
+        if(doc.exists) return Object.assign({ isCloud: true }, doc.data());
+      }catch(e){ console.warn('read room failed', e); }
+    } else {
+      return session.localRoom || null;
+    }
+  }
+  const roomCode = genRoomCode();
+  const roomData = {
+    roomCode,
+    gameId: game.id,
+    gameName: game.name,
+    mode: game.mode || 'player_led',
+    hostName: (session.players[0] && session.players[0].name) || '房主',
+    agentName,
+    createdAt: Date.now(),
+    status: 'open',
+    players: session.players.map(p => ({ name: p.name, ready: !!p.ready, isHost: !!p.isHost })),
+    messages: []
+  };
+  session.roomCode = roomCode;
+  if(firebaseReady){
+    try{
+      await withTimeout(fbDb.collection('rooms').doc(roomCode).set(roomData), 10000, 'create room');
+      roomData.isCloud = true;
+    }catch(e){
+      console.warn('createRoom failed or timed out, falling back to local-only room', e);
+      session.localRoom = roomData;
+    }
+  } else {
+    session.localRoom = roomData;
+  }
+  saveGamesStore();
+  return roomData;
+}
+
+async function joinRoomAsPlayer(roomCode, playerName){
+  if(firebaseReady){
+    const ref = fbDb.collection('rooms').doc(roomCode);
+    await withTimeout(fbDb.runTransaction(async (tx) => {
+      const doc = await tx.get(ref);
+      if(!doc.exists) throw new Error('房间不存在或已关闭');
+      const data = doc.data();
+      const players = data.players || [];
+      if(!players.find(p => p.name === playerName)){
+        players.push({ name: playerName, ready: false, isHost: false });
+        tx.update(ref, { players });
+      }
+    }), 10000, 'join room');
+    return true;
+  }
+  return false;
+}
+
+async function setPlayerReadyState(roomCode, playerName, ready){
+  if(!firebaseReady) return;
+  const ref = fbDb.collection('rooms').doc(roomCode);
+  await fbDb.runTransaction(async (tx) => {
+    const doc = await tx.get(ref);
+    if(!doc.exists) return;
+    const data = doc.data();
+    const players = (data.players || []).map(p => p.name === playerName ? Object.assign({}, p, { ready }) : p);
+    tx.update(ref, { players });
+  });
+}
+
+async function sendRoomMessage(roomCode, message){
+  if(!firebaseReady) return false;
+  await fbDb.collection('rooms').doc(roomCode).update({
+    messages: firebase.firestore.FieldValue.arrayUnion(message)
+  });
+  return true;
+}
+
+function listenToRoom(roomCode, cb){
+  if(!firebaseReady) return () => {};
+  return fbDb.collection('rooms').doc(roomCode).onSnapshot(doc => {
+    if(doc.exists) cb(Object.assign({ isCloud: true }, doc.data()));
+  });
+}
+
+/* Private per-player role delivery. Stored as one document per player
+   inside the room's "roles" subcollection so each phone only ever queries
+   its own document. NOTE: without Firebase Auth wired up, this is
+   obscurity (you need to know the room code + your own name), not a hard
+   security guarantee — anyone with direct Firestore access to the project
+   could still read other players' role docs. Locking this down fully
+   needs auth-based security rules, which is a reasonable next step once
+   the basic flow is confirmed working. */
+async function assignPrivateRole(roomCode, playerName, roleText){
+  if(!firebaseReady) return;
+  await fbDb.collection('rooms').doc(roomCode).collection('roles').doc(playerName).set({
+    role: roleText, assignedAt: Date.now()
+  });
+}
+function listenToMyRole(roomCode, playerName, cb){
+  if(!firebaseReady) return () => {};
+  return fbDb.collection('rooms').doc(roomCode).collection('roles').doc(playerName).onSnapshot(doc => {
+    if(doc.exists) cb(doc.data());
+  });
+}
+
+/* ===== Mascot — pixel-art cat, drawn as inline SVG (no image assets) ===== */
+
+/* 16x16 shared silhouette. '.' = transparent. Colors resolved via PIXEL_CAT_PALETTE. */
+const PIXEL_CAT_BASE = [
+  "....B......B....",
+  "...BB......BB...",
+  "..BBBE....EBBB..",
+  ".BBBBB....BBBBB.",
+  "..BBBBBBBBBBBB..",
+  ".BBBBBBBBBBBBBB.",
+  ".BBBBBBBBBBBBBB.",
+  ".BBBBBBBBBBBBBB.",
+  ".BBBBBBBBBBBBBB.",
+  ".BBBBBBBBBBBBBB.",
+  "..BBBBBBBBBBBB..",
+  "..BBBBBBBBBBBB..",
+  "...BBBBBBBBBB...",
+  "....BBBBBBBB....",
+  ".....BBBBBB.....",
+  ".....BBBBBB.....",
+];
+const PIXEL_CAT_PALETTE = {
+  B: 'var(--coral)',
+  E: 'var(--dazed)',
+  K: 'var(--ink)',
+};
+function catRow(setters){
+  const arr = new Array(16).fill('.');
+  Object.keys(setters).forEach(col => { arr[+col] = setters[col]; });
+  return arr.join('');
+}
+function catOverlay(map){
+  const rows = [];
+  for(let y = 0; y < 16; y++) rows.push(map[y] || '');
+  return rows;
+}
+/* per-state eyes/mouth overlay, drawn on top of the shared silhouette */
+const PIXEL_CAT_STATES = {
+  idle: catOverlay({
+    6: catRow({4:'K', 11:'K'}),
+    9: catRow({7:'K', 8:'K'}),
+  }),
+  thinking: catOverlay({
+    6: catRow({4:'K', 5:'K', 10:'K', 11:'K'}),
+    9: catRow({6:'K', 7:'K', 8:'K'}),
+  }),
+  talking: catOverlay({
+    6: catRow({4:'K', 11:'K'}),
+    9: catRow({6:'K', 7:'K', 8:'K', 9:'K'}),
+    10: catRow({7:'K', 8:'K'}),
+  }),
+  error: catOverlay({
+    5: catRow({3:'K', 5:'K', 10:'K', 12:'K'}),
+    6: catRow({4:'K', 11:'K'}),
+    9: catRow({6:'K', 9:'K'}),
+    10: catRow({7:'K', 8:'K'}),
+  }),
+};
 const MASCOT_STATES = ['idle','thinking','talking','explaining','error'];
 function resolveImageKey(state){
-  // 'explaining' reuses the 'talking' portrait (no distinct art asset for it)
+  // 'explaining' reuses the 'talking' expression (no distinct pose for it)
   if(state === 'explaining') return 'talking';
   return MASCOT_STATES.includes(state) ? state : 'idle';
 }
 
-function mascotFaceHTML(state){
+function pixelCatSVG(state){
   const key = resolveImageKey(state);
-  const imgs = Object.keys(MASCOT_FACE).map(k => {
-    const active = k === key ? ' active' : '';
-    return `<img data-key="${k}" class="${active.trim()}" src="${MASCOT_FACE[k]}" alt="" />`;
-  }).join('');
-  return `<div class="mascot-face anim-${state}" role="img" aria-label="小懵表情：${state}">${imgs}</div>`;
+  const overlay = PIXEL_CAT_STATES[key] || PIXEL_CAT_STATES.idle;
+  let rects = '';
+  for(let y = 0; y < 16; y++){
+    for(let x = 0; x < 16; x++){
+      const overlayChar = overlay[y] ? overlay[y][x] : undefined;
+      const c = (overlayChar && overlayChar !== '.') ? overlayChar : PIXEL_CAT_BASE[y][x];
+      if(c === '.') continue;
+      rects += `<rect x="${x}" y="${y}" width="1" height="1" fill="${PIXEL_CAT_PALETTE[c]}"/>`;
+    }
+  }
+  return `<svg viewBox="0 0 16 16" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg">${rects}</svg>`;
+}
+
+function mascotFaceHTML(state){
+  return `<div class="mascot-face anim-${state}" role="img" aria-label="${t('mascotAriaLabel', state)}">${pixelCatSVG(state)}</div>`;
 }
 
 function mascotBodyHTML(state, heightPx){
-  const key = resolveImageKey(state);
   const h = heightPx || 56;
-  const imgs = Object.keys(MASCOT_BODY).map(k => {
-    const active = k === key ? ' active' : '';
-    return `<img data-key="${k}" class="${active.trim()}" src="${MASCOT_BODY[k]}" alt="" />`;
-  }).join('');
-  return `<div class="mascot-body anim-${state}" style="height:${h}px;" role="img" aria-label="小懵表情：${state}">${imgs}</div>`;
+  return `<div class="mascot-body anim-${state}" style="height:${h}px;" role="img" aria-label="${t('mascotAriaLabel', state)}">${pixelCatSVG(state)}</div>`;
 }
 
 function updateMascotEl(container, state){
-  const key = resolveImageKey(state);
   const base = container.classList.contains('mascot-face') ? 'mascot-face' : 'mascot-body';
   container.className = base + ' anim-' + state;
-  container.querySelectorAll('img').forEach(img => {
-    img.classList.toggle('active', img.dataset.key === key);
-  });
+  container.setAttribute('aria-label', t('mascotAriaLabel', state));
+  container.innerHTML = pixelCatSVG(state);
 }
 
 function setMascotState(state){
@@ -549,6 +1409,14 @@ function setMascotState(state){
       updateMascotEl(emptyMascot.querySelector('.mascot-body'), state);
     }
   }
+  const dashWrap = document.getElementById('dashMascotWrap');
+  if(dashWrap){
+    if(!dashWrap.querySelector('.mascot-face')){
+      dashWrap.innerHTML = mascotFaceHTML(state);
+    } else {
+      updateMascotEl(dashWrap.querySelector('.mascot-face'), state);
+    }
+  }
 }
 
 /* static per-message avatar — captures current expression, does not animate/update later */
@@ -557,9 +1425,10 @@ function mascotAvatarHTML(state){
 }
 
 /* ===== System prompt ===== */
-const SYSTEM_PROMPT = `# 角色设定
+function buildSystemPrompt(){
+return `# 角色设定
 
-你是一名名叫"小懵"的 AI 桌游主持人。你的性格有点小迷糊、偶尔会歪头愣一下，但对规则非常认真负责——你会诚实说"这条我不确定"，绝不会瞎编。你不是冷冰冰的规则说明书，而是坐在桌边陪玩家玩的主持人搭子。
+你是一名名叫"${agentName}"的 AI 桌游主持人。你的性格有点小迷糊、偶尔会歪头愣一下，但对规则非常认真负责——你会诚实说"这条我不确定"，绝不会瞎编。你不是冷冰冰的规则说明书，而是坐在桌边陪玩家玩的主持人搭子。
 
 你的任务是帮助第一次接触某款桌游的玩家快速开始游戏，并在整局游戏中持续提供主持、规则解释、流程提醒、状态记录和结算帮助。
 
@@ -629,6 +1498,19 @@ const SYSTEM_PROMPT = `# 角色设定
 第四阶段（开局教学）：只讲第一回合需要的内容。
 第五阶段（逐回合主持）：格式为（每项都只写一行，不展开）——
 
+处理玩家上一轮的选择、公布结果时，按这个顺序输出：
+
+1）如果这个结果可以拆成不止一个具体行动（比如"出杀→对方没闪→扣血"算两三个行动），每个行动各写一个区块，可以有多个：
+【行动】
+玩家：谁做的
+目标：针对谁（没有目标写"无"）
+行动：做了什么（如"出杀""移动到森林""结算本回合收入"）
+结果：具体发生了什么，尽量写出数值变化（如"体力 4→3""获得 2 金币"）。如果你还不确定具体数值，不要编造，先写"待确认"，并紧接着用一句话问玩家要这个数字（例如"你现在血量还剩多少？"），等玩家回答后再在后面的消息里补上确切数值。
+
+2）再用一行给这轮一个简短总结：
+【上轮结果】一句话总结这轮发生的事（游戏刚开始、还没有上一轮时可以省略这一行和上面的【行动】区块）
+
+3）最后展示下一轮：
 【第 X 轮｜玩家名称的回合】
 当前阶段：（一行）
 玩家现在需要做什么：（一行）
@@ -642,9 +1524,24 @@ const SYSTEM_PROMPT = `# 角色设定
 【原因】最多 1-2 句，简单说明
 【现在怎么做】一句话，下一步动作
 
-第七阶段（状态记录）：维护轮次、玩家、分数、资源、公共目标、已触发事件等，每次更新用一行简短确认，不写额外说明。
+第七阶段（状态记录）：维护轮次、玩家、分数、资源、公共目标、已触发事件等。所有体力/分数/资源/位置的具体数值必须来自玩家明确告诉你的信息，或玩家上传的图片——不能自己假设或编造；不确定就直接追问（例如"现在血量还剩多少？"），确认后按第五阶段的【行动】格式记录。日常确认只需一行，不写额外说明。
 
 第八阶段（结算）：触发结束条件时主动提醒，逐项指导计算基础分、目标分、资源换算、奖励分、扣分项、平局规则，每项一行数字，最后公布结果，总结控制在 2-3 句话内。
+
+# 隐藏身份与私密角色
+
+如果这局游戏有阵营对抗或隐藏身份（例如阿瓦隆、狼人杀、秘密希特勒、三国杀、谁是卧底、血染钟楼类的说书人游戏），并且已经知道全部玩家的名字，在正式进入第一轮之前需要给每位玩家分配一个私密身份。分配时机只出现一次，通常紧跟在摆放/开局教学之后、第一轮开始之前。
+
+分配身份时，必须用下面这个格式，一位玩家一个区块，紧挨着输出，不要在区块之间插入别的话：
+【身份分配】
+玩家：<玩家名字>
+身份：<身份名称>
+说明：<这个身份仅对该玩家有意义的私密信息，比如队友是谁、目标是谁、能力是什么，一到两句话>
+
+这个区块之后会被系统自动摘除、只私下发给对应玩家本人，不会出现在其他人能看到的聊天记录里。所以：
+- 区块前后的其他文字里，绝对不能提前用语言点破任何一位玩家具体是什么身份（比如不能说"小红是刺客"），保持悬念。
+- 如果这局游戏没有隐藏身份，永远不要输出这个区块。
+- 中途如果需要私下提醒某位玩家的身份信息（而不是重新分配），同样用这个格式，只写这一位玩家的区块即可。
 
 # 模式设置
 
@@ -652,16 +1549,293 @@ const SYSTEM_PROMPT = `# 角色设定
 
 # 首次开场白
 
-"嗨，我是你们今天的 AI 桌游主持人小懵 🎲（呃，稍等我晃个神——好啦准备好了！）
+"嗨，我是你们今天的 AI 桌游主持人${agentName} 🎲（呃，稍等我晃个神——好啦准备好了！）
 把桌游名称告诉我，或者拍一下游戏盒封面，我可以带你们完成规则介绍、桌面摆放和整局游戏。
 今天有几位玩家？你们想选择：
 1. 快速学会并马上开玩
 2. 从摆放开始全程主持
 3. 只查询某条规则"`;
+}
+
+/* ===== AI facilitation modes — how Xiaomeng shows up for a given game ===== */
+const FACILITATION_MODES = {
+  ai_hosted: {
+    id: 'ai_hosted', icon: '🎙️', label: 'AI 全程主持',
+    tagline: 'AI 主持人讲规则、主持流程、追踪隐藏信息',
+    roleDesc: 'AI 主持人会记住谁是卧底、谁的牌面朝下，按流程逐步公布结果，不会提前泄露给其他玩家。',
+    examples: [
+      { name: '阿瓦隆', subLabel: 'Full Storyteller' },
+      { name: '三国杀', subLabel: 'Full Storyteller' },
+      { name: '谁是卧底', subLabel: 'Guided Moderator' },
+      { name: '狼人杀', subLabel: 'Full Storyteller' },
+    ],
+    genreTags: ['阵营对抗', '隐藏身份'],
+    en: {
+      label: 'Fully AI-hosted',
+      tagline: 'Your AI host explains rules, runs the flow, and tracks hidden info',
+      roleDesc: 'Your AI host remembers who\'s undercover and whose cards are face-down, revealing results step by step without leaking info to other players.',
+    },
+  },
+  player_led: {
+    id: 'player_led', icon: '♟️', label: '玩家自主策略',
+    tagline: 'AI 主持人讲清规则和摆放，策略决策交给玩家',
+    roleDesc: 'AI 主持人负责教规则、答疑、记分，不替玩家做决策，你们自己轮流行动。',
+    examples: [
+      { name: '卡坦岛' },
+      { name: '璀璨宝石' },
+      { name: '大富翁' },
+    ],
+    genreTags: ['策略', '资源管理'],
+    en: {
+      label: 'Player-led strategy',
+      tagline: 'Your AI host explains rules and setup — the strategic decisions are yours',
+      roleDesc: 'Your AI host teaches the rules, answers questions, and keeps score — it won\'t decide for you, you take turns yourselves.',
+    },
+  },
+  party_team: {
+    id: 'party_team', icon: '🎉', label: '派对团队',
+    tagline: '带节奏、控场计时，适合多人聚会',
+    roleDesc: 'AI 主持人负责出题、计时、判定得分，让派对气氛不冷场。',
+    examples: [
+      { name: '你画我猜' },
+      { name: '猜歌达人' },
+      { name: '桌游版你说我猜' },
+    ],
+    genreTags: ['聚会', '破冰'],
+    en: {
+      label: 'Party & team',
+      tagline: 'Keeps the pace and runs the clock — great for group parties',
+      roleDesc: 'Your AI host sets prompts, runs the timer, and judges scoring so the party never goes quiet.',
+    },
+  },
+  co_op_narrative: {
+    id: 'co_op_narrative', icon: '📖', label: '合作叙事',
+    tagline: '和玩家一起讲故事、共同对抗游戏',
+    roleDesc: 'AI 主持人讲述剧情、扮演 NPC 或系统对手，和所有玩家一起达成合作目标。',
+    examples: [
+      { name: '瘟疫危机' },
+      { name: '侦探社' },
+      { name: '龙与地下城（简化跑团）' },
+    ],
+    genreTags: ['合作', '叙事'],
+    en: {
+      label: 'Co-op narrative',
+      tagline: 'Tells the story alongside you, working together against the game',
+      roleDesc: 'Your AI host narrates the story and plays NPCs or the system opponent, working with everyone toward a shared goal.',
+    },
+  },
+};
+function modeInfo(modeId){
+  return FACILITATION_MODES[modeId] || FACILITATION_MODES.player_led;
+}
+/* Localized view of a facilitation mode — same shape as modeInfo() but
+   with label/tagline/roleDesc swapped to the active appLang. */
+function modeInfoLocalized(modeId){
+  const m = modeInfo(modeId);
+  if(appLang === 'en' && m.en) return { ...m, ...m.en };
+  return m;
+}
+
+/* ===== Board game genres — how players actually think about games, based
+   on the "十二张图带你认识桌游的六大类型" reference. This is the primary
+   browsing axis on the dashboard now (clearer than "how does the AI host"
+   for someone who just wants to find a game). Each genre keeps a
+   defaultMode so a session created from it still has a sensible AI
+   facilitation style under the hood — editable in the new-session modal.
+   Player counts / durations below are general defaults for filtering,
+   not official rules — noted in the UI. */
+const GENRES = {
+  american: {
+    id:'american', icon:'🏚️', defaultMode:'co_op_narrative',
+    label:'美式桌游', keywords:['剧情','战斗','强随机性','模型'],
+    theme:'核心是剧情或战斗：你扮演一个有身份背景的角色，跟随场景剧情随波逐流或过关斩将。精美模型和庞大文字量带来沉浸感。',
+    audience:'喜欢沉浸式体验、合作探索的玩家',
+    en:{
+      label:'American-style', keywords:['Story','Combat','High randomness','Miniatures'],
+      theme:'Centered on story or combat: you play a character with a backstory, riding the scene\'s plot or fighting your way through. Gorgeous miniatures and heavy narrative text create immersion.',
+      audience:'Players who love immersive, cooperative exploration',
+    },
+    examples:[
+      { name:"山中小屋", cover:"👻", playerMin:3, playerMax:6, duration:"约 60 分钟（1.0+ 小时）", blurb:"合作探索一栋闹鬼的房子，中途会突然分裂出叛徒阵营，剧情随机组合，每局体验都不同。", tags:["中等策略","中等时长","恐怖","叛徒机制"],
+        en:{ name:"Betrayal at House on the Hill", blurb:"Cooperatively explore a haunted house — partway through, a traitor faction suddenly splits off, so the story combination is randomized every time.", tags:["Medium strategy","Medium length","Horror","Traitor mechanic"] } },
+      { name:"诡镇奇谈：卡牌游戏", cover:"🐙", playerMin:1, playerMax:2, duration:"约 120 分钟（2.0+ 小时）", blurb:"克苏鲁主题合作解谜卡牌游戏，调查员组建卡组一起对抗古神的威胁，剧情战役感强。", tags:["策略较深","长时间","好评高","合作","组卡对战","双人对战"],
+        en:{ name:"Arkham Horror: The Card Game", blurb:"A Lovecraftian cooperative deduction card game — investigators build decks and team up against the threat of ancient horrors across a story campaign.", tags:["Deep strategy","Long session","Highly rated","Co-op","Deck building","Two-player duel"] } },
+      { name:"幽港迷城", cover:"🗡️", playerMin:1, playerMax:4, duration:"约 120 分钟（2.0+ 小时）", blurb:"战役制地城探索，剧情驱动的合作战斗与角色成长，箱子里塞满了贴纸和解锁内容。", tags:["烧脑硬核","长时间","好评如潮","合作","Legacy剧情","战役"],
+        en:{ name:"Gloomhaven", blurb:"A campaign-based dungeon crawler with story-driven cooperative combat and character growth — the box is packed with stickers and unlockable content.", tags:["Brain-burning","Long session","Critically acclaimed","Co-op","Legacy campaign","Campaign"] } },
+      { name:"瘟疫危机：传承 第一季", cover:"🦠", playerMin:2, playerMax:4, duration:"约 60 分钟（1.0+ 小时）", blurb:"经典合作抗疫游戏的传承版，每一局都会永久改变游戏板和规则，一整年的剧情线一次性揭晓。", tags:["策略较深","中等时长","好评如潮","合作","Legacy剧情","剧情"],
+        en:{ name:"Pandemic Legacy: Season 1", blurb:"A legacy take on the classic co-op disease-fighting game — every session permanently changes the board and rules, unfolding a year-long story arc.", tags:["Deep strategy","Medium length","Critically acclaimed","Co-op","Legacy campaign","Story-driven"] } },
+      { name:"暮光帝国 第四版", cover:"🌌", playerMin:3, playerMax:6, duration:"约 480 分钟（8.0+ 小时）", blurb:"史诗级 4X 太空歌剧，外交、贸易、科技和战争交织，一整天的桌游体验。", tags:["烧脑硬核","史诗时长","好评如潮","外交","史诗"],
+        en:{ name:"Twilight Imperium: Fourth Edition", blurb:"An epic 4X space-opera — diplomacy, trade, tech, and war intertwine for an all-day tabletop experience.", tags:["Brain-burning","Epic length","Critically acclaimed","Diplomacy","Epic"] } },
+      { name:"沙丘：帝权", cover:"🏜️", playerMin:1, playerMax:4, duration:"约 120 分钟（2.0+ 小时）", blurb:"卡牌驱动的放置工人游戏，改编自《沙丘》，阵营博弈与资源争夺同样精彩。", tags:["策略较深","长时间","好评如潮","放置工人","科幻","阵营"],
+        en:{ name:"Dune: Imperium", blurb:"A card-driven worker-placement game set in the world of Dune — faction politics and resource conflict make every turn tense.", tags:["Deep strategy","Long session","Critically acclaimed","Worker placement","Sci-fi","Faction"] } },
+      { name:"星球大战：反抗军", cover:"⭐", playerMin:2, playerMax:4, duration:"约 240 分钟（4.0+ 小时）", blurb:"不对称阵营对抗，帝国搜索反抗军基地，反抗军则要在暗中壮大、伺机反击。", tags:["烧脑硬核","史诗时长","好评如潮","科幻","不对称"],
+        en:{ name:"Star Wars: Rebellion", blurb:"Asymmetric faction warfare — the Empire hunts for the hidden Rebel base while the Rebellion grows in the shadows, waiting to strike back.", tags:["Brain-burning","Epic length","Critically acclaimed","Sci-fi","Asymmetric"] } },
+      { name:"复仇女神号", cover:"👽", playerMin:1, playerMax:5, duration:"约 180 分钟（3.0+ 小时）", blurb:"异形主题合作生存游戏，飞船上人人自危，暗藏的目标和感染让信任变得稀缺。", tags:["策略较深","长时间","好评如潮","合作","推理","生存"],
+        en:{ name:"Nemesis", blurb:"An Alien-inspired co-op survival game aboard a doomed ship — hidden objectives and infection make trust a scarce resource.", tags:["Deep strategy","Long session","Critically acclaimed","Co-op","Deduction","Survival"] } },
+      { name:"漫威冠军：卡牌游戏", cover:"🦸", playerMin:1, playerMax:4, duration:"约 90 分钟（1.5+ 小时）", blurb:"组建你的英雄卡组，合作对抗反派的阴谋，规则清晰、上手比想象中快。", tags:["中等策略","中等时长","好评高","合作","组卡对战","超级英雄"],
+        en:{ name:"Marvel Champions: The Card Game", blurb:"Build your hero deck and team up against a villain's scheme — the rules are clear and easier to pick up than you'd expect.", tags:["Medium strategy","Medium length","Highly rated","Co-op","Deck building","Superhero"] } },
+      { name:"指环王卡牌游戏", cover:"💍", playerMin:1, playerMax:2, duration:"约 60 分钟（1.0+ 小时）", blurb:"合作卡牌游戏，组建远征队踏上中土世界的冒险，剧情扩展丰富，适合长期投入。", tags:["策略较深","中等时长","好评高","合作","组卡对战","双人对战"],
+        en:{ name:"The Lord of the Rings: The Card Game", blurb:"A cooperative card game — build a fellowship and set out on adventures across Middle-earth, with a huge library of story expansions.", tags:["Deep strategy","Medium length","Highly rated","Co-op","Deck building","Two-player duel"] } },
+    ],
+  },
+  german: {
+    id:'german', icon:'📐', defaultMode:'player_led',
+    label:'德式桌游', keywords:['策略','经营','弱随机性','版图'],
+    theme:'核心是算分：获取资源、置换资源、规划路径，可能是建造城镇或运输货物，干每件事之前要想到接下来很多件事。',
+    audience:'热爱动脑、善于思考的玩家',
+    en:{
+      label:'German-style (Euro)', keywords:['Strategy','Economy','Low randomness','Board/map'],
+      theme:'Centered on optimization: acquire resources, convert them, plan routes — maybe building towns or shipping goods. You have to think several moves ahead before every action.',
+      audience:'Players who love thinking deeply and planning ahead',
+    },
+    examples:[
+      { name:"展翅翱翔", cover:"🦜", playerMin:1, playerMax:5, duration:"约 70 分钟（1.1+ 小时）", blurb:"收集鸟类卡牌、经营栖息地，规则轻但策略深，独游体验也很完整。", tags:["中等策略","中等时长","好评高","轮抽","独游友好"],
+        en:{ name:"Wingspan", blurb:"Collect bird cards and build up habitats — light rules with surprising strategic depth, and a great solo experience too.", tags:["Medium strategy","Medium length","Highly rated","Drafting","Great solo"] } },
+      { name:"伯明翰", cover:"🏭", playerMin:2, playerMax:4, duration:"约 120 分钟（2.0+ 小时）", blurb:"工业革命经营，两个时代的产业链与运输网络博弈，公认的重策略欧式神作。", tags:["烧脑硬核","长时间","好评如潮","经营"],
+        en:{ name:"Brass: Birmingham", blurb:"An Industrial Revolution economic game — build supply chains and transport networks across two eras. Widely regarded as a heavy-euro masterpiece.", tags:["Brain-burning","Long session","Critically acclaimed","Economy"] } },
+      { name:"方舟动物园", cover:"🦁", playerMin:1, playerMax:4, duration:"约 120 分钟（2.0+ 小时）", blurb:"建设动物园、规划展区，兼顾保育和吸引力评分，卡牌驱动的引擎构建。", tags:["烧脑硬核","长时间","好评如潮","轮抽","经营"],
+        en:{ name:"Ark Nova", blurb:"Design and run a zoo, planning exhibits while balancing conservation and appeal scoring — a card-driven engine-builder.", tags:["Brain-burning","Long session","Critically acclaimed","Drafting","Economy"] } },
+      { name:"火星移民", cover:"🔴", playerMin:1, playerMax:5, duration:"约 120 分钟（2.0+ 小时）", blurb:"企业竞相改造火星，提升含氧量、气温和海洋覆盖率，科技树玩法极多。", tags:["策略较深","长时间","好评如潮","轮抽","科幻","经营"],
+        en:{ name:"Terraforming Mars", blurb:"Corporations race to terraform Mars — raise oxygen, temperature, and ocean coverage while building out a huge tech tree.", tags:["Deep strategy","Long session","Critically acclaimed","Drafting","Sci-fi","Economy"] } },
+      { name:"万物竞发：文明的进程", cover:"🏛️", playerMin:2, playerMax:4, duration:"约 120 分钟（2.0+ 小时）", blurb:"从石器时代玩到太空竞赛，科技、军事和文化全方位比拼，硬核文明游戏标杆。", tags:["烧脑硬核","长时间","好评如潮","轮抽","文明"],
+        en:{ name:"Through the Ages: A New Story of Civilization", blurb:"Play from the Stone Age to the Space Race — tech, military, and culture all compete. A benchmark hardcore civilization game.", tags:["Brain-burning","Long session","Critically acclaimed","Drafting","Civilization"] } },
+      { name:"灵魂岛", cover:"🌴", playerMin:1, playerMax:4, duration:"约 120 分钟（2.0+ 小时）", blurb:"扮演岛屿上的自然之灵，合作赶走入侵的殖民者，主题独特、每个灵魂玩法都不同。", tags:["烧脑硬核","长时间","好评如潮","合作","不对称"],
+        en:{ name:"Spirit Island", blurb:"Play nature spirits defending an island from invading colonists — cooperative, thematically unique, with every spirit playing differently.", tags:["Brain-burning","Long session","Critically acclaimed","Co-op","Asymmetric"] } },
+      { name:"大西部之路", cover:"🐄", playerMin:2, playerMax:4, duration:"约 150 分钟（2.5+ 小时）", blurb:"赶牛去往堪萨斯城，规划路线、升级牛群、建设铁路网络，德式经营的经典之作。", tags:["烧脑硬核","长时间","好评如潮","经营"],
+        en:{ name:"Great Western Trail", blurb:"Drive cattle to Kansas City — plan your route, upgrade your herd, and build out the rail network. A classic of euro economy design.", tags:["Brain-burning","Long session","Critically acclaimed","Economy"] } },
+      { name:"日蚀：新黎明", cover:"🛰️", playerMin:2, playerMax:6, duration:"约 200 分钟（3.3+ 小时）", blurb:"太空 4X 策略，科技研发、舰队建造和星域争夺一应俱全，规则模块化易于取舍。", tags:["策略较深","史诗时长","好评如潮","科幻"],
+        en:{ name:"Eclipse: Second Dawn for the Galaxy", blurb:"4X space strategy with tech research, fleet building, and territory control — modular rules make it easy to scale the experience.", tags:["Deep strategy","Epic length","Critically acclaimed","Sci-fi"] } },
+      { name:"神秘大地", cover:"⛰️", playerMin:2, playerMax:5, duration:"约 150 分钟（2.5+ 小时）", blurb:"十四个种族在地形各异的版图上开疆拓土，资源转换效率决定胜负，策略深度极高。", tags:["烧脑硬核","长时间","好评高","不对称"],
+        en:{ name:"Terra Mystica", blurb:"Fourteen factions terraform and expand across a varied landscape — resource-conversion efficiency decides the game. Very deep strategy.", tags:["Brain-burning","Long session","Highly rated","Asymmetric"] } },
+      { name:"康科迪亚", cover:"🏺", playerMin:2, playerMax:6, duration:"约 120 分钟（2.0+ 小时）", blurb:"古罗马贸易主题，卡牌驱动的行动选择，规则简洁但路线规划很烧脑。", tags:["策略较深","长时间","好评如潮","轮抽","贸易"],
+        en:{ name:"Concordia", blurb:"A trading game set in ancient Rome — card-driven action selection with simple rules but brain-burning route planning.", tags:["Deep strategy","Long session","Critically acclaimed","Drafting","Trading"] } },
+    ],
+  },
+  wool: {
+    id:'wool', icon:'🧶', defaultMode:'party_team',
+    label:'毛线桌游', keywords:['简单','欢乐','聚会','竞争'],
+    theme:'核心是欢乐：门槛低、上手快，几分钟就能讲完规则，适合多人聚会和碎片时间。',
+    audience:'多人聚会或不想动脑的休闲玩家',
+    en:{
+      label:'Party / Filler Games', keywords:['Simple','Fun','Party','Competitive'],
+      theme:'Centered on fun: low barrier to entry, quick to learn, rules explained in minutes — great for parties and filling spare time.',
+      audience:'Groups looking for casual fun without heavy thinking',
+    },
+    examples:[
+      { name:"染·钟楼谜团", cover:"🕰️", playerMin:5, playerMax:10, duration:"约 90 分钟（1.5+ 小时）", blurb:"阵营对抗与隐藏身份，靠讨论和推理揪出邪恶玩家，需要一位说书人主持。", tags:["策略较深","中等时长","好评高","推理","适合大团","阵营"], mode:'ai_hosted',
+        en:{ name:"Blood on the Clocktower", blurb:"Faction-vs-faction hidden-role game — talk, deduce, and root out the evil players, run by a Storyteller.", tags:["Deep strategy","Medium length","Highly rated","Deduction","Great for big groups","Faction"] } },
+      { name:"代号", cover:"🕵️", playerMin:2, playerMax:8, duration:"约 15 分钟", blurb:"两队靠一个词语给出线索，猜出己方的所有代号卧底，简单又烧脑的聚会神作。", tags:["轻松简单","极速一局","好评高","团队对抗","适合大团","文字"],
+        en:{ name:"Codenames", blurb:"Two teams give one-word clues to guess their agents on the board — simple to learn, surprisingly brain-teasing, a party-game classic.", tags:["Light & simple","Quick round","Highly rated","Team-based","Great for big groups","Word game"] } },
+      { name:"秘密希特勒", cover:"🎩", playerMin:5, playerMax:10, duration:"约 45 分钟", blurb:"阵营隐藏身份游戏，自由派要在混乱中揪出法西斯，气氛紧张又好笑。", tags:["轻松简单","短时间","好评高","推理","适合大团","阵营"], mode:'ai_hosted',
+        en:{ name:"Secret Hitler", blurb:"A hidden-role game of liberals racing to find the fascists before it's too late — tense and hilarious in equal measure.", tags:["Light & simple","Short session","Highly rated","Deduction","Great for big groups","Faction"] } },
+      { name:"情书", cover:"💌", playerMin:2, playerMax:6, duration:"约 20 分钟", blurb:"一副 16 张牌的微型推理游戏，猜测对手手牌，规则一分钟就能讲完。", tags:["轻松简单","极速一局","好评高","轻便"],
+        en:{ name:"Love Letter", blurb:"A tiny 16-card deduction game — guess your opponents' hands. Rules explained in under a minute.", tags:["Light & simple","Quick round","Highly rated","Pocket-sized"] } },
+      { name:"只言片语", cover:"💡", playerMin:3, playerMax:7, duration:"约 20 分钟", blurb:"合作猜词游戏，队友们各自写下一个提示词，重复的提示会被划掉，考验默契。", tags:["轻松简单","极速一局","好评高","合作","默契"],
+        en:{ name:"Just One", blurb:"A cooperative word-guessing game — teammates each write one clue, duplicate clues get crossed out. All about reading each other's minds.", tags:["Light & simple","Quick round","Highly rated","Co-op","Team chemistry"] } },
+      { name:"解密者", cover:"🔐", playerMin:3, playerMax:8, duration:"约 45 分钟", blurb:"两队互猜暗号，用词语提示传递数字密码，既要让队友懂又不能让对方猜到。", tags:["中等策略","短时间","好评高","团队对抗","适合大团","团队"],
+        en:{ name:"Decrypto", blurb:"Two teams decode each other's secret numbers from word clues — hint just enough for your team, not enough for the enemy.", tags:["Medium strategy","Short session","Highly rated","Team-based","Great for big groups","Team"] } },
+      { name:"狼人词语豪华版", cover:"🐺", playerMin:2, playerMax:20, duration:"约 10 分钟", blurb:"狼人杀和猜词的结合，村民要靠是非问题猜出神秘词语，狼人则要蒙混过关。", tags:["轻松简单","极速一局","好评高","推理","适合大团"], mode:'ai_hosted',
+        en:{ name:"Werewords Deluxe Edition", blurb:"A mashup of Werewolf and 20-questions — villagers ask yes/no questions to guess the secret word while the werewolf bluffs along.", tags:["Light & simple","Quick round","Highly rated","Deduction","Great for big groups"] } },
+      { name:"传情画意", cover:"🎨", playerMin:4, playerMax:12, duration:"约 30 分钟", blurb:"画画版传话游戏，你的杰作会在传递中被一次次曲解，最后揭晓时全场爆笑。", tags:["轻松简单","短时间","好评高","适合大团","绘画","欢乐"],
+        en:{ name:"Telestrations", blurb:"A drawing-based game of telephone — your masterpiece gets hilariously mangled as it passes around the table.", tags:["Light & simple","Short session","Highly rated","Great for big groups","Drawing","Hilarious"] } },
+      { name:"骆驼快跑", cover:"🐫", playerMin:3, playerMax:8, duration:"约 45 分钟", blurb:"给赛骆驼下注，骰子决定名次，规则简单但每一轮都充满意外和爆笑瞬间。", tags:["轻松简单","短时间","好评高","适合大团","下注"],
+        en:{ name:"Camel Up", blurb:"Bet on racing camels whose positions are decided by dice — simple rules, but every round brings a new twist.", tags:["Light & simple","Short session","Highly rated","Great for big groups","Betting"] } },
+      { name:"声纳舰长", cover:"🚢", playerMin:2, playerMax:8, duration:"约 45 分钟", blurb:"两队各驾驶一艘潜艇实时对战，角色分工明确，节奏紧张堪比电子游戏。", tags:["中等策略","短时间","好评高","实时紧张","适合大团","团队"],
+        en:{ name:"Captain Sonar", blurb:"Two teams pilot submarines in real time, each player with a distinct role — as tense and fast-paced as a video game.", tags:["Medium strategy","Short session","Highly rated","Real-time","Great for big groups","Team"] } },
+      { name:"UNO", cover:"🎴", playerMin:2, playerMax:10, duration:"约 20 分钟", blurb:"最国民的出牌游戏，配色数字加功能牌，几乎人人都会玩，聚会必备。", tags:["轻松简单","极速一局","适合大团","国民度高"],
+        en:{ name:"UNO", blurb:"The most universally known card game — match colors and numbers, add action cards, and everyone already knows how to play.", tags:["Light & simple","Quick round","Great for big groups","Everyone knows it"] } },
+      { name:"三国杀", cover:"⚔️", playerMin:4, playerMax:8, duration:"约 45 分钟", blurb:"国产身份阵营卡牌游戏，主公、忠臣、反贼、内奸各怀心思，武将技能变化丰富。", tags:["中等策略","短时间","推理","适合大团","阵营","国产"], mode:'ai_hosted',
+        en:{ name:"Legends of the Three Kingdoms", blurb:"A Chinese-made hidden-role card game set in the Three Kingdoms era — lord, loyalists, rebels, and a turncoat all scheme against each other.", tags:["Medium strategy","Short session","Deduction","Great for big groups","Faction","Made in China"] } },
+      { name:"狼人杀（一夜版）", cover:"🌙", playerMin:3, playerMax:10, duration:"约 10 分钟", blurb:"一整局只有一个夜晚和一次白天投票，没有出局，讨论和推理浓缩在几分钟里。", tags:["轻松简单","极速一局","推理","适合大团"], mode:'ai_hosted',
+        en:{ name:"One Night Ultimate Werewolf", blurb:"One night, one day, one vote — no eliminations, and all the deduction and bluffing compressed into just a few minutes.", tags:["Light & simple","Quick round","Deduction","Great for big groups"] } },
+      { name:"谁是卧底", cover:"🎭", playerMin:4, playerMax:12, duration:"约 15 分钟", blurb:"每人拿到一个词语，卧底的词语略有不同，靠描述和投票把卧底揪出来，零道具就能玩。", tags:["极速一局","适合大团","聚会","推理","零道具","国产"], mode:'ai_hosted',
+        en:{ name:"Who's the Undercover", blurb:"Everyone gets a word — the undercover players' word is slightly different. Describe and vote to find them out. No components needed.", tags:["Quick round","Great for big groups","Party","Deduction","No components","Made in China"] } },
+    ],
+  },
+  trpg: {
+    id:'trpg', icon:'🎭', defaultMode:'co_op_narrative',
+    label:'跑团', keywords:['剧情','战斗','角色扮演'],
+    theme:'强调剧情扮演与沉浸感：玩家自己设计任务，跟随主持人推进故事，用自己喜欢的方式冒险，乐趣取决于主持人的临场水平和玩家的脑洞。',
+    audience:'对背景主题感兴趣的固定团队',
+    en:{
+      label:'Tabletop RPG', keywords:['Story','Combat','Role-playing'],
+      theme:'Emphasizes storytelling and immersion: players craft their own quests and follow the game master through the story, adventuring however they like — the fun depends on the GM\'s improvisation and the players\' imagination.',
+      audience:'A steady group interested in a shared setting/theme',
+    },
+    examples:[
+      { name:"龙与地下城", cover:"🐉", playerMin:3, playerMax:6, duration:"2-4 小时/场", blurb:"经典奇幻跑团框架，规则模块丰富，AI 主持人可以扮演地下城主推进剧情。", tags:["长时间","跑团","奇幻","固定团"],
+        en:{ name:"Dungeons & Dragons", blurb:"The classic fantasy TRPG framework with a huge library of rule modules — your AI host can act as Dungeon Master and drive the story.", tags:["Long session","TRPG","Fantasy","Steady group"] } },
+      { name:"克苏鲁的呼唤", cover:"🐙", playerMin:2, playerMax:6, duration:"2-4 小时/场", blurb:"恐怖调查主题跑团，理智值机制让每一次抉择都充满张力，剧情压迫感极强。", tags:["长时间","跑团","恐怖"],
+        en:{ name:"Call of Cthulhu", blurb:"A horror-investigation TRPG — the Sanity mechanic keeps every decision tense, with a heavy, oppressive atmosphere throughout.", tags:["Long session","TRPG","Horror"] } },
+      { name:"蜂蜜大劫案", cover:"🐻", playerMin:3, playerMax:6, duration:"30-60 分钟/场", blurb:"一页纸规则的爆笑跑团，玩家扮演伪装成人类的熊策划一场蜂蜜抢劫，零门槛新手团首选。", tags:["短时间","跑团","轻松简单","新手向","短团"],
+        en:{ name:"Honey Heist", blurb:"A one-page, hilariously simple TRPG — play bears disguised as humans planning a honey heist. The perfect zero-barrier first session.", tags:["Short session","TRPG","Light & simple","Beginner-friendly"] } },
+      { name:"探索者角色扮演游戏", cover:"🗡️", playerMin:3, playerMax:6, duration:"2-4 小时/场", blurb:"脱胎于 D&D 3.5 版规则、自成体系的奇幻跑团系统，角色构筑深度是出了名的丰富。", tags:["长时间","跑团","奇幻","烧脑"],
+        en:{ name:"Pathfinder Roleplaying Game", blurb:"A fantasy TRPG system that grew out of D&D 3.5-era rules — famous for its deep, highly customizable character-building.", tags:["Long session","TRPG","Fantasy","Brainy"] } },
+      { name:"吸血鬼：避世潜藏", cover:"🧛", playerMin:2, playerMax:6, duration:"2-4 小时/场", blurb:"世界黑暗主题跑团，玩家扮演吸血鬼在人类社会的阴影中周旋，权谋与人性挣扎并重。", tags:["长时间","跑团","剧情","固定团"],
+        en:{ name:"Vampire: The Masquerade", blurb:"A World of Darkness TRPG — play vampires navigating human society from the shadows, balancing political intrigue and lingering humanity.", tags:["Long session","TRPG","Story-driven","Steady group"] } },
+    ],
+  },
+  wargame: {
+    id:'wargame', icon:'♜', defaultMode:'player_led',
+    label:'战棋', keywords:['场景','战争','战术','推演'],
+    theme:'桌面沙盘推演：大战场用棋子推演战局，或聚焦小队交锋，共同特点是战争主题、较复杂的规则，以及用骰子结算战斗。',
+    audience:'1v1 爱好者、历史或战争爱好者',
+    en:{
+      label:'Wargame', keywords:['Scenario','War','Tactics','Simulation'],
+      theme:'Tabletop simulation of warfare: large battles fought with pieces on a map, or small-squad skirmishes — sharing a war theme, fairly complex rules, and dice-resolved combat.',
+      audience:'1v1 enthusiasts, history or war buffs',
+    },
+    examples:[
+      { name:"权力的游戏", cover:"🐺", playerMin:3, playerMax:6, duration:"约 240 分钟（4.0+ 小时）", blurb:"阵营割据与外交博弈，改编自冰与火之歌，效忠单位、外交牌和海战交织。", tags:["策略较深","史诗时长","阵营","外交"],
+        en:{ name:"A Game of Thrones: The Board Game", blurb:"Faction warfare and diplomacy adapted from A Song of Ice and Fire — fealty units, diplomacy tokens, and naval combat all in play.", tags:["Deep strategy","Epic length","Faction","Diplomacy"] } },
+      { name:"教改风云", cover:"⛪", playerMin:2, playerMax:6, duration:"约 360 分钟（6.0+ 小时）", blurb:"16 世纪宗教改革历史题材，卡牌驱动的战略博弈，六个阵营各有独特胜利路径。", tags:["烧脑硬核","史诗时长","好评高","历史"],
+        en:{ name:"Here I Stand", blurb:"A 16th-century Reformation-era historical wargame — card-driven strategy where six factions each chase a different path to victory.", tags:["Brain-burning","Epic length","Highly rated","History"] } },
+      { name:"战锤40k：First Strike", cover:"⚔️", playerMin:2, playerMax:2, duration:"约 30 分钟", blurb:"入门对战套装，两支阵营模型的近身战术交锋，规则精简，是接触战棋的好起点。", tags:["策略较深","极速一局","好评高","对战","新手向"],
+        en:{ name:"Warhammer 40,000: First Strike", blurb:"A beginner starter set — two miniature armies clash in close-quarters tactical combat. Streamlined rules make it a great entry point.", tags:["Deep strategy","Quick round","Highly rated","Dueling","Beginner-friendly"] } },
+      { name:"冷战热斗", cover:"🌍", playerMin:2, playerMax:2, duration:"约 180 分钟（3.0+ 小时）", blurb:"美苏冷战主题卡牌驱动战略游戏，历史事件牌左右战局，被誉为战棋类的巅峰之作。", tags:["策略较深","长时间","好评如潮","历史","双人对战"],
+        en:{ name:"Twilight Struggle", blurb:"A card-driven strategy game of the US-Soviet Cold War — historical event cards swing the balance. Widely hailed as a genre pinnacle.", tags:["Deep strategy","Long session","Critically acclaimed","History"] } },
+      { name:"魔戒之战：第二版", cover:"💍", playerMin:2, playerMax:4, duration:"约 180 分钟（3.0+ 小时）", blurb:"还原《指环王》史诗战争，自由人民与黑暗势力的战略对抗，剧情感极强。", tags:["烧脑硬核","长时间","好评如潮","奇幻","阵营"],
+        en:{ name:"War of the Ring: Second Edition", blurb:"Recreates the epic war of The Lord of the Rings — strategic conflict between the Free Peoples and the Shadow, deeply thematic.", tags:["Brain-burning","Long session","Critically acclaimed","Fantasy","Faction"] } },
+      { name:"旭日帝国", cover:"☀️", playerMin:1, playerMax:2, duration:"约 360 分钟（6.0+ 小时）", blurb:"太平洋战争主题卡牌驱动战略游戏，海空协同和资源调度是取胜关键。", tags:["烧脑硬核","史诗时长","好评高","历史","双人对战"],
+        en:{ name:"Empire of the Sun", blurb:"A card-driven strategy game of the Pacific War — coordinating air and naval power is the key to victory.", tags:["Brain-burning","Epic length","Highly rated","History"] } },
+      { name:"末日狂飙", cover:"🚗", playerMin:2, playerMax:8, duration:"约 90 分钟（1.5+ 小时）", blurb:"末日废土赛车战斗，用玩具车改装战斗载具，规则轻松但操作花样很多。", tags:["中等策略","中等时长","好评高","适合大团","载具","欢乐"],
+        en:{ name:"Gaslands", blurb:"Post-apocalyptic vehicular combat racing — convert toy cars into war machines. Light rules but tons of tactical options.", tags:["Medium strategy","Medium length","Highly rated","Great for big groups","Vehicles","Fun"] } },
+      { name:"星球大战：X翼中队", cover:"🚀", playerMin:2, playerMax:2, duration:"约 45 分钟", blurb:"模型对战游戏，驾驶星战宇宙的战机在桌面上缠斗，规则比想象中友好。", tags:["策略较深","短时间","好评如潮","科幻","双人对战"],
+        en:{ name:"Star Wars: X-Wing (Second Edition)", blurb:"A miniatures skirmish game — pilot Star Wars starfighters into tabletop dogfights. Friendlier rules than you'd expect.", tags:["Deep strategy","Short session","Critically acclaimed","Sci-fi"] } },
+      { name:"霜岭战纪", cover:"❄️", playerMin:2, playerMax:8, duration:"约 120 分钟（2.0+ 小时）", blurb:"奇幻小队战棋，法师带领随从在废墟中夺宝，角色可以在战役中持续成长。", tags:["中等策略","长时间","好评高","适合大团","奇幻","养成"],
+        en:{ name:"Frostgrave", blurb:"A fantasy skirmish wargame — wizards and their henchmen loot ruins, with characters growing across a linked campaign.", tags:["Medium strategy","Long session","Highly rated","Great for big groups","Fantasy","Character growth"] } },
+    ],
+  },
+  tcg: {
+    id:'tcg', icon:'🃏', defaultMode:'player_led',
+    label:'TCG（集换式卡牌）', keywords:['卡牌','对战','拆包','市场'],
+    theme:'购买卡包、拆包、组卡组、对战、和其他玩家交易卡牌，整体流程构成集换式卡牌类型，玩家主要分竞技和收藏两种取向。',
+    audience:'收集爱好者、比赛选手型玩家',
+    en:{
+      label:'TCG (Trading Card Game)', keywords:['Cards','Dueling','Booster packs','Marketplace'],
+      theme:'Buy booster packs, open them, build a deck, battle, and trade cards with other players — this loop defines the TCG genre. Players generally lean competitive or collector.',
+      audience:'Collectors and competitive-minded players',
+    },
+    examples:[
+      { name:"游戏王", cover:"🐲", playerMin:2, playerMax:2, duration:"约 20 分钟", blurb:"召唤怪兽、设置陷阱，经典的回合制卡牌对战，全球最经典的 TCG 之一。", tags:["中等策略","极速一局","对战","竞技"],
+        en:{ name:"Yu-Gi-Oh!", blurb:"Summon monsters and set traps in this classic turn-based card duel — one of the most iconic TCGs worldwide.", tags:["Medium strategy","Quick round","Dueling","Competitive"] } },
+      { name:"万智牌", cover:"🔮", playerMin:2, playerMax:2, duration:"约 20 分钟", blurb:"历史最悠久的 TCG，法力费用与色彩组合策略极深，拆包和构筑卡组的乐趣无穷。", tags:["策略较深","极速一局","好评高","对战","竞技","烧脑"],
+        en:{ name:"Magic: The Gathering", blurb:"The longest-running TCG — mana costs and color combinations create deep strategy, with endless fun in packs and deck-building.", tags:["Deep strategy","Quick round","Highly rated","Dueling","Competitive"] } },
+      { name:"宝可梦", cover:"⚡", playerMin:2, playerMax:2, duration:"约 20 分钟", blurb:"亲和度高的入门 TCG，规则简单适合带新手对战，拆卡包本身就充满惊喜。", tags:["中等策略","极速一局","新手向","亲和"],
+        en:{ name:"Pokémon TCG", blurb:"An approachable entry-level TCG — simple rules make it easy to bring in new players, and opening packs is a thrill on its own.", tags:["Medium strategy","Quick round","Beginner-friendly","Friendly"] } },
+      { name:"矩阵奔行者", cover:"💻", playerMin:2, playerMax:2, duration:"约 45 分钟", blurb:"赛博朋克主题非对称 TCG，一方扮演企业防守，一方扮演黑客潜入，心理博弈极深。", tags:["策略较深","短时间","好评高","组卡对战","不对称","烧脑"],
+        en:{ name:"Android: Netrunner", blurb:"A cyberpunk asymmetric TCG — one player defends as a mega-corp, the other infiltrates as a hacker runner. Deep psychological play.", tags:["Deep strategy","Short session","Highly rated","Deck building","Asymmetric","Brainy"] } },
+      { name:"秘境对决：世界冲突", cover:"🗝️", playerMin:2, playerMax:2, duration:"约 45 分钟", blurb:"每副牌都是电脑随机生成的独一无二卡组，不用构筑，开包即玩，节奏轻快。", tags:["策略较深","短时间","好评高","开包即玩"],
+        en:{ name:"KeyForge: Worlds Collide", blurb:"Every deck is uniquely, algorithmically generated — no deck-building needed, just open the pack and play. Fast and casual.", tags:["Deep strategy","Short session","Highly rated","Play out of the box"] } },
+    ],
+  },
+};
 
 let apiKey = '';
 let modelId = '';
 let baseUrl = '';
+let voiceApiKey = '';
+let voiceApiBaseUrl = '';
 let history = [];
 let pendingImages = [];
 let connected = false;
@@ -670,12 +1844,2051 @@ const el = id => document.getElementById(id);
 const messagesEl = el('messages');
 const drawer = el('drawer');
 
+/* ===== Games / Sessions dashboard data store ===== */
+const GAMES_KEY = 'xiaomeng_games_v1';
+let gamesStore = loadGamesStore();
+migrateGamesStore();
+let currentGameId = null;
+let currentSessionId = null;
+let sidebarExpanded = {};
+
+/* Backward-compat migration: early versions stored session.players as a
+   plain string[]; the invite/room system needs objects with ready/host
+   state. Also backfills mode/status fields that didn't exist yet. Runs
+   once on load and is a no-op for already-migrated data. */
+function migrateGamesStore(){
+  let changed = false;
+  (gamesStore.games || []).forEach(game => {
+    if(!game.mode){ game.mode = 'player_led'; changed = true; }
+    (game.sessions || []).forEach(session => {
+      if(session.players && session.players.length && typeof session.players[0] === 'string'){
+        session.players = session.players.map((name, i) => ({ name, ready: false, isHost: i === 0 }));
+        changed = true;
+      }
+      if(!session.status){ session.status = 'active'; changed = true; }
+      if(!session.lastActiveAt){ session.lastActiveAt = session.startedAt; changed = true; }
+    });
+  });
+  if(changed) saveGamesStore();
+}
+
+function loadGamesStore(){
+  try{
+    const raw = localStorage.getItem(GAMES_KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return { games: [] };
+}
+function saveGamesStore(){
+  localStorage.setItem(GAMES_KEY, JSON.stringify(gamesStore));
+}
+function escapeHTML(str){
+  const d = document.createElement('div');
+  d.textContent = str == null ? '' : String(str);
+  return d.innerHTML;
+}
+function formatDate(ts){
+  if(!ts) return '—';
+  const d = new Date(ts);
+  return `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+function findGameByName(name){
+  return gamesStore.games.find(g => g.name === name);
+}
+function findGameById(id){
+  return gamesStore.games.find(g => g.id === id);
+}
+function findSession(gameId, sessionId){
+  const g = findGameById(gameId);
+  if(!g) return null;
+  return g.sessions.find(s => s.id === sessionId) || null;
+}
+function getOrCreateGame(name, mode){
+  let g = findGameByName(name);
+  if(!g){
+    g = { id:'game_'+Date.now()+'_'+Math.random().toString(36).slice(2,7), name, mode: mode || 'player_led', playCount:0, lastPlayed:null, sessions:[] };
+    gamesStore.games.unshift(g);
+  } else if(mode && g.mode !== mode){
+    g.mode = mode;
+  }
+  return g;
+}
+function createSession(gameName, playerNames, mode){
+  const game = getOrCreateGame(gameName, mode);
+  const players = playerNames.map((name, i) => ({ name, ready: false, isHost: i === 0 }));
+  const session = {
+    id:'sess_'+Date.now()+'_'+Math.random().toString(36).slice(2,7),
+    startedAt: Date.now(),
+    lastActiveAt: Date.now(),
+    status: 'active',
+    players: players,
+    roundsPlayed: 0,
+    roomCode: null,
+    rounds: []
+  };
+  game.sessions.unshift(session);
+  game.playCount += 1;
+  game.lastPlayed = Date.now();
+  saveGamesStore();
+  return { game, session };
+}
+function addRoundEntry(gameId, sessionId, info){
+  const session = findSession(gameId, sessionId);
+  if(!session) return;
+  session.rounds.push({
+    round: info.round,
+    player: info.player,
+    phase: info.phase,
+    prompt: info.prompt,
+    action: null,
+    outcome: null,
+    actions: [],
+    ts: Date.now()
+  });
+  saveGamesStore();
+}
+function attachOutcomeToLastRound(gameId, sessionId, outcome){
+  const session = findSession(gameId, sessionId);
+  if(!session || !session.rounds.length || !outcome) return;
+  const last = session.rounds[session.rounds.length - 1];
+  if(last.outcome == null){
+    last.outcome = outcome;
+    saveGamesStore();
+  }
+}
+function parseOutcome(text){
+  const tagged = text.match(/【上轮结果】\s*(.+)/);
+  if(tagged) return tagged[1].trim();
+  // fallback: model may narrate the outcome without the exact tag —
+  // grab any text appearing before the next round header as the recap.
+  const idx = text.indexOf('【第');
+  if(idx > 0){
+    const pre = text.slice(0, idx).trim();
+    if(pre) return pre.split('\n').filter(Boolean).pop().trim();
+  }
+  return null;
+}
+/* Sanguosha-style itemized action log: parses one or more 【行动】 blocks
+   (玩家/目标/行动/结果 each on their own line) out of a reply. Best-effort —
+   if the model doesn't follow the tagged format, this simply returns
+   nothing and the round falls back to the single-line 【上轮结果】 summary.
+   The raw chat bubble always keeps the full untouched text regardless. */
+function parseActions(text){
+  const actions = [];
+  const re = /【行动】\s*\n\s*玩家[:：]\s*(.+?)\s*\n\s*目标[:：]\s*(.+?)\s*\n\s*行动[:：]\s*(.+?)\s*\n\s*结果[:：]\s*(.+?)(?=\n\s*【|\n\s*\n|$)/gs;
+  let m;
+  while((m = re.exec(text)) !== null){
+    actions.push({
+      actor: m[1].trim(),
+      target: m[2].trim(),
+      action: m[3].trim(),
+      result: m[4].trim()
+    });
+  }
+  return actions;
+}
+function attachActionsToLastRound(gameId, sessionId, actions){
+  if(!actions || !actions.length) return;
+  const session = findSession(gameId, sessionId);
+  if(!session || !session.rounds.length) return;
+  const last = session.rounds[session.rounds.length - 1];
+  if(!last.actions) last.actions = [];
+  last.actions.push(...actions);
+  saveGamesStore();
+}
+function fillLastRoundAction(gameId, sessionId, text){
+  const session = findSession(gameId, sessionId);
+  if(!session || !session.rounds.length) return;
+  const last = session.rounds[session.rounds.length - 1];
+  if(last.action == null){
+    last.action = text;
+    saveGamesStore();
+  }
+}
+function parseRoundInfo(text){
+  const roundMatch = text.match(/第\s*(\d+)\s*轮[｜|]?\s*([^\n，,】]+?)的回合/);
+  if(!roundMatch) return null;
+  const phaseMatch = text.match(/当前阶段[:：]\s*(.+)/);
+  const promptMatch = text.match(/玩家现在需要做什么[:：]\s*(.+)/);
+  return {
+    round: parseInt(roundMatch[1], 10),
+    player: roundMatch[2].trim(),
+    phase: phaseMatch ? phaseMatch[1].trim() : '',
+    prompt: promptMatch ? promptMatch[1].trim() : ''
+  };
+}
+
+/* Hidden-identity role delivery (Avalon / Werewolf / Secret Hitler style):
+   the model emits a 【身份分配】 block listing every player's private role.
+   That block must never reach the shared chat/Firestore mirror — it's
+   parsed out here, delivered per-player via assignPrivateRole(), and the
+   sanitized remainder is what actually gets shown/broadcast. */
+function parseRoleAssignments(text){
+  const roles = [];
+  const blockMatch = text.match(/【身份分配】([\s\S]*?)(?=\n\s*【(?!身份分配)|$)/);
+  if(!blockMatch) return roles;
+  const re = /玩家[:：]\s*(.+?)\s*\n\s*身份[:：]\s*(.+?)\s*\n(?:\s*说明[:：]\s*(.+?)\s*\n)?(?=\s*玩家[:：]|\s*$)/gs;
+  let m;
+  while((m = re.exec(blockMatch[1] + '\n')) !== null){
+    roles.push({ player: m[1].trim(), role: m[2].trim(), note: m[3] ? m[3].trim() : '' });
+  }
+  return roles;
+}
+function stripRoleAssignmentBlock(text){
+  return text.replace(/【身份分配】[\s\S]*?(?=\n\s*【(?!身份分配)|$)/, '').replace(/\n{3,}/g, '\n\n').trim();
+}
+
+/* ===== Dashboard rendering ===== */
+let activeFilters = { mode: '', players: '' };
+
+/* ===== Language toggle: 中文 / English =====
+   appLang controls which language genre definitions, example blurbs/tags,
+   and a handful of fixed UI labels render in. Persisted to localStorage so
+   the choice sticks across visits. GENRES entries carry the Chinese text
+   as their top-level fields and an `en:{...}` sub-object with English
+   equivalents (see GENRES definition above); `g(genre)`/`gx(example)`
+   below pick the right one based on appLang. */
+let appLang = localStorage.getItem('xiaomeng_lang') || 'zh';
+let agentName = localStorage.getItem('xiaomeng_agent_name') || '小懵';
+function setAgentName(name){
+  const trimmed = (name || '').trim();
+  agentName = trimmed || '小懵';
+  localStorage.setItem('xiaomeng_agent_name', agentName);
+  applyStaticTranslations();
+  setMascotState('idle');
+  if(messagesEl && messagesEl.querySelector('.empty-state')) showEmptyState();
+}
+function setAppLang(lang){
+  if(lang !== 'zh' && lang !== 'en') return;
+  appLang = lang;
+  localStorage.setItem('xiaomeng_lang', lang);
+  renderLangToggle();
+  applyStaticTranslations();
+  renderGenreMap();
+  renderContinueRow();
+  renderGamesGrid();
+  renderSearchResults();
+  if(currentGameId && currentSessionId) updateSessionStatusBar();
+  if(el('genreModal') && el('genreModal').classList.contains('show') && currentGenreModalId){
+    openGenreModal(currentGenreModalId);
+  }
+}
+/* Returns the genre's fields in the active language (falls back to zh). */
+function g(genre){
+  if(appLang === 'en' && genre.en) return { ...genre, ...genre.en };
+  return genre;
+}
+/* Returns an example's fields in the active language (falls back to zh). */
+function gx(ex){
+  if(appLang === 'en' && ex.en) return { ...ex, ...ex.en };
+  return ex;
+}
+const UI_STRINGS = {
+  zh: {
+    genreSectionTitle: '按桌游类型找游戏',
+    theme: '主题', audience: '适合人群', playerCountLabel: '你们有几位玩家？',
+    playerCountPh: '例如：4', reqLabel: '其他需求（可选）', reqPh: '例如：想要轻松欢乐 / 带新手',
+    recommendedForYou: '推荐给你', featured: '代表作：', pickBadge: '推荐', startPlaying: '开始这局',
+    noExamples: '这个类型下暂时还没有收录代表作',
+    noMatchNote: (q) => `没有找到和「${q}」直接匹配的标签，已按人数排序，你也可以换个说法试试（比如"轻松""烧脑""合作""时间短"）`,
+    peopleUnit: '人', refNote: '（人数/时长为大致参考，以游戏说明为准）',
+    reasonPlayerCount: (n) => `人数符合（${n} 人）`, reasonBlurb: '简介契合',
+    reasonLong: '时长较长', reasonShort: '时长较短/易上手',
+    viaWiki: '真实图片 · 来自 Wikipedia，仅供参考',
+    searchPh: '搜索桌游名称或标签，比如「UNO」「合作」「烧脑」…',
+    searchNoResults: (q) => `没有找到和「${q}」匹配的桌游，换个关键词试试？`,
+    searchResultsCount: (n) => `找到 ${n} 款桌游`,
+
+    /* ===== App-wide static UI chrome (dashboard, header, drawer, modals) ===== */
+    pageTitle: () => `${agentName} · AI 桌游主持人`,
+    settingsBtnTitle: '设置 API', settingsBtnAria: '设置',
+    heroTitle: '开始新的一局',
+    heroDesc: () => `告诉${agentName}你想玩什么桌游，它会按你选的主持方式带你摆盘、讲规则、走流程。`,
+    heroBtn: '+ 新建对局',
+    entryNewSessionLabel: '新建对局', entrySearchLabel: '搜索',
+    entryContinueLabel: '继续对局', entryLibraryLabel: '我的桌游',
+    continueTitle: '继续最近的对局',
+    myGamesTitle: '我的桌游',
+    filtersToggle: '筛选 ▾',
+    filterModeAll: '全部方式', filterPlayersAny: '不限人数',
+    filterPlayers2: '2 人', filterPlayers34: '3-4 人', filterPlayers58: '5-8 人', filterPlayers8plus: '8 人以上',
+    homeBtnTitle: '返回主页',
+    notConnected: '还没连接模型',
+    voiceToggleTitle: '语音朗读', voiceToggleAria: '语音朗读开关',
+    voiceModeBtnTitle: '智能语音对话（免按键，说完自动发送，AI 回复完自动继续听）',
+    voiceModeOnStatus: '🎙️ 语音对话进行中',
+    voiceModeListeningStatus: '聆听中…说完会自动发送',
+    voiceModeThinkingStatus: () => `${agentName}在想…`,
+    voiceModeSpeakingStatus: () => `${agentName}说话中…（点麦克风可以打断）`,
+    mascotAriaLabel: (state) => `${agentName}表情：${state}`,
+    resetBtnTitle: '重新开始',
+    agentNameSectionTitle: '给 AI 主持人取个名字',
+    agentNamePh: '小懵', agentNameSaveBtn: '改名',
+    drawerTitle: '连接模型（火山方舟 Volcengine Ark）',
+    drawerWarn: '你的 API Key 只保存在<strong>这个浏览器标签页</strong>里，直接从浏览器发到火山方舟，不会经过我或 Anthropic。刷新页面后需要重新粘贴（除非勾选"记住"，那样会存在本机浏览器的 localStorage 里，同样不会离开你的设备）。请不要分享这个文件给别人，也不要把 Key 写死在代码里。',
+    apiKeyLabel: 'API Key', apiKeyPh: '粘贴你的 Ark API Key',
+    endpointLabel: '推理接入点 ID（Endpoint ID）', endpointPh: '例如 ep-20240101-xxxxx',
+    baseUrlLabel: 'API 地址',
+    fieldNote: '接入点 ID 请在火山方舟控制台 → 模型推理 → 你创建的接入点里复制，不是模型展示页上的名字。',
+    voiceApiTitle: '语音 API（可选）',
+    voiceApiNote: '不填的话，语音输入/朗读会用浏览器自带的语音功能（仅 Chrome/Edge 支持语音输入）。填了之后会改用真正的语音识别和语音合成 API，所有浏览器都能用。目前示例接的是 OpenAI 格式的接口（/v1/audio/transcriptions、/v1/audio/speech），如果你用的是兼容这个格式的代理地址，把下面的地址换掉就行。',
+    voiceApiKeyLabel: '语音 API Key', voiceApiKeyPh: '粘贴你的语音 API Key（可选）',
+    voiceApiBaseUrlLabel: '语音 API 地址',
+    saveKeyBtn: '保存并连接',
+    rememberLabel: '记住这台设备（存在本地浏览器，不上传）',
+    inviteBtnTitle: '邀请好友',
+    uploadImgTitle: '上传图片', micTitle: '按一下说话', micAria: '语音输入',
+    textInputPh: () => `告诉${agentName}你想玩什么桌游…`, sendBtnAria: '发送',
+    gameNameLabel: '桌游名称', gameNamePh: '例如：卡坦岛',
+    modeLabel: '主持方式',
+    playersFieldLabel: '玩家（用逗号分隔，第一位默认是房主）', playersFieldPh: '例如：小明, 小红, 小刚',
+    createRoomLabel: '创建在线房间，邀请好友用各自的手机加入',
+    cancelBtn: '取消', startBtn: '开始',
+    historyModalTitle: '对局记录', closeAria: '关闭',
+    inviteModalTitle: '邀请好友',
+    myRoleModalTitle: '我的身份',
+    myRoleBtnTitle: '我的身份',
+    roundLabel: (n) => `第 ${n} 轮`, playersCountLabel: (n) => `${n} 位玩家`,
+    connectedAs: (id) => `已连接 · ${id}`,
+    micNotSupportedTitle: '这个浏览器不支持语音输入（建议用 Chrome / Edge）',
+    removeImgAria: '移除图片',
+    emptyStateTitle: () => `${agentName}还在等你连接模型`,
+    emptyStateDesc: () => `点右上角 ⚙ 填一下火山方舟的 API Key，${agentName}就能陪你摆棋盘、讲规则、算分数啦`,
+    notConnectedDetail: '请先点右上角 ⚙ 设置并保存你的 API Key，再开始这局。',
+    notConnectedDetailShort: '请先点右上角 ⚙ 设置并保存你的 API Key',
+    resumeSessionNote: (name) => `继续「${name}」的这局 — 之前的完整对话没有保存，但轮次记录都在，你可以点「对局记录」查看，或直接告诉${agentName}你们现在的进度。`,
+    voiceUnsupportedNote: '这个浏览器不支持语音输入，建议用 Chrome 或 Edge 试试。',
+    micDeniedNote: '麦克风权限被拒绝，请在浏览器设置里允许访问麦克风后再试。',
+    voiceErrorNote: (err) => `语音识别出错了：${err}`,
+    resetConfirm: '重新开始会清空当前对话记录，确定吗？',
+    fillGameNameAlert: '请填写桌游名称',
+    fillNameAlert: '请填写你的名字',
+    noBackendAlert: '这个房间还没连接真实后端，暂时无法在别的设备上加入。请让房主先在 index.html 里配置 Firebase。',
+    joinFailedAlert: (msg) => `加入失败：${msg}`,
+    noModelReplyError: '模型没有返回内容，请检查接入点 ID 是否正确',
+    corsErrorDetail: 'Failed to fetch —— 很可能是浏览器 CORS 限制，浏览器不允许网页直接调用火山方舟接口。需要一个服务器中转（proxy）才能绕开，不是你的 Key 或模型 ID 填错了。',
+    requestFailedTitle: '请求失败',
+    quickReplyDone: '完成了', quickReplyNotYet: '还没有', quickReplyQuestion: '我有问题',
+    playersMeta: (n, r) => `${n} 人 · ${r} 轮`,
+    lastPlayedMeta: (date, count) => `最近：${date} · 共玩 ${count} 次`,
+    noGamesEmpty: '还没有符合条件的桌游记录<br>点上面「+ 新建对局」开始第一局吧',
+    noSessionsYet: '暂无历史对局',
+    sessionOngoing: '进行中', sessionEnded: '已结束',
+    noRoundsYet: '这局还没有回合记录',
+    roundNumLabel: (n) => `第 ${n} 轮`,
+    phaseLabel: '阶段：', promptLabel: '提示：', playerReplyLabel: '玩家回复：',
+    resultLabel: '结果：', unconfirmedFlag: '⚠ 待确认',
+    notRecorded: '（未记录）',
+    noItemizedLog: '（还没有逐条记录，完整对话仍保留在聊天记录里）',
+    noBackendBanner: '⚠ 还没连接真实后端：这个邀请链接目前只在这台设备上有效。要让朋友在自己手机上实时看到房间和角色，需要在 index.html 顶部的 firebaseConfig 里填入一个免费 Firebase 项目的配置（详见代码注释）。',
+    roomCodeLabel: '房间码', copyLinkBtn: '复制链接', copiedFeedback: '已复制 ✓',
+    playersHeading: (n) => `玩家（${n} 人）`,
+    hostTag: '（房主）', readyTag: '已准备', waitingTag: '等待中',
+    localOnlyNote: '本机模式下暂不支持真实的「加入」——链接分享给朋友后，他们打开会看到房间信息，但需要真实后端才能各自领取角色。',
+    roomNotFoundTitle: '找不到这个房间',
+    roomNotFoundDesc: (code) => `房间码 ${code} 无效，或者房主还没打开 ${agentName} 创建这局。请确认链接没有过期，或联系房主重新发一个邀请。`,
+    yourNamePh: '你的名字', joinBtn: '加入这局',
+    helloPlayer: (name) => `你好，${name}`,
+    yourRoleLabel: '你的身份 · 仅你自己可见',
+    waitingForRole: '等待房主分配身份…',
+    readyBtnDone: '已准备 ✓', readyBtnPending: '点击表示准备好了',
+    joinChatInputPh: () => `给${agentName}发消息…`, joinChatSendBtn: '发送',
+    crossDeviceUnavailableTitle: '这个邀请链接还不能跨设备使用',
+    roomCodeIs: (code) => `房间码：${code}`,
+    noFirebaseDesc: () => `创建这局的 ${agentName} 还没有配置真实后端（Firebase），所以邀请目前只能在房主自己的设备上使用。让房主看看 index.html 顶部的 firebaseConfig 说明就能打开这个功能。`,
+    hostLabel: (name) => `房主：${name}`,
+    alreadyJoinedCount: (n) => `已有 ${n} 人`,
+    connectingRoom: '正在连接房间…',
+    qrAlt: '房间二维码',
+    ttsUnsupportedTitle: '这个浏览器不支持语音朗读',
+    voiceOnTitle: '朗读已开启（点击关闭）', voiceOffTitle: '朗读已关闭（点击开启）',
+    youLabel: '你',
+  },
+  en: {
+    genreSectionTitle: 'Browse by Genre',
+    theme: 'Theme', audience: 'Best for', playerCountLabel: 'How many players?',
+    playerCountPh: 'e.g. 4', reqLabel: 'Other preferences (optional)', reqPh: 'e.g. light & fun / new players',
+    recommendedForYou: 'Recommended for you', featured: 'Featured: ', pickBadge: 'Pick', startPlaying: 'Start playing',
+    noExamples: 'No featured titles for this genre yet',
+    noMatchNote: (q) => `No exact tag match for "${q}" — sorted by player count instead. Try another word (e.g. "light", "brainy", "co-op", "short")`,
+    peopleUnit: ' players', refNote: ' (player count/duration are rough guides — check the rulebook)',
+    reasonPlayerCount: (n) => `Fits your group (${n} players)`, reasonBlurb: 'Matches description',
+    reasonLong: 'Longer playtime', reasonShort: 'Short & easy to learn',
+    viaWiki: 'Real photo · via Wikipedia, for reference only',
+    searchPh: 'Search by game name or tag, e.g. "UNO", "co-op", "brainy"…',
+    searchNoResults: (q) => `No games matched "${q}" — try a different keyword?`,
+    searchResultsCount: (n) => `${n} games found`,
+
+    /* ===== App-wide static UI chrome (dashboard, header, drawer, modals) ===== */
+    pageTitle: () => `${agentName} · AI Board Game Host`,
+    settingsBtnTitle: 'API settings', settingsBtnAria: 'Settings',
+    heroTitle: 'Start a new session',
+    heroDesc: () => `Tell ${agentName} what board game you want to play — it will set up the table, walk through the rules, and run the session in the mode you pick.`,
+    heroBtn: '+ New session',
+    entryNewSessionLabel: 'New session', entrySearchLabel: 'Search',
+    entryContinueLabel: 'Continue', entryLibraryLabel: 'My games',
+    continueTitle: 'Continue a recent session',
+    myGamesTitle: 'My games',
+    filtersToggle: 'Filters ▾',
+    filterModeAll: 'All modes', filterPlayersAny: 'Any player count',
+    filterPlayers2: '2 players', filterPlayers34: '3-4 players', filterPlayers58: '5-8 players', filterPlayers8plus: '8+ players',
+    homeBtnTitle: 'Back to home',
+    notConnected: 'Not connected to a model yet',
+    voiceToggleTitle: 'Read aloud', voiceToggleAria: 'Toggle read-aloud',
+    voiceModeBtnTitle: 'Hands-free voice mode (no button-holding — auto-sends when you stop talking, auto-listens again after each reply)',
+    voiceModeOnStatus: '🎙️ Voice conversation active',
+    voiceModeListeningStatus: 'Listening… will send automatically when you stop',
+    voiceModeThinkingStatus: () => `${agentName} is thinking…`,
+    voiceModeSpeakingStatus: () => `${agentName} is talking… (tap the mic to interrupt)`,
+    mascotAriaLabel: (state) => `${agentName} expression: ${state}`,
+    resetBtnTitle: 'Start over',
+    agentNameSectionTitle: 'Name your AI host',
+    agentNamePh: 'Xiaomeng', agentNameSaveBtn: 'Rename',
+    drawerTitle: 'Connect a model (Volcengine Ark)',
+    drawerWarn: 'Your API Key is only kept in <strong>this browser tab</strong> and sent straight to Volcengine Ark — it never passes through us or Anthropic. You\'ll need to paste it again after refreshing (unless you check "Remember", which stores it in this browser\'s local storage, still never leaving your device). Please don\'t share this file with others or hard-code the key.',
+    apiKeyLabel: 'API Key', apiKeyPh: 'Paste your Ark API Key',
+    endpointLabel: 'Inference Endpoint ID', endpointPh: 'e.g. ep-20240101-xxxxx',
+    baseUrlLabel: 'API URL',
+    fieldNote: 'Copy the Endpoint ID from the Volcengine Ark console → Model Inference → your endpoint — not the model\'s display name.',
+    voiceApiTitle: 'Voice API (optional)',
+    voiceApiNote: 'Leave this blank to use the browser\'s built-in voice features (voice input only works in Chrome/Edge). Fill it in to use a real speech-to-text/text-to-speech API instead, which works in any browser. This currently talks to an OpenAI-shaped API (/v1/audio/transcriptions, /v1/audio/speech) — if you\'re using a compatible proxy, just swap the URL below.',
+    voiceApiKeyLabel: 'Voice API Key', voiceApiKeyPh: 'Paste your voice API key (optional)',
+    voiceApiBaseUrlLabel: 'Voice API URL',
+    saveKeyBtn: 'Save & connect',
+    rememberLabel: 'Remember on this device (stored locally, never uploaded)',
+    inviteBtnTitle: 'Invite friends',
+    uploadImgTitle: 'Upload image', micTitle: 'Hold to speak', micAria: 'Voice input',
+    textInputPh: () => `Tell ${agentName} what you want to play…`, sendBtnAria: 'Send',
+    gameNameLabel: 'Game name', gameNamePh: 'e.g. Catan',
+    modeLabel: 'Hosting mode',
+    playersFieldLabel: 'Players (comma-separated, first one is the host by default)', playersFieldPh: 'e.g. Alex, Sam, Jordan',
+    createRoomLabel: 'Create an online room so friends can join on their own phones',
+    cancelBtn: 'Cancel', startBtn: 'Start',
+    historyModalTitle: 'Session log', closeAria: 'Close',
+    inviteModalTitle: 'Invite friends',
+    myRoleModalTitle: 'My role',
+    myRoleBtnTitle: 'My role',
+    roundLabel: (n) => `Round ${n}`, playersCountLabel: (n) => `${n} players`,
+    connectedAs: (id) => `Connected · ${id}`,
+    micNotSupportedTitle: 'Voice input isn\'t supported in this browser (try Chrome / Edge)',
+    removeImgAria: 'Remove image',
+    emptyStateTitle: () => `${agentName} is waiting for you to connect a model`,
+    emptyStateDesc: () => `Tap ⚙ in the top right to add your Volcengine Ark API Key, and ${agentName} can start setting up the table, explaining rules, and keeping score.`,
+    notConnectedDetail: 'Please tap ⚙ in the top right to set and save your API Key before starting.',
+    notConnectedDetailShort: 'Please tap ⚙ in the top right to set and save your API Key',
+    resumeSessionNote: (name) => `Resuming "${name}" — the full chat history wasn't saved, but the round log is intact. Check "Session log", or just tell ${agentName} where you left off.`,
+    voiceUnsupportedNote: 'Voice input isn\'t supported in this browser — try Chrome or Edge instead.',
+    micDeniedNote: 'Microphone access was denied — please allow it in your browser settings and try again.',
+    voiceErrorNote: (err) => `Voice recognition error: ${err}`,
+    resetConfirm: 'Starting over will clear the current chat history — are you sure?',
+    fillGameNameAlert: 'Please enter a game name',
+    fillNameAlert: 'Please enter your name',
+    noBackendAlert: 'This room isn\'t connected to a real backend yet, so it can\'t be joined from another device. Ask the host to configure Firebase in index.html first.',
+    joinFailedAlert: (msg) => `Failed to join: ${msg}`,
+    noModelReplyError: 'The model returned no content — please check that the Endpoint ID is correct',
+    corsErrorDetail: 'Failed to fetch — most likely a browser CORS restriction; browsers block direct calls to the Volcengine Ark API from a webpage. A server-side proxy is needed to get around this — it\'s not a wrong Key or model ID.',
+    requestFailedTitle: 'Request failed',
+    quickReplyDone: 'Done', quickReplyNotYet: 'Not yet', quickReplyQuestion: 'I have a question',
+    playersMeta: (n, r) => `${n} players · ${r} rounds`,
+    lastPlayedMeta: (date, count) => `Last played: ${date} · ${count} sessions`,
+    noGamesEmpty: 'No games match yet<br>Tap "+ New session" above to start your first one',
+    noSessionsYet: 'No sessions yet',
+    sessionOngoing: 'Ongoing', sessionEnded: 'Ended',
+    noRoundsYet: 'No rounds recorded for this session yet',
+    roundNumLabel: (n) => `Round ${n}`,
+    phaseLabel: 'Phase: ', promptLabel: 'Prompt: ', playerReplyLabel: 'Player reply: ',
+    resultLabel: 'Result: ', unconfirmedFlag: '⚠ Unconfirmed',
+    notRecorded: '(not recorded)',
+    noItemizedLog: '(no itemized log yet — the full conversation is still in the chat history)',
+    noBackendBanner: '⚠ No real backend connected yet: this invite link currently only works on this device. To let friends see the room and their roles live on their own phones, fill in a free Firebase project\'s config in the firebaseConfig block near the top of index.html (see the code comments).',
+    roomCodeLabel: 'Room code', copyLinkBtn: 'Copy link', copiedFeedback: 'Copied ✓',
+    playersHeading: (n) => `Players (${n})`,
+    hostTag: '(Host)', readyTag: 'Ready', waitingTag: 'Waiting',
+    localOnlyNote: 'Real "joining" isn\'t supported in local-only mode — friends who open the link will see the room info, but need a real backend to claim their own roles.',
+    roomNotFoundTitle: 'Room not found',
+    roomNotFoundDesc: (code) => `Room code ${code} is invalid, or the host hasn\'t opened ${agentName} to create this session yet. Double check the link hasn\'t expired, or ask the host for a new invite.`,
+    yourNamePh: 'Your name', joinBtn: 'Join session',
+    helloPlayer: (name) => `Hi, ${name}`,
+    yourRoleLabel: 'Your role · only visible to you',
+    waitingForRole: 'Waiting for the host to assign roles…',
+    readyBtnDone: 'Ready ✓', readyBtnPending: 'Tap when you\'re ready',
+    joinChatInputPh: () => `Message ${agentName}…`, joinChatSendBtn: 'Send',
+    crossDeviceUnavailableTitle: 'This invite link doesn\'t work across devices yet',
+    roomCodeIs: (code) => `Room code: ${code}`,
+    noFirebaseDesc: 'Whoever created this session hasn\'t configured a real backend (Firebase) yet, so invites currently only work on the host\'s own device. Have the host check the firebaseConfig instructions near the top of index.html to turn this on.',
+    hostLabel: (name) => `Host: ${name}`,
+    alreadyJoinedCount: (n) => `${n} joined`,
+    connectingRoom: 'Connecting to room…',
+    qrAlt: 'Room QR code',
+    ttsUnsupportedTitle: 'Read-aloud isn\'t supported in this browser',
+    voiceOnTitle: 'Read-aloud on (tap to turn off)', voiceOffTitle: 'Read-aloud off (tap to turn on)',
+    youLabel: 'You',
+  },
+};
+function t(key, ...args){
+  const str = (UI_STRINGS[appLang] || UI_STRINGS.zh)[key];
+  return typeof str === 'function' ? str(...args) : str;
+}
+function renderLangToggle(){
+  const box = el('langToggle');
+  if(!box) return;
+  box.innerHTML = `
+    <button type="button" class="lang-btn ${appLang === 'zh' ? 'active' : ''}" data-lang="zh">中文</button>
+    <button type="button" class="lang-btn ${appLang === 'en' ? 'active' : ''}" data-lang="en">English</button>
+  `;
+  box.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.onclick = () => setAppLang(btn.dataset.lang);
+  });
+}
+/* Sweeps the whole page for data-i18n* markers and fills in the active
+   language's UI_STRINGS text. Called on initial render and whenever the
+   language toggle changes, so the entire app (not just the recommend
+   list) switches language together. */
+function applyStaticTranslations(){
+  document.title = t('pageTitle') || document.title;
+  document.documentElement.setAttribute('lang', appLang === 'en' ? 'en' : 'zh-CN');
+  document.querySelectorAll('[data-i18n]').forEach(node => {
+    const key = node.getAttribute('data-i18n');
+    const val = t(key);
+    if(val !== undefined) node.textContent = val;
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(node => {
+    const key = node.getAttribute('data-i18n-html');
+    const val = t(key);
+    if(val !== undefined) node.innerHTML = val;
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(node => {
+    const key = node.getAttribute('data-i18n-placeholder');
+    const val = t(key);
+    if(val !== undefined) node.setAttribute('placeholder', val);
+  });
+  document.querySelectorAll('[data-i18n-title]').forEach(node => {
+    const key = node.getAttribute('data-i18n-title');
+    const val = t(key);
+    if(val !== undefined) node.setAttribute('title', val);
+  });
+  document.querySelectorAll('[data-i18n-aria]').forEach(node => {
+    const key = node.getAttribute('data-i18n-aria');
+    const val = t(key);
+    if(val !== undefined) node.setAttribute('aria-label', val);
+  });
+}
+
+/* Hand-placed positions (% of the map card) for each genre's pin.
+   Swap in real illustrations by dropping files at assets/map/{genreId}.png —
+   the pin falls back to the genre's emoji icon if the image 404s. */
+const GENRE_MAP_POSITIONS = {
+  american: { x: 20, y: 16 },
+  german:   { x: 78, y: 14 },
+  wool:     { x: 50, y: 36 },
+  trpg:     { x: 22, y: 58 },
+  wargame:  { x: 76, y: 56 },
+  tcg:      { x: 50, y: 82 },
+};
+
+function renderGenreMap(){
+  const canvas = el('genreMap');
+  const pathEl = el('genreMapPath');
+  const heading = el('genreSectionTitle');
+  if(heading) heading.textContent = t('genreSectionTitle');
+  if(!canvas) return;
+  const genres = Object.values(GENRES);
+  canvas.innerHTML = genres.map(genre => {
+    const gg = g(genre);
+    const pos = GENRE_MAP_POSITIONS[genre.id] || { x: 50, y: 50 };
+    return `
+    <button class="dash-map-pin" data-genre="${genre.id}" style="left:${pos.x}%;top:${pos.y}%;" title="${escapeHTML(gg.label)}">
+      <span class="dash-map-pin-icon">
+        <span class="pin-emoji">${genre.icon}</span>
+        <img src="assets/map/${genre.id}.png" alt="" onerror="this.remove()" onload="this.parentElement.classList.add('has-image')">
+      </span>
+      <span class="dash-map-pin-label">${escapeHTML(gg.label)}</span>
+    </button>`;
+  }).join('');
+  canvas.querySelectorAll('.dash-map-pin').forEach(pin => {
+    pin.onclick = () => openGenreModal(pin.dataset.genre);
+  });
+  if(pathEl) pathEl.innerHTML = buildGenreMapDecoration(genres);
+}
+
+const GENRE_MAP_REGION_TINTS = ['var(--dazed-light)', 'var(--coral-light)', 'var(--success-light)'];
+/* Sparkle decorations sit at fixed spots chosen to avoid the pins above. */
+const GENRE_MAP_SPARKLES = [
+  { x: 90, y: 30, s: 4 }, { x: 8, y: 40, s: 3 }, { x: 88, y: 78, s: 3.5 }, { x: 12, y: 92, s: 3 },
+];
+function sparkleStarPath(cx, cy, s){
+  // simple 4-point sparkle: a thin vertical + horizontal diamond cross
+  return `M ${cx} ${cy - s} Q ${cx + s * 0.22} ${cy - s * 0.22} ${cx + s} ${cy}
+          Q ${cx + s * 0.22} ${cy + s * 0.22} ${cx} ${cy + s}
+          Q ${cx - s * 0.22} ${cy + s * 0.22} ${cx - s} ${cy}
+          Q ${cx - s * 0.22} ${cy - s * 0.22} ${cx} ${cy - s} Z`;
+}
+
+function buildGenreMapDecoration(genres){
+  const points = genres.map(genre => GENRE_MAP_POSITIONS[genre.id] || { x: 50, y: 50 });
+
+  const regions = points.map((p, i) => {
+    const tint = GENRE_MAP_REGION_TINTS[i % GENRE_MAP_REGION_TINTS.length];
+    return `<ellipse class="region" cx="${p.x}" cy="${p.y}" rx="16" ry="13" fill="${tint}" filter="url(#mapBlur)"/>`;
+  }).join('');
+
+  // smooth route through the pins: quadratic curve to the midpoint of each
+  // consecutive pair, using the pin itself as the control point
+  let routeD = `M ${points[0].x} ${points[0].y}`;
+  for(let i = 1; i < points.length - 1; i++){
+    const cur = points[i], next = points[i + 1];
+    const midX = (cur.x + next.x) / 2, midY = (cur.y + next.y) / 2;
+    routeD += ` Q ${cur.x} ${cur.y} ${midX} ${midY}`;
+  }
+  if(points.length > 1){
+    const last = points[points.length - 1];
+    const secondLast = points[points.length - 2];
+    routeD += ` Q ${secondLast.x} ${secondLast.y} ${last.x} ${last.y}`;
+  }
+
+  const sparkles = GENRE_MAP_SPARKLES.map(sp => `<path class="sparkle" d="${sparkleStarPath(sp.x, sp.y, sp.s)}"/>`).join('');
+
+  return `
+    <defs><filter id="mapBlur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6"/></filter></defs>
+    ${regions}
+    <path class="route" d="${routeD}"/>
+    ${sparkles}
+  `;
+}
+
+/* ===== Genre detail modal: definition + player-count/requirement form +
+   recommendations, built from the GENRES data above ===== */
+/* Rough color palette for the cover-art placeholders. We don't have
+   licensed box-art images bundled in this single-file app, so each
+   example gets a stable gradient (hashed from its name) plus a
+   representative emoji as a lightweight "cover". If real box-art URLs
+   are ever added to an example (an `image` field), renderRecommendations
+   will use that instead. */
+const COVER_PALETTE = [
+  ['#f6d365', '#fda085'], ['#a1c4fd', '#c2e9fb'], ['#fbc2eb', '#a6c1ee'],
+  ['#84fab0', '#8fd3f4'], ['#ffecd2', '#fcb69f'], ['#d4fc79', '#96e6a1'],
+];
+function coverGradient(ex){
+  let hash = 0;
+  for(let i = 0; i < ex.name.length; i++) hash = (hash * 31 + ex.name.charCodeAt(i)) >>> 0;
+  const pair = COVER_PALETTE[hash % COVER_PALETTE.length];
+  return `linear-gradient(135deg, ${pair[0]}, ${pair[1]})`;
+}
+
+/* Turns a duration string ("60-90 分钟" / "2-4 小时") into an average
+   number of minutes, so free-text requirements like "时间久" / "快一点"
+   can be compared against it. Returns null if nothing parseable. */
+function parseDurationMinutes(duration){
+  if(!duration) return null;
+  const nums = (duration.match(/\d+(\.\d+)?/g) || []).map(Number);
+  if(!nums.length) return null;
+  const avg = nums.reduce((a, b) => a + b, 0) / nums.length;
+  return duration.includes('小时') ? avg * 60 : avg;
+}
+
+/* Duration strings are only authored in Chinese ("60-90 分钟" / "2-4 小时/场");
+   this does a light word-swap for English display rather than duplicating
+   the field on every example. */
+function localizeDuration(duration){
+  if(appLang !== 'en' || !duration) return duration;
+  return duration
+    .replace(/分钟/g, 'min')
+    .replace(/小时/g, 'hr')
+    .replace(/\/场/g, '/session');
+}
+
+const LONG_DURATION_WORDS = ['长', '久', '慢', '沉浸'];
+const SHORT_DURATION_WORDS = ['短', '快', '新手', '入门', '轻松', '简单'];
+
+/* Scores + explains why an example matches the player's input. Player
+   count is matched against playerMin/playerMax. Free-text requirements
+   are split into terms and matched against: the example's curated tags,
+   its blurb/name text, and duration-related keywords (compared against
+   the parsed average duration). Every match is also surfaced as a
+   human-readable "reason" so the UI can visibly show what changed. */
+function scoreExample(ex, playerCount, reqText){
+  let score = 0;
+  const reasons = [];
+  const exx = gx(ex); // language-localized view (name/blurb/tags), numeric fields unaffected
+  if(playerCount){
+    const n = parseInt(playerCount, 10);
+    if(!isNaN(n)){
+      if(n >= ex.playerMin && n <= ex.playerMax){ score += 2; reasons.push(t('reasonPlayerCount', n)); }
+      else score -= 1;
+    }
+  }
+  if(reqText){
+    const terms = reqText.trim().toLowerCase().split(/[\s,，、/]+/).filter(Boolean);
+    const durMin = parseDurationMinutes(ex.duration);
+    terms.forEach(term => {
+      let hit = false;
+      (exx.tags || []).forEach(tag => {
+        const tl = tag.toLowerCase();
+        if(tl.includes(term) || term.includes(tl)){ reasons.push(tag); hit = true; }
+      });
+      if(exx.blurb.toLowerCase().includes(term) || exx.name.toLowerCase().includes(term)){
+        reasons.push(t('reasonBlurb')); hit = true;
+      }
+      if(durMin != null){
+        if(LONG_DURATION_WORDS.some(w => term.includes(w)) && durMin >= 90){ reasons.push(t('reasonLong')); hit = true; }
+        if(SHORT_DURATION_WORDS.some(w => term.includes(w)) && durMin <= 60){ reasons.push(t('reasonShort')); hit = true; }
+      }
+      if(hit) score += 2;
+    });
+  }
+  return { score, reasons: [...new Set(reasons)] };
+}
+
+/* ===== Live cover-image fetch, by exact known game name =====
+   The curated database above (built from a cleaned BoardGameGeek dataset
+   plus hand-added titles) has no bundled box-art. The old approach tried
+   to *discover* games via an ambiguous Wikipedia incategory search — that
+   both mixed unrelated results across genres (the actual cause of the
+   "American and German show the same recommendations" bug) and only gave
+   real photos to the subset of cards that came from that search, leaving
+   curated cards stuck with an emoji placeholder (the "some covers are
+   real, some aren't" bug).
+   Now every card is a known, exact game name up front, so instead of
+   *searching*, we just *look up* — fetch Wikipedia's summary endpoint for
+   that exact title, grab the thumbnail if one exists, and cache the
+   result (by English name) in localStorage so repeat visits don't
+   re-fetch. Every card goes through the same pipeline: render immediately
+   with the gradient+emoji placeholder, then swap in the real photo in
+   place once the fetch resolves. If a title has no Wikipedia photo, it
+   simply keeps the placeholder — a consistent, honest fallback instead of
+   two different visual systems. */
+const GAME_IMAGE_CACHE_KEY = 'xiaomeng_game_images_v1';
+let gameImageCache = (() => {
+  try{
+    const raw = localStorage.getItem(GAME_IMAGE_CACHE_KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return {};
+})();
+function saveGameImageCache(){
+  try{ localStorage.setItem(GAME_IMAGE_CACHE_KEY, JSON.stringify(gameImageCache)); }catch(e){}
+}
+async function fetchGameImage(nameEn){
+  if(!nameEn) return null;
+  if(Object.prototype.hasOwnProperty.call(gameImageCache, nameEn)) return gameImageCache[nameEn]; // may be null — "looked up, no photo" is itself cached
+  try{
+    const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(nameEn)}`;
+    const res = await fetch(url);
+    if(!res.ok) throw new Error('lookup failed');
+    const data = await res.json();
+    const image = (data.type && data.type.includes('disambiguation')) ? null : ((data.thumbnail && data.thumbnail.source) || null);
+    gameImageCache[nameEn] = image;
+    saveGameImageCache();
+    return image;
+  }catch(e){
+    gameImageCache[nameEn] = null;
+    saveGameImageCache();
+    return null;
+  }
+}
+
+function renderRecommendations(genre){
+  const list = el('genreRecommendList');
+  if(!list) return;
+  const playerCount = el('genrePlayerCountInput') ? el('genrePlayerCountInput').value.trim() : '';
+  const reqText = el('genreReqInput') ? el('genreReqInput').value.trim() : '';
+  const items = genre.examples.map(ex => ({ ex, exx: gx(ex), ...scoreExample(ex, playerCount, reqText) }));
+  items.sort((a, b) => b.score - a.score);
+  if(!items.length){
+    list.innerHTML = `<div class="recommend-empty">${t('noExamples')}</div>`;
+    return;
+  }
+  const anyMatched = items.some(e => e.reasons.length);
+  list.innerHTML = items.map(item => {
+    const { ex, exx, score, reasons } = item;
+    const nameEn = (ex.en && ex.en.name) || exx.name;
+    return `
+    <div class="recommend-card" data-game="${escapeHTML(exx.name)}">
+      <div class="recommend-card-head">
+        <span class="recommend-cover" style="background:${coverGradient(ex)}" data-cover-for="${escapeHTML(nameEn)}">${ex.cover || '🎲'}</span>
+        <div class="recommend-card-headtext">
+          <span class="rc-title">${escapeHTML(exx.name)}</span>
+          ${score > 0 ? `<span class="mode-badge">${t('pickBadge')}</span>` : ''}
+        </div>
+      </div>
+      <div class="recommend-card-meta">${ex.playerMin}${ex.playerMax !== ex.playerMin ? '-'+ex.playerMax : ''}${t('peopleUnit')} · ${escapeHTML(localizeDuration(ex.duration))}${t('refNote')}</div>
+      <div class="recommend-card-blurb">${escapeHTML(exx.blurb)}</div>
+      ${reasons.length ? `<div class="recommend-reasons">${reasons.map(r => `<span class="reason-chip">✓ ${escapeHTML(r)}</span>`).join('')}</div>` : ''}
+      <button type="button" class="recommend-start-btn" data-game="${escapeHTML(exx.name)}" data-mode="${ex.mode || genre.defaultMode}">${t('startPlaying')}</button>
+    </div>`;
+  }).join('') + (reqText && !anyMatched ? `<div class="recommend-no-match-note">${t('noMatchNote', escapeHTML(reqText))}</div>` : '');
+  list.querySelectorAll('.recommend-start-btn').forEach(btn => {
+    btn.onclick = () => {
+      el('genreModal').classList.remove('show');
+      openNewSessionModal(btn.dataset.game, btn.dataset.mode);
+    };
+  });
+  // Swap in real cover photos in place, one lookup per unique title on
+  // this list (localStorage-cached, so this is a no-op after first load).
+  [...new Set(items.map(it => (it.ex.en && it.ex.en.name) || it.exx.name))].forEach(nameEn => {
+    fetchGameImage(nameEn).then(url => {
+      if(!url) return;
+      list.querySelectorAll(`[data-cover-for="${window.CSS && CSS.escape ? CSS.escape(nameEn) : nameEn}"]`).forEach(coverEl => {
+        coverEl.innerHTML = `<img src="${escapeHTML(url)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:10px;" loading="lazy">`;
+      });
+    });
+  });
+}
+
+let currentGenreModalId = null;
+function openGenreModal(genreId){
+  const genre = GENRES[genreId];
+  if(!genre) return;
+  currentGenreModalId = genreId;
+  const gg = g(genre);
+  el('genreModalTitle').textContent = `${genre.icon} ${gg.label}`;
+  const content = el('genreModalContent');
+  content.innerHTML = `
+    <div class="genre-def-block">
+      <div class="mode-card-keywords" style="margin-bottom:10px;">
+        ${gg.keywords.map(k => `<span class="genre-tag">${escapeHTML(k)}</span>`).join('')}
+      </div>
+      <div class="genre-def-label">${t('theme')}</div>
+      <p class="genre-def-text">${escapeHTML(gg.theme)}</p>
+      <div class="genre-def-label">${t('audience')}</div>
+      <p class="genre-def-text">${escapeHTML(gg.audience)}</p>
+    </div>
+    <div class="genre-req-form">
+      <div class="genre-req-row">
+        <div class="field">
+          <label>${t('playerCountLabel')}</label>
+          <input type="number" min="1" id="genrePlayerCountInput" placeholder="${t('playerCountPh')}">
+        </div>
+        <div class="field">
+          <label>${t('reqLabel')}</label>
+          <input type="text" id="genreReqInput" placeholder="${t('reqPh')}">
+        </div>
+      </div>
+    </div>
+    <div class="dash-section-head" style="margin-bottom:8px;"><h3 style="font-size:13px;">${t('recommendedForYou')}</h3></div>
+    <div class="genre-recommend-list" id="genreRecommendList"></div>
+  `;
+  renderRecommendations(genre);
+  const rerender = () => renderRecommendations(genre);
+  el('genrePlayerCountInput').addEventListener('input', rerender);
+  el('genreReqInput').addEventListener('input', rerender);
+  el('genreModal').classList.add('show');
+}
+el('closeGenreModalBtn').onclick = () => el('genreModal').classList.remove('show');
+el('genreModal').addEventListener('click', e => {
+  if(e.target.id === 'genreModal') el('genreModal').classList.remove('show');
+});
+
+/* ===== Dashboard search box: searches by name/tags/blurb across every
+   genre's curated examples at once (unlike the per-genre recommend list,
+   which only looks within one genre). Matching is a simple case-insensitive
+   substring test against the localized name, tags and blurb, plus the raw
+   English name — so both "UNO" and "合作" find results. Name matches are
+   ranked above tag/blurb-only matches. Results reuse the same card markup
+   and live image-fetch pipeline as the genre recommend list. */
+function searchAllGames(query){
+  const q = query.trim().toLowerCase();
+  if(!q) return [];
+  const hits = [];
+  Object.values(GENRES).forEach(genre => {
+    genre.examples.forEach(ex => {
+      const exx = gx(ex);
+      const nameEn = (ex.en && ex.en.name) || exx.name;
+      const nameHit = exx.name.toLowerCase().includes(q) || nameEn.toLowerCase().includes(q);
+      const tagHit = (exx.tags || []).some(tag => tag.toLowerCase().includes(q));
+      const blurbHit = exx.blurb.toLowerCase().includes(q);
+      if(nameHit || tagHit || blurbHit){
+        hits.push({ ex, exx, genre, rank: nameHit ? 2 : (tagHit ? 1 : 0) });
+      }
+    });
+  });
+  hits.sort((a, b) => b.rank - a.rank);
+  return hits;
+}
+
+function renderSearchResults(){
+  const input = el('gameSearchInput');
+  const panel = el('searchResultsPanel');
+  if(!input || !panel) return;
+  const query = input.value;
+  if(!query.trim()){ panel.innerHTML = ''; return; }
+  const hits = searchAllGames(query);
+  if(!hits.length){
+    panel.innerHTML = `<div class="search-empty">${t('searchNoResults', escapeHTML(query.trim()))}</div>`;
+    return;
+  }
+  const countLine = `<div class="search-empty" style="padding:0 0 2px;text-align:left;">${t('searchResultsCount', hits.length)}</div>`;
+  panel.innerHTML = countLine + hits.map(({ ex, exx, genre }) => {
+    const nameEn = (ex.en && ex.en.name) || exx.name;
+    const gg = g(genre);
+    return `
+  <div class="recommend-card" data-game="${escapeHTML(exx.name)}">
+    <span class="search-result-genre-badge">${genre.icon} ${escapeHTML(gg.label)}</span>
+    <div class="recommend-card-head">
+      <span class="recommend-cover" style="background:${coverGradient(ex)}" data-cover-for="${escapeHTML(nameEn)}">${ex.cover || '🎲'}</span>
+      <div class="recommend-card-headtext">
+        <span class="rc-title">${escapeHTML(exx.name)}</span>
+      </div>
+    </div>
+    <div class="recommend-card-meta">${ex.playerMin}${ex.playerMax !== ex.playerMin ? '-'+ex.playerMax : ''}${t('peopleUnit')} · ${escapeHTML(localizeDuration(ex.duration))}${t('refNote')}</div>
+    <div class="recommend-card-blurb">${escapeHTML(exx.blurb)}</div>
+    <div class="recommend-reasons">${(exx.tags || []).slice(0, 4).map(tag => `<span class="reason-chip">${escapeHTML(tag)}</span>`).join('')}</div>
+    <button type="button" class="recommend-start-btn" data-game="${escapeHTML(exx.name)}" data-mode="${ex.mode || genre.defaultMode}">${t('startPlaying')}</button>
+  </div>`;
+  }).join('');
+  panel.querySelectorAll('.recommend-start-btn').forEach(btn => {
+    btn.onclick = () => openNewSessionModal(btn.dataset.game, btn.dataset.mode);
+  });
+  [...new Set(hits.map(({ ex, exx }) => (ex.en && ex.en.name) || exx.name))].forEach(nameEn => {
+    fetchGameImage(nameEn).then(url => {
+      if(!url) return;
+      panel.querySelectorAll(`[data-cover-for="${window.CSS && CSS.escape ? CSS.escape(nameEn) : nameEn}"]`).forEach(coverEl => {
+        coverEl.innerHTML = `<img src="${escapeHTML(url)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:10px;" loading="lazy">`;
+      });
+    });
+  });
+}
+if(el('gameSearchInput')) el('gameSearchInput').addEventListener('input', renderSearchResults);
+
+function renderContinueRow(){
+  const row = el('continueRow');
+  const section = el('continueSection');
+  if(!row || !section) return;
+  const recent = [];
+  gamesStore.games.forEach(game => {
+    (game.sessions || []).forEach(session => {
+      recent.push({ game, session });
+    });
+  });
+  recent.sort((a,b) => (b.session.lastActiveAt||0) - (a.session.lastActiveAt||0));
+  const top = recent.slice(0, 6);
+  if(!top.length){
+    section.style.display = 'none';
+    return;
+  }
+  section.style.display = '';
+  row.innerHTML = top.map(({game, session}) => `
+    <div class="continue-card" data-game="${game.id}" data-session="${session.id}">
+      <div class="cc-name">${escapeHTML(game.name)}</div>
+      <div class="cc-meta">${modeInfoLocalized(game.mode).icon} ${escapeHTML(modeInfoLocalized(game.mode).label)} · ${t('playersMeta', session.players.length, session.rounds.length)}</div>
+      <div class="cc-time">${session.status === 'ended' ? t('sessionEnded') + ' · ' : ''}${formatDate(session.lastActiveAt || session.startedAt)}</div>
+    </div>
+  `).join('');
+  row.querySelectorAll('.continue-card').forEach(card => {
+    card.onclick = () => resumeSession(card.dataset.game, card.dataset.session);
+  });
+}
+
+function renderGamesGrid(){
+  const grid = el('gamesGrid');
+  const note = el('gamesCountNote');
+  if(!grid) return;
+  let games = gamesStore.games;
+  if(activeFilters.mode) games = games.filter(g => g.mode === activeFilters.mode);
+  if(activeFilters.players){
+    games = games.filter(g => {
+      const counts = (g.sessions||[]).map(s => s.players.length);
+      if(!counts.length) return false;
+      const max = Math.max(...counts);
+      if(activeFilters.players === '2') return max === 2;
+      if(activeFilters.players === '3-4') return max >= 3 && max <= 4;
+      if(activeFilters.players === '5-8') return max >= 5 && max <= 8;
+      if(activeFilters.players === '8+') return max > 8;
+      return true;
+    });
+  }
+  if(note) note.textContent = games.length ? (appLang === 'en' ? `${games.length} games` : `共 ${games.length} 款`) : '';
+  if(!games.length){
+    grid.innerHTML = `<div class="dash-empty-note">${t('noGamesEmpty')}</div>`;
+    return;
+  }
+  grid.innerHTML = '';
+  games.forEach(game => {
+    const mi = modeInfoLocalized(game.mode);
+    const wrap = document.createElement('div');
+    wrap.className = 'game-item' + (game.id === currentGameId ? ' active' : '');
+    const main = document.createElement('div');
+    main.className = 'game-item-main';
+    main.innerHTML = `
+      <div class="game-icon">${mi.icon}</div>
+      <div class="game-info">
+        <div class="game-name-row">
+          <span class="game-name">${escapeHTML(game.name)}</span>
+          <span class="mode-badge">${escapeHTML(mi.label)}</span>
+        </div>
+        <div class="game-meta">${t('lastPlayedMeta', formatDate(game.lastPlayed), game.playCount)}</div>
+      </div>
+      <div class="game-count-badge">${game.sessions.length}</div>
+    `;
+    main.onclick = () => {
+      sidebarExpanded[game.id] = !sidebarExpanded[game.id];
+      renderGamesGrid();
+    };
+    wrap.appendChild(main);
+    if(sidebarExpanded[game.id]){
+      const list = document.createElement('div');
+      list.className = 'session-list';
+      if(!game.sessions.length){
+        list.innerHTML = `<div class="dash-empty-note" style="padding:8px 0;">${t('noSessionsYet')}</div>`;
+      } else {
+        game.sessions.forEach(session => {
+          const row = document.createElement('div');
+          row.className = 'session-item';
+          const statusHtml = `<span class="s-status${session.status==='ended' ? ' ended':''}">${session.status==='ended' ? t('sessionEnded'):t('sessionOngoing')}</span>`;
+          row.innerHTML = `<span class="s-date">${formatDate(session.startedAt)}</span><span>${t('playersMeta', session.players.length, session.rounds.length)}${statusHtml}</span>`;
+          row.onclick = (e) => {
+            e.stopPropagation();
+            openHistoryModal(game.id, session.id);
+          };
+          list.appendChild(row);
+        });
+      }
+      wrap.appendChild(list);
+    }
+    grid.appendChild(wrap);
+  });
+}
+
+function renderDashboard(){
+  renderLangToggle();
+  applyStaticTranslations();
+  renderGenreMap();
+  renderContinueRow();
+  renderGamesGrid();
+}
+
+function resumeSession(gameId, sessionId){
+  const session = findSession(gameId, sessionId);
+  if(!session){ showDashboard(); return; }
+  currentGameId = gameId;
+  currentSessionId = sessionId;
+  session.lastActiveAt = Date.now();
+  saveGamesStore();
+  updateSessionStatusBar();
+  showChat();
+  history = [];
+  if(session.transcript && session.transcript.length){
+    clearEmptyState();
+    history = session.transcript.slice();
+    history.forEach(m => {
+      if(typeof m.content === 'string') addBubble(m.role === 'user' ? 'user' : 'assistant', m.content);
+    });
+  } else {
+    showEmptyState();
+    addSystemNote(t('resumeSessionNote', findGameById(gameId).name));
+  }
+  if(session.roomCode){ startRoomChatRelay(session); startHostRoleListener(session); }
+}
+
+function openHistoryModal(gameId, sessionId){
+  const game = findGameById(gameId);
+  const session = findSession(gameId, sessionId);
+  if(!game || !session) return;
+  el('historyModalTitle').textContent = `${game.name} · ${formatDate(session.startedAt)}`;
+  const content = el('historyModalContent');
+  if(!session.rounds.length){
+    content.innerHTML = `<div class="dash-empty-note">${t('noRoundsYet')}</div>`;
+  } else {
+    content.innerHTML = session.rounds.map(r => {
+      const actionsHtml = (r.actions && r.actions.length)
+        ? `<div class="action-log-list">${r.actions.map(a => {
+            const unconfirmed = /待确认|不确定|未知/.test(a.result);
+            const hasTarget = a.target && a.target !== '无' && a.target !== '-';
+            return `<div class="action-log-row${unconfirmed ? ' unconfirmed' : ''}">
+              <div class="a-line">
+                <span class="a-actor">${escapeHTML(a.actor)}</span>${hasTarget ? `<span class="a-arrow">→</span><span class="a-target">${escapeHTML(a.target)}</span>` : ''}
+                <span class="a-action">${escapeHTML(a.action)}</span>
+              </div>
+              <div class="a-result">${escapeHTML(a.result)}${unconfirmed ? ` <span class="a-flag">${t('unconfirmedFlag')}</span>` : ''}</div>
+            </div>`;
+          }).join('')}</div>`
+        : `<div class="round-log-row"><b>${t('resultLabel')}</b>${r.outcome ? escapeHTML(r.outcome) : t('noItemizedLog')}</div>`;
+      return `
+      <div class="round-log-item">
+        <div class="round-log-head"><span>${t('roundNumLabel', r.round)}</span><span>${escapeHTML(r.player)}</span></div>
+        ${actionsHtml}
+        <div class="round-log-row"><b>${t('phaseLabel')}</b>${escapeHTML(r.phase || '—')}</div>
+        <div class="round-log-row"><b>${t('promptLabel')}</b>${escapeHTML(r.prompt || '—')}</div>
+        <div class="round-log-row"><b>${t('playerReplyLabel')}</b>${r.action ? escapeHTML(r.action) : t('notRecorded')}</div>
+      </div>`;
+    }).join('');
+  }
+  el('historyModal').classList.add('show');
+}
+
+function updateSessionStatusBar(){
+  const bar = el('sessionStatus');
+  if(!currentGameId || !currentSessionId){
+    bar.style.display = 'none';
+    return;
+  }
+  const session = findSession(currentGameId, currentSessionId);
+  if(!session){ bar.style.display = 'none'; return; }
+  const rounds = session.rounds;
+  const roundNum = rounds.length ? rounds[rounds.length-1].round : 0;
+  el('statusRoundText').textContent = t('roundLabel', roundNum);
+  el('statusPlayersText').textContent = t('playersCountLabel', session.players.length || 0);
+  bar.style.display = 'flex';
+}
+
+/* ===== View routing: dashboard (home) / chat (active session) / join (invite link) ===== */
+let currentView = 'dashboard';
+function showDashboard(){
+  currentView = 'dashboard';
+  el('dashboardView').classList.remove('app-shell-hidden');
+  el('chatShell').classList.add('app-shell-hidden');
+  el('joinView').classList.add('app-shell-hidden');
+  renderDashboard();
+  setMascotState('idle');
+}
+function showChat(){
+  currentView = 'chat';
+  el('dashboardView').classList.add('app-shell-hidden');
+  el('chatShell').classList.remove('app-shell-hidden');
+  el('joinView').classList.add('app-shell-hidden');
+}
+function showJoin(){
+  currentView = 'join';
+  el('dashboardView').classList.add('app-shell-hidden');
+  el('chatShell').classList.add('app-shell-hidden');
+  el('joinView').classList.remove('app-shell-hidden');
+}
+
+function openNewSessionModal(prefillName, prefillMode){
+  const modeSel = el('newGameModeInput');
+  modeSel.innerHTML = Object.values(FACILITATION_MODES).map(m => `<option value="${m.id}">${m.icon} ${escapeHTML(modeInfoLocalized(m.id).label)}</option>`).join('');
+  el('newGameNameInput').value = prefillName || '';
+  modeSel.value = prefillMode || 'player_led';
+  el('newGamePlayersInput').value = '';
+  el('newGameOnlineInput').checked = false;
+  el('newSessionModal').classList.add('show');
+}
+
+function startNewSession(name, playerNames, mode, createRoom){
+  const { game, session } = createSession(name, playerNames, mode);
+  currentGameId = game.id;
+  currentSessionId = session.id;
+  sidebarExpanded[game.id] = true;
+  updateSessionStatusBar();
+  showChat();
+
+  if(createRoom){
+    openInviteModal();
+  }
+
+  history = [];
+  showEmptyState();
+
+  if(!connected){
+    addErrorBubble(t('notConnected'), t('notConnectedDetail'));
+    drawer.classList.add('open');
+    return;
+  }
+  clearEmptyState();
+  const introText = playerNames.length
+    ? `我们要玩：${name}\n主持方式：${modeInfo(mode).label}\n玩家（${playerNames.length}人）：${playerNames.join('、')}`
+    : `我们要玩：${name}\n主持方式：${modeInfo(mode).label}`;
+  addBubble('user', introText);
+  history.push({role:'user', content: introText});
+  sendToModel(null, false, null, true);
+}
+
+el('menuBtn').onclick = () => { stopRoomChatRelay(); stopHostRoleListener(); showDashboard(); };
+el('dashSettingsBtn').onclick = () => { showChat(); drawer.classList.add('open'); };
+el('entryNewSessionBtn').onclick = () => openNewSessionModal('', 'player_led');
+el('entrySearchBtn').onclick = () => {
+  const section = el('searchSection');
+  const showing = section.style.display !== 'none';
+  section.style.display = showing ? 'none' : '';
+  if(!showing) el('gameSearchInput').focus();
+};
+el('entryContinueBtn').onclick = () => {
+  el('continueSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
+el('entryLibraryBtn').onclick = () => {
+  el('myGamesSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
+
+el('filtersToggleBtn').onclick = () => {
+  el('filtersBar').classList.toggle('show');
+  el('filtersToggleBtn').classList.toggle('active');
+};
+el('filterMode').addEventListener('change', () => { activeFilters.mode = el('filterMode').value; renderGamesGrid(); });
+el('filterPlayers').addEventListener('change', () => { activeFilters.players = el('filterPlayers').value; renderGamesGrid(); });
+
+el('cancelNewSessionBtn').onclick = () => el('newSessionModal').classList.remove('show');
+el('newSessionModal').addEventListener('click', e => {
+  if(e.target.id === 'newSessionModal') el('newSessionModal').classList.remove('show');
+});
+el('confirmNewSessionBtn').onclick = () => {
+  const name = el('newGameNameInput').value.trim();
+  const mode = el('newGameModeInput').value;
+  const playersRaw = el('newGamePlayersInput').value.trim();
+  if(!name){
+    alert(t('fillGameNameAlert'));
+    return;
+  }
+  const players = playersRaw ? playersRaw.split(/[,，、]/).map(p => p.trim()).filter(Boolean) : [];
+  const createRoom = el('newGameOnlineInput').checked;
+  el('newSessionModal').classList.remove('show');
+  startNewSession(name, players, mode, createRoom);
+};
+
+el('closeHistoryModalBtn').onclick = () => el('historyModal').classList.remove('show');
+el('historyModal').addEventListener('click', e => {
+  if(e.target.id === 'historyModal') el('historyModal').classList.remove('show');
+});
+
+/* ===== Invite modal: real cross-device room via Firebase (falls back to
+   local-only if firebaseConfig isn't filled in — see comment near the top
+   of the script) ===== */
+let inviteUnsub = null;
+
+let roomChatUnsub = null;
+const seenRoomMessageIds = new Set();
+let relayInFlight = false;
+let relayQueue = [];
+
+function hostDisplayNameForCurrentSession(session){
+  return (session.players[0] && session.players[0].name) || '房主';
+}
+
+function startRoomChatRelay(session){
+  if(!firebaseReady || !session.roomCode) return;
+  stopRoomChatRelay();
+  roomChatUnsub = listenToRoom(session.roomCode, roomData => handleIncomingRoomMessages(session, roomData));
+}
+
+function stopRoomChatRelay(){
+  if(roomChatUnsub){ roomChatUnsub(); roomChatUnsub = null; }
+  seenRoomMessageIds.clear();
+  relayInFlight = false;
+  relayQueue = [];
+}
+
+function handleIncomingRoomMessages(session, roomData){
+  const msgs = roomData.messages || [];
+  const hostName = hostDisplayNameForCurrentSession(session);
+  const fresh = msgs.filter(m => !seenRoomMessageIds.has(m.id));
+  if(!fresh.length) return;
+  fresh.forEach(m => seenRoomMessageIds.add(m.id));
+  const fromJoiners = fresh.filter(m => m.role === 'user' && m.authorName !== hostName);
+  fromJoiners.forEach(m => addBubble('user', m.text, null, m.authorName));
+  if(fromJoiners.length) queueRelayToModel(fromJoiners);
+}
+
+function queueRelayToModel(msgs){
+  relayQueue = relayQueue.concat(msgs);
+  drainRelayQueue();
+}
+
+async function drainRelayQueue(){
+  if(relayInFlight) return;
+  if(!relayQueue.length) return;
+  const batch = relayQueue;
+  relayQueue = [];
+  relayInFlight = true;
+  const combinedText = batch.map(m => `${m.authorName}：${m.text}`).join('\n');
+  try{
+    await sendToModel(combinedText, false, null);
+  }finally{
+    relayInFlight = false;
+    if(relayQueue.length) drainRelayQueue();
+  }
+}
+
+/* Host's own private-role channel — the host is just player #1, so if a
+   hidden-identity game assigns them a role too, they must find out the
+   same way joiners do (assignPrivateRole/listenToMyRole), never by reading
+   it off their own chat bubble (which is sanitized for everyone). */
+let hostRoleUnsub = null;
+let hostRoleData = null;
+
+function startHostRoleListener(session){
+  if(!firebaseReady || !session.roomCode) return;
+  stopHostRoleListener();
+  const hostName = hostDisplayNameForCurrentSession(session);
+  hostRoleUnsub = listenToMyRole(session.roomCode, hostName, (roleData) => {
+    hostRoleData = roleData;
+    renderMyRoleModalContent();
+    updateMyRoleBtnVisibility();
+  });
+  updateMyRoleBtnVisibility();
+}
+
+function stopHostRoleListener(){
+  if(hostRoleUnsub){ hostRoleUnsub(); hostRoleUnsub = null; }
+  hostRoleData = null;
+  updateMyRoleBtnVisibility();
+}
+
+function updateMyRoleBtnVisibility(){
+  const btn = el('myRoleBtn');
+  if(!btn) return;
+  const session = (currentGameId && currentSessionId) ? findSession(currentGameId, currentSessionId) : null;
+  btn.style.display = (session && session.roomCode) ? '' : 'none';
+}
+
+function renderMyRoleModalContent(){
+  const content = el('myRoleModalContent');
+  if(!content) return;
+  content.innerHTML = hostRoleData && hostRoleData.role ? `
+    <div class="my-role-box">
+      <div class="mr-label">${t('yourRoleLabel')}</div>
+      <div class="mr-role">${escapeHTML(hostRoleData.role)}</div>
+    </div>` : `<div class="dash-empty-note">${t('waitingForRole')}</div>`;
+}
+
+el('myRoleBtn').onclick = () => {
+  renderMyRoleModalContent();
+  el('myRoleModal').classList.add('show');
+};
+el('closeMyRoleModalBtn').onclick = () => el('myRoleModal').classList.remove('show');
+el('myRoleModal').addEventListener('click', e => {
+  if(e.target.id === 'myRoleModal') el('myRoleModal').classList.remove('show');
+});
+
+async function openInviteModal(){
+  if(!currentGameId || !currentSessionId) return;
+  const game = findGameById(currentGameId);
+  const session = findSession(currentGameId, currentSessionId);
+  if(!game || !session) return;
+  const content = el('inviteModalContent');
+  content.innerHTML = `<div class="dash-empty-note">${appLang === 'en' ? 'Creating room…' : '正在创建房间…'}</div>`;
+  el('inviteModal').classList.add('show');
+
+  const room = await ensureRoom(game, session);
+  renderInviteContent(game, session, room);
+  startRoomChatRelay(session);
+  startHostRoleListener(session);
+
+  if(inviteUnsub) inviteUnsub();
+  if(firebaseReady && session.roomCode){
+    inviteUnsub = listenToRoom(session.roomCode, (roomData) => {
+      renderInviteContent(game, session, roomData);
+    });
+  }
+}
+
+function renderInviteContent(game, session, room){
+  const content = el('inviteModalContent');
+  const mi = modeInfoLocalized(game.mode);
+  const link = location.origin + location.pathname + '?room=' + room.roomCode;
+  const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=' + encodeURIComponent(link);
+  const players = room.players || [];
+
+  content.innerHTML = `
+    ${room.isCloud ? '' : `<div class="setup-banner">${t('noBackendBanner')}</div>`}
+    <div class="invite-head">
+      <div class="game-icon">${mi.icon}</div>
+      <div class="invite-head-text">
+        <div class="ih-name">${escapeHTML(game.name)}</div>
+        <div class="ih-meta"><span class="mode-badge">${escapeHTML(mi.label)}</span><span>${t('hostLabel', escapeHTML(room.hostName || '—'))}</span></div>
+      </div>
+    </div>
+    <div class="room-code-box">
+      <div>
+        <div class="rc-label">${t('roomCodeLabel')}</div>
+        <div class="rc-code">${escapeHTML(room.roomCode)}</div>
+      </div>
+      <div class="qr-box" style="margin:0;"><img src="${qrUrl}" alt="${t('qrAlt')}"></div>
+    </div>
+    <div class="copy-link-row">
+      <input type="text" readonly id="inviteLinkInput" value="${escapeHTML(link)}">
+      <button id="copyInviteLinkBtn">${t('copyLinkBtn')}</button>
+    </div>
+    <div class="dash-section-head" style="margin-bottom:8px;"><h3 style="font-size:13px;">${t('playersHeading', players.length)}</h3></div>
+    <div class="invite-players-list">
+      ${players.map(p => `<div class="invite-player-row"><span class="ip-name">${escapeHTML(p.name)}${p.isHost ? t('hostTag') : ''}</span><span class="ip-ready${p.ready ? '' : ' waiting'}">${p.ready ? t('readyTag') : t('waitingTag')}</span></div>`).join('')}
+    </div>
+    ${!room.isCloud ? `<div class="invite-slot-open">${t('localOnlyNote')}</div>` : ''}
+  `;
+  const copyBtn = el('copyInviteLinkBtn');
+  if(copyBtn){
+    copyBtn.onclick = () => {
+      const input = el('inviteLinkInput');
+      input.select();
+      navigator.clipboard && navigator.clipboard.writeText(input.value).catch(() => document.execCommand('copy'));
+      copyBtn.textContent = t('copiedFeedback');
+      setTimeout(() => { copyBtn.textContent = t('copyLinkBtn'); }, 1500);
+    };
+  }
+}
+
+el('inviteBtn').onclick = openInviteModal;
+el('closeInviteModalBtn').onclick = () => {
+  el('inviteModal').classList.remove('show');
+  if(inviteUnsub){ inviteUnsub(); inviteUnsub = null; }
+};
+el('inviteModal').addEventListener('click', e => {
+  if(e.target.id === 'inviteModal'){
+    el('inviteModal').classList.remove('show');
+    if(inviteUnsub){ inviteUnsub(); inviteUnsub = null; }
+  }
+});
+
+/* ===== Join view: opened via a shared invite link (?room=CODE) so a
+   second device can see the room and (once assigned) its own private
+   role, without touching the host's chat/dashboard state. ===== */
+let joinRoomUnsub = null;
+let joinRoleUnsub = null;
+let joinedPlayerName = null;
+
+let lastMyRole = null;
+let joinShellRendered = false;
+const joinRenderedMsgIds = new Set();
+
+function appendJoinMessage(m, speak){
+  const container = el('jcMessages');
+  if(!container) return;
+  const row = document.createElement('div');
+  row.className = 'msg-row ' + (m.role === 'user' ? 'user' : 'host');
+  const avatar = document.createElement('div');
+  avatar.className = 'avatar';
+  if(m.role === 'user'){
+    avatar.classList.add('user');
+    avatar.textContent = m.authorName ? m.authorName.slice(0,1) : t('youLabel');
+    if(m.authorName) avatar.title = m.authorName;
+  } else {
+    avatar.classList.add('host');
+    avatar.innerHTML = mascotAvatarHTML('idle');
+  }
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble ' + (m.role === 'user' ? 'user' : 'host');
+  bubble.textContent = m.text;
+  row.appendChild(avatar);
+  row.appendChild(bubble);
+  container.appendChild(row);
+  if(speak && m.role !== 'user') speakText(m.text);
+}
+
+let joinRecognition = null;
+let joinListening = false;
+
+function setJoinMicUI(listening){
+  const btn = el('jcMicBtn');
+  if(!btn) return;
+  btn.classList.toggle('listening', listening);
+  btn.textContent = listening ? '⏹' : '🎤';
+}
+
+function updateJoinVoiceToggleUI(){
+  const btn = el('jcVoiceToggleBtn');
+  if(!btn) return;
+  if(!ttsSupported){
+    btn.disabled = true;
+    btn.textContent = '🔇';
+    btn.title = t('ttsUnsupportedTitle');
+    return;
+  }
+  btn.textContent = voiceReplyEnabled ? '🔊' : '🔇';
+  btn.title = voiceReplyEnabled ? t('voiceOnTitle') : t('voiceOffTitle');
+}
+
+function wireJoinComposer(roomCode){
+  const input = el('jcTextInput');
+  const sendBtn = el('jcSendBtn');
+  const micBtn = el('jcMicBtn');
+  const voiceBtn = el('jcVoiceToggleBtn');
+  if(!input || !sendBtn) return;
+  const doSend = async () => {
+    const text = input.value.trim();
+    if(!text) return;
+    input.value = '';
+    const msg = {
+      id: 'msg_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
+      role: 'user',
+      authorName: joinedPlayerName,
+      text,
+      ts: Date.now()
+    };
+    joinRenderedMsgIds.add(msg.id);
+    appendJoinMessage(msg);
+    el('jcMessages').scrollTop = el('jcMessages').scrollHeight;
+    try{
+      await sendRoomMessage(roomCode, msg);
+    }catch(e){
+      console.warn('send join message failed', e);
+    }
+  };
+  sendBtn.onclick = doSend;
+  input.addEventListener('keydown', e => {
+    if(e.key === 'Enter' && !e.shiftKey){
+      e.preventDefault();
+      doSend();
+    }
+  });
+
+  if(voiceBtn){
+    updateJoinVoiceToggleUI();
+    voiceBtn.onclick = () => {
+      if(!ttsSupported) return;
+      voiceReplyEnabled = !voiceReplyEnabled;
+      if(!voiceReplyEnabled) window.speechSynthesis.cancel();
+      saveVoicePref();
+      updateJoinVoiceToggleUI();
+    };
+  }
+
+  if(micBtn){
+    if(!speechSupported){
+      micBtn.disabled = true;
+      micBtn.title = t('micNotSupportedTitle');
+    } else {
+      micBtn.onclick = () => {
+        if(joinListening){
+          if(joinRecognition) joinRecognition.stop();
+          return;
+        }
+        if(ttsSupported) window.speechSynthesis.cancel();
+        joinRecognition = new SpeechRecognitionCtor();
+        joinRecognition.lang = appLang === 'en' ? 'en-US' : 'zh-CN';
+        joinRecognition.continuous = false;
+        joinRecognition.interimResults = false;
+        joinRecognition.maxAlternatives = 1;
+        joinRecognition.onstart = () => {
+          joinListening = true;
+          setJoinMicUI(true);
+        };
+        joinRecognition.onresult = (e) => {
+          const transcript = e.results[0][0].transcript.trim();
+          if(!transcript) return;
+          input.value = transcript;
+          if(!voiceReplyEnabled && ttsSupported){
+            voiceReplyEnabled = true;
+            saveVoicePref();
+            updateJoinVoiceToggleUI();
+          }
+          doSend();
+        };
+        joinRecognition.onerror = (e) => {
+          if(e.error === 'not-allowed' || e.error === 'service-not-allowed'){
+            alert(t('micDeniedNote'));
+          }
+        };
+        joinRecognition.onend = () => {
+          joinListening = false;
+          setJoinMicUI(false);
+        };
+        try{
+          joinRecognition.start();
+        }catch(err){
+          joinListening = false;
+          setJoinMicUI(false);
+        }
+      };
+    }
+  }
+}
+
+let joinFirstSyncDone = false;
+
+function renderJoinShell(roomCode, room){
+  const card = el('joinCard');
+  const mi = modeInfoLocalized(room.mode);
+  card.innerHTML = `
+    <h2>${escapeHTML(room.gameName)}</h2>
+    <p class="jc-sub">${mi.icon} ${escapeHTML(mi.label)} · ${t('helloPlayer', escapeHTML(joinedPlayerName))}</p>
+    <div id="jcPlayersSection"></div>
+    <div id="jcRoleSection"></div>
+    <div id="jcReadySection"></div>
+    <div class="join-messages" id="jcMessages"></div>
+    <div class="join-input-row">
+      <textarea id="jcTextInput" placeholder="${t('joinChatInputPh')}" rows="1"></textarea>
+      <button class="bar-btn" id="jcVoiceToggleBtn" title="${t('voiceToggleTitle')}" aria-label="${t('voiceToggleAria')}">🔇</button>
+      <button class="bar-btn" id="jcMicBtn" title="${t('micTitle')}" aria-label="${t('micAria')}">🎤</button>
+      <button class="bar-btn" id="jcSendBtn" title="${t('joinChatSendBtn')}" aria-label="${t('joinChatSendBtn')}">➤</button>
+    </div>
+  `;
+  joinRenderedMsgIds.clear();
+  joinFirstSyncDone = false;
+  joinShellRendered = true;
+  wireJoinComposer(roomCode);
+}
+
+function updateJoinShell(roomCode, room, myRole){
+  if(myRole !== undefined) lastMyRole = myRole;
+  const me = (room.players || []).find(p => p.name === joinedPlayerName);
+
+  el('jcPlayersSection').innerHTML = `
+    <div class="dash-section-head" style="margin-bottom:8px;"><h3 style="font-size:13px;">${t('playersHeading', (room.players||[]).length)}</h3></div>
+    <div class="invite-players-list">
+      ${(room.players||[]).map(p => `<div class="invite-player-row"><span class="ip-name">${escapeHTML(p.name)}${p.isHost ? t('hostTag') : ''}</span><span class="ip-ready${p.ready ? '' : ' waiting'}">${p.ready ? t('readyTag') : t('waitingTag')}</span></div>`).join('')}
+    </div>`;
+
+  el('jcRoleSection').innerHTML = lastMyRole && lastMyRole.role ? `
+      <div class="my-role-box">
+        <div class="mr-label">${t('yourRoleLabel')}</div>
+        <div class="mr-role">${escapeHTML(lastMyRole.role)}</div>
+      </div>` : `<div class="dash-empty-note">${t('waitingForRole')}</div>`;
+
+  el('jcReadySection').innerHTML = `<button class="ready-toggle-btn${me && me.ready ? ' on' : ''}" id="readyToggleBtn">${me && me.ready ? t('readyBtnDone') : t('readyBtnPending')}</button>`;
+  const readyBtn = el('readyToggleBtn');
+  if(readyBtn){
+    readyBtn.onclick = async () => {
+      const nowReady = !(me && me.ready);
+      await setPlayerReadyState(roomCode, joinedPlayerName, nowReady);
+    };
+  }
+
+  const msgs = room.messages || [];
+  const messagesBox = el('jcMessages');
+  const wasNearBottom = messagesBox.scrollHeight - messagesBox.scrollTop - messagesBox.clientHeight < 40;
+  const isLiveUpdate = joinFirstSyncDone;
+  let appended = false;
+  msgs.forEach(m => {
+    if(joinRenderedMsgIds.has(m.id)) return;
+    joinRenderedMsgIds.add(m.id);
+    appendJoinMessage(m, isLiveUpdate);
+    appended = true;
+  });
+  joinFirstSyncDone = true;
+  if(appended && wasNearBottom) messagesBox.scrollTop = messagesBox.scrollHeight;
+}
+
+function renderJoinCard(roomCode, room, myRole){
+  if(myRole !== undefined) lastMyRole = myRole;
+  if(room && room.agentName && room.agentName !== agentName) agentName = room.agentName;
+  const card = el('joinCard');
+  if(!room){
+    card.innerHTML = `
+      <h2>${t('roomNotFoundTitle')}</h2>
+      <p class="jc-sub">${t('roomNotFoundDesc', escapeHTML(roomCode))}</p>`;
+    return;
+  }
+  const mi = modeInfoLocalized(room.mode);
+  if(!joinedPlayerName){
+    joinShellRendered = false;
+    card.innerHTML = `
+      <h2>${escapeHTML(room.gameName)}</h2>
+      <p class="jc-sub">${mi.icon} ${escapeHTML(mi.label)} · ${t('hostLabel', escapeHTML(room.hostName || '—'))} · ${t('alreadyJoinedCount', (room.players||[]).length)}</p>
+      <div class="join-name-row">
+        <input type="text" id="joinNameInput" placeholder="${t('yourNamePh')}">
+      </div>
+      <button class="dash-hero-btn" style="width:100%;" id="joinConfirmBtn">${t('joinBtn')}</button>
+    `;
+    el('joinConfirmBtn').onclick = async () => {
+      const name = el('joinNameInput').value.trim();
+      if(!name){ alert(t('fillNameAlert')); return; }
+      if(!firebaseReady){
+        alert(t('noBackendAlert'));
+        return;
+      }
+      try{
+        await joinRoomAsPlayer(roomCode, name);
+        joinedPlayerName = name;
+        joinShellRendered = false;
+        if(joinRoleUnsub) joinRoleUnsub();
+        joinRoleUnsub = listenToMyRole(roomCode, name, (roleData) => {
+          renderJoinCard(roomCode, lastJoinRoomData, roleData);
+        });
+      }catch(e){
+        alert(t('joinFailedAlert', e.message));
+      }
+    };
+    return;
+  }
+  if(!joinShellRendered){
+    renderJoinShell(roomCode, room);
+  }
+  updateJoinShell(roomCode, room, myRole);
+}
+
+let lastJoinRoomData = null;
+function initJoinView(roomCode){
+  showJoin();
+  el('joinCard').innerHTML = `<div class="dash-empty-note">${t('connectingRoom')}</div>`;
+  if(!firebaseReady){
+    el('joinCard').innerHTML = `
+      <h2>${t('crossDeviceUnavailableTitle')}</h2>
+      <p class="jc-sub">${t('roomCodeIs', escapeHTML(roomCode))}<br>${t('noFirebaseDesc')}</p>`;
+    return;
+  }
+  joinRoomUnsub = listenToRoom(roomCode, (roomData) => {
+    lastJoinRoomData = roomData;
+    renderJoinCard(roomCode, roomData);
+  });
+  fbDb.collection('rooms').doc(roomCode).get().then(doc => {
+    if(!doc.exists) renderJoinCard(roomCode, null);
+  });
+}
+
+/* ===== Voice mode: push-to-talk STT + spoken replies (browser-native, no backend) ===== */
+const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition;
+const speechSupported = !!SpeechRecognitionCtor;
+const ttsSupported = 'speechSynthesis' in window;
+const mediaRecorderSupported = typeof MediaRecorder !== 'undefined' && !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+let recognition = null;
+let isListening = false;
+let voiceReplyEnabled = false;
+let mediaRecorder = null;
+let mediaStream = null;
+let audioChunks = [];
+let ttsAudio = null;
+let voiceModeEnabled = false;
+let vadAudioCtx = null;
+let vadAnalyser = null;
+let vadRAF = null;
+const VAD_SILENCE_MS = 1200;
+const VAD_SPEECH_RMS = 0.015;
+const VAD_MAX_TURN_MS = 30000;
+
+function loadVoicePref(){
+  voiceReplyEnabled = (ttsSupported || !!voiceApiKey) && localStorage.getItem('xiaomeng_voice_reply') === '1';
+}
+function saveVoicePref(){
+  localStorage.setItem('xiaomeng_voice_reply', voiceReplyEnabled ? '1' : '0');
+}
+function updateVoiceToggleUI(){
+  const btn = el('voiceToggleBtn');
+  if(!ttsSupported && !voiceApiKey){
+    btn.disabled = true;
+    btn.textContent = '🔇';
+    btn.title = t('ttsUnsupportedTitle');
+    return;
+  }
+  btn.disabled = false;
+  btn.textContent = voiceReplyEnabled ? '🔊' : '🔇';
+  btn.title = voiceReplyEnabled ? t('voiceOnTitle') : t('voiceOffTitle');
+}
+el('voiceToggleBtn').onclick = () => {
+  if(!ttsSupported && !voiceApiKey) return;
+  voiceReplyEnabled = !voiceReplyEnabled;
+  if(!voiceReplyEnabled){
+    if(ttsSupported) window.speechSynthesis.cancel();
+    stopSpeakingCloud();
+  }
+  saveVoicePref();
+  updateVoiceToggleUI();
+};
+
+function stopSpeakingCloud(){
+  if(ttsAudio){
+    ttsAudio.pause();
+    ttsAudio = null;
+  }
+}
+
+async function speakTextCloud(text, onDone){
+  stopSpeakingCloud();
+  try{
+    const resp = await fetch(voiceApiBaseUrl.replace(/\/$/, '') + '/v1/audio/speech', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + voiceApiKey,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ model: 'tts-1', voice: 'alloy', input: text })
+    });
+    if(!resp.ok) throw new Error('TTS ' + resp.status);
+    const blob = await resp.blob();
+    const url = URL.createObjectURL(blob);
+    ttsAudio = new Audio(url);
+    ttsAudio.onended = () => { URL.revokeObjectURL(url); ttsAudio = null; if(onDone) onDone(); };
+    ttsAudio.onerror = () => { ttsAudio = null; if(onDone) onDone(); };
+    ttsAudio.play().catch(() => { if(onDone) onDone(); });
+  }catch(e){
+    console.warn('cloud TTS failed', e);
+    if(onDone) onDone();
+  }
+}
+
+function speakText(text, onDone){
+  const cleaned = text.replace(/[【】\[\]#*`_]/g, '').trim();
+  if(!voiceReplyEnabled || !cleaned){
+    if(onDone) onDone();
+    return;
+  }
+  if(voiceApiKey){
+    if(ttsSupported) window.speechSynthesis.cancel();
+    setVoiceModeStatus('speaking');
+    speakTextCloud(cleaned, onDone);
+    return;
+  }
+  if(!ttsSupported){
+    if(onDone) onDone();
+    return;
+  }
+  window.speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(cleaned);
+  utter.lang = 'zh-CN';
+  utter.rate = 1.02;
+  utter.onend = () => { if(onDone) onDone(); };
+  utter.onerror = () => { if(onDone) onDone(); };
+  setVoiceModeStatus('speaking');
+  window.speechSynthesis.speak(utter);
+}
+
+function setMicUI(listening){
+  const btn = el('micBtn');
+  btn.classList.toggle('listening', listening);
+  btn.textContent = listening ? '⏹' : '🎤';
+}
+
+function setVoiceModeStatus(state){
+  const box = el('voiceModeStatus');
+  if(!voiceModeEnabled){
+    box.style.display = 'none';
+    return;
+  }
+  box.style.display = '';
+  if(state === 'listening') box.textContent = t('voiceModeListeningStatus');
+  else if(state === 'thinking') box.textContent = t('voiceModeThinkingStatus');
+  else if(state === 'speaking') box.textContent = t('voiceModeSpeakingStatus');
+  else box.textContent = t('voiceModeOnStatus');
+}
+
+function teardownVAD(){
+  if(vadRAF) clearInterval(vadRAF);
+  vadRAF = null;
+  if(vadAudioCtx){ vadAudioCtx.close().catch(() => {}); vadAudioCtx = null; }
+  vadAnalyser = null;
+}
+
+function setupVAD(stream, onSilenceDetected){
+  teardownVAD();
+  vadAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const source = vadAudioCtx.createMediaStreamSource(stream);
+  vadAnalyser = vadAudioCtx.createAnalyser();
+  vadAnalyser.fftSize = 2048;
+  source.connect(vadAnalyser);
+  const data = new Float32Array(vadAnalyser.fftSize);
+  let speechStarted = false;
+  let silenceStart = null;
+  const startedAt = Date.now();
+  // setInterval, not requestAnimationFrame — rAF gets throttled/suspended in
+  // background/unfocused tabs, which is exactly when a hands-free voice call
+  // (screen off, user switched apps) needs silence detection to keep working.
+  vadRAF = setInterval(() => {
+    if(!vadAnalyser) return;
+    vadAnalyser.getFloatTimeDomainData(data);
+    let sumSquares = 0;
+    for(let i = 0; i < data.length; i++) sumSquares += data[i] * data[i];
+    const rms = Math.sqrt(sumSquares / data.length);
+    const now = Date.now();
+    if(rms > VAD_SPEECH_RMS){
+      speechStarted = true;
+      silenceStart = null;
+    } else if(speechStarted){
+      if(silenceStart === null) silenceStart = now;
+      else if(now - silenceStart > VAD_SILENCE_MS){
+        teardownVAD();
+        onSilenceDetected();
+        return;
+      }
+    }
+    if(now - startedAt > VAD_MAX_TURN_MS){
+      teardownVAD();
+      onSilenceDetected();
+    }
+  }, 100);
+}
+
+function updateMicAvailability(){
+  const btn = el('micBtn');
+  if(voiceApiKey ? mediaRecorderSupported : speechSupported){
+    btn.disabled = false;
+    btn.title = t('micTitle');
+  } else {
+    btn.disabled = true;
+    btn.title = t('micNotSupportedTitle');
+  }
+}
+
+async function transcribeAudioCloud(blob){
+  const form = new FormData();
+  const ext = (blob.type || '').includes('mp4') ? 'm4a' : 'webm';
+  form.append('file', blob, 'voice.' + ext);
+  form.append('model', 'whisper-1');
+  const resp = await fetch(voiceApiBaseUrl.replace(/\/$/, '') + '/v1/audio/transcriptions', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + voiceApiKey },
+    body: form
+  });
+  if(!resp.ok){
+    const errText = await resp.text().catch(() => '');
+    throw new Error('STT ' + resp.status + ' ' + errText.slice(0, 200));
+  }
+  const data = await resp.json();
+  return (data.text || '').trim();
+}
+
+async function startListeningCloud(){
+  if(isListening) return;
+  if(ttsSupported) window.speechSynthesis.cancel();
+  stopSpeakingCloud();
+  try{
+    mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  }catch(err){
+    addSystemNote(t('micDeniedNote'));
+    if(voiceModeEnabled){ voiceModeEnabled = false; updateVoiceModeUI(); }
+    return;
+  }
+  const mimeType = MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' :
+    MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4' : '';
+  mediaRecorder = mimeType ? new MediaRecorder(mediaStream, { mimeType }) : new MediaRecorder(mediaStream);
+  audioChunks = [];
+  mediaRecorder.ondataavailable = (e) => { if(e.data.size > 0) audioChunks.push(e.data); };
+  mediaRecorder.onstop = async () => {
+    teardownVAD();
+    mediaStream.getTracks().forEach(tr => tr.stop());
+    isListening = false;
+    setMicUI(false);
+    const blob = new Blob(audioChunks, { type: mediaRecorder.mimeType || 'audio/webm' });
+    if(blob.size < 1000){
+      // no real speech captured (silence timeout / cut short) — in voice mode just keep listening
+      if(voiceModeEnabled) startListenTurn();
+      else setVoiceModeStatus('idle');
+      return;
+    }
+    setVoiceModeStatus('thinking');
+    try{
+      const transcript = await transcribeAudioCloud(blob);
+      if(!transcript){
+        if(voiceModeEnabled) startListenTurn();
+        return;
+      }
+      el('textInput').value = transcript;
+      autoGrow();
+      if(!voiceReplyEnabled){
+        voiceReplyEnabled = true;
+        saveVoicePref();
+        updateVoiceToggleUI();
+      }
+      handleSend();
+    }catch(e){
+      addSystemNote(t('voiceErrorNote', e.message || String(e)));
+      if(voiceModeEnabled) startListenTurn();
+    }
+  };
+  mediaRecorder.start();
+  isListening = true;
+  setMicUI(true);
+  setVoiceModeStatus('listening');
+  setupVAD(mediaStream, () => stopListeningCloud());
+}
+function stopListeningCloud(){
+  teardownVAD();
+  if(mediaRecorder && isListening) mediaRecorder.stop();
+}
+
+function startListening(){
+  if(!speechSupported){
+    addSystemNote(t('voiceUnsupportedNote'));
+    if(voiceModeEnabled){ voiceModeEnabled = false; updateVoiceModeUI(); }
+    return;
+  }
+  if(isListening) return;
+  // stop 小懵 talking so it doesn't get picked up by the mic
+  if(ttsSupported) window.speechSynthesis.cancel();
+
+  recognition = new SpeechRecognitionCtor();
+  recognition.lang = appLang === 'en' ? 'en-US' : 'zh-CN';
+  recognition.continuous = false;
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+  let gotResult = false;
+
+  recognition.onstart = () => {
+    isListening = true;
+    setMicUI(true);
+    setVoiceModeStatus('listening');
+  };
+  recognition.onresult = (e) => {
+    const transcript = e.results[0][0].transcript.trim();
+    if(!transcript) return;
+    gotResult = true;
+    el('textInput').value = transcript;
+    autoGrow();
+    if(!voiceReplyEnabled){
+      voiceReplyEnabled = ttsSupported;
+      saveVoicePref();
+      updateVoiceToggleUI();
+    }
+    setVoiceModeStatus('thinking');
+    handleSend();
+  };
+  recognition.onerror = (e) => {
+    if(e.error === 'not-allowed' || e.error === 'service-not-allowed'){
+      addSystemNote(t('micDeniedNote'));
+      if(voiceModeEnabled){ voiceModeEnabled = false; updateVoiceModeUI(); }
+    } else if(e.error !== 'aborted' && e.error !== 'no-speech'){
+      addSystemNote(t('voiceErrorNote', e.error));
+    }
+  };
+  recognition.onend = () => {
+    isListening = false;
+    setMicUI(false);
+    if(!gotResult && voiceModeEnabled) startListenTurn();
+  };
+  try{
+    recognition.start();
+  }catch(err){
+    isListening = false;
+    setMicUI(false);
+  }
+}
+function stopListening(){
+  if(recognition && isListening) recognition.stop();
+}
+
+function startListenTurn(){
+  if(voiceApiKey) startListeningCloud();
+  else startListening();
+}
+function stopListenTurn(){
+  if(voiceApiKey) stopListeningCloud();
+  else stopListening();
+}
+
+function updateVoiceModeUI(){
+  const btn = el('voiceModeBtn');
+  btn.classList.toggle('on', voiceModeEnabled);
+  btn.title = t('voiceModeBtnTitle');
+  setVoiceModeStatus(voiceModeEnabled ? 'idle' : null);
+}
+
+el('voiceModeBtn').onclick = () => {
+  if(!connected){
+    addErrorBubble(t('notConnected'), t('notConnectedDetailShort'));
+    drawer.classList.add('open');
+    return;
+  }
+  voiceModeEnabled = !voiceModeEnabled;
+  updateVoiceModeUI();
+  if(voiceModeEnabled){
+    if(!voiceReplyEnabled){
+      voiceReplyEnabled = true;
+      saveVoicePref();
+      updateVoiceToggleUI();
+    }
+    if(!isListening) startListenTurn();
+  } else {
+    if(isListening) stopListenTurn();
+    stopSpeakingCloud();
+    if(ttsSupported) window.speechSynthesis.cancel();
+  }
+};
+
+el('micBtn').onclick = () => {
+  if(el('sendBtn').disabled) return; // 小懵还在思考，先别打断
+  if(isListening){
+    stopListenTurn();
+    return;
+  }
+  // tapping mic while 小懵 is talking interrupts her (barge-in)
+  if(ttsAudio) stopSpeakingCloud();
+  if(ttsSupported && window.speechSynthesis.speaking) window.speechSynthesis.cancel();
+  startListenTurn();
+};
+updateMicAvailability();
+
 function showEmptyState(){
   messagesEl.innerHTML = `
     <div class="empty-state">
       <div class="big-mascot" id="emptyMascotSlot"></div>
-      <h2>小懵还在等你连接模型</h2>
-      <p>点右上角 ⚙ 填一下火山方舟的 API Key，小懵就能陪你摆棋盘、讲规则、算分数啦</p>
+      <h2>${t('emptyStateTitle')}</h2>
+      <p>${t('emptyStateDesc')}</p>
     </div>`;
   setMascotState('idle');
 }
@@ -694,6 +3907,8 @@ function loadSaved(){
       el('apiKeyInput').value = cfg.apiKey || '';
       if(cfg.modelId) el('modelIdInput').value = cfg.modelId;
       if(cfg.baseUrl) el('baseUrlInput').value = cfg.baseUrl;
+      if(cfg.voiceApiKey) el('voiceApiKeyInput').value = cfg.voiceApiKey;
+      if(cfg.voiceApiBaseUrl) el('voiceApiBaseUrlInput').value = cfg.voiceApiBaseUrl;
       el('rememberCheck').checked = true;
       if(cfg.apiKey){
         applyConfig(false);
@@ -706,14 +3921,18 @@ function applyConfig(showDrawerAfter){
   apiKey = el('apiKeyInput').value.trim();
   modelId = el('modelIdInput').value.trim();
   baseUrl = el('baseUrlInput').value.trim();
+  voiceApiKey = el('voiceApiKeyInput').value.trim();
+  voiceApiBaseUrl = el('voiceApiBaseUrlInput').value.trim();
+  updateMicAvailability();
+  updateVoiceToggleUI();
   if(el('rememberCheck').checked && apiKey){
-    localStorage.setItem('xiaomeng_config', JSON.stringify({apiKey, modelId, baseUrl}));
+    localStorage.setItem('xiaomeng_config', JSON.stringify({apiKey, modelId, baseUrl, voiceApiKey, voiceApiBaseUrl}));
   } else {
     localStorage.removeItem('xiaomeng_config');
   }
   if(apiKey && modelId && baseUrl){
     connected = true;
-    el('statusLine').textContent = '已连接 · ' + modelId;
+    el('statusLine').textContent = t('connectedAs', modelId);
     el('statusDot').classList.add('on');
     if(history.length === 0){
       sendToModel(null, true);
@@ -727,8 +3946,14 @@ function applyConfig(showDrawerAfter){
 el('settingsBtn').onclick = () => drawer.classList.toggle('open');
 el('saveKeyBtn').onclick = () => { applyConfig(false); };
 
+el('agentNameInput').value = agentName;
+el('saveAgentNameBtn').onclick = () => {
+  setAgentName(el('agentNameInput').value);
+  el('agentNameInput').value = agentName;
+};
+
 el('resetBtn').onclick = () => {
-  if(confirm('重新开始会清空当前对话记录，确定吗？')){
+  if(confirm(t('resetConfirm'))){
     history = [];
     if(connected){
       sendToModel(null, true);
@@ -738,7 +3963,7 @@ el('resetBtn').onclick = () => {
   }
 };
 
-function addBubble(role, text, images){
+function addBubble(role, text, images, authorName){
   clearEmptyState();
   const row = document.createElement('div');
   row.className = 'msg-row ' + (role === 'user' ? 'user' : 'host');
@@ -746,7 +3971,8 @@ function addBubble(role, text, images){
   avatar.className = 'avatar';
   if(role === 'user'){
     avatar.classList.add('user');
-    avatar.textContent = '你';
+    avatar.textContent = authorName ? authorName.slice(0,1) : t('youLabel');
+    if(authorName) avatar.title = authorName;
   } else {
     avatar.classList.add('host');
     avatar.innerHTML = mascotAvatarHTML('idle');
@@ -847,9 +4073,9 @@ function detectReplyState(text){
   return 'talking';
 }
 
-async function sendToModel(userText, isFirstTurn, images){
+async function sendToModel(userText, isFirstTurn, images, skipPush){
   if(!connected){
-    addErrorBubble('还没连接模型', '请先点右上角 ⚙ 设置并保存你的 API Key');
+    addErrorBubble(t('notConnected'), t('notConnectedDetailShort'));
     drawer.classList.add('open');
     return;
   }
@@ -863,15 +4089,16 @@ async function sendToModel(userText, isFirstTurn, images){
       userContent.push({type:'image_url', image_url:{url: src}});
     });
   }
-  if(!isFirstTurn){
+  if(!isFirstTurn && !skipPush){
     history.push({role:'user', content: userText && !images ? userText : userContent});
   }
 
   addTypingIndicator();
   el('sendBtn').disabled = true;
 
+  const systemPrompt = buildSystemPrompt();
   const messagesPayload = [
-    {role:'system', content: SYSTEM_PROMPT},
+    {role:'system', content: systemPrompt},
     ...history
   ];
 
@@ -884,7 +4111,7 @@ async function sendToModel(userText, isFirstTurn, images){
       },
       body: JSON.stringify({
         model: modelId,
-        messages: isFirstTurn ? [{role:'system', content: SYSTEM_PROMPT},{role:'user', content:'（开始）'}] : messagesPayload,
+        messages: isFirstTurn ? [{role:'system', content: systemPrompt},{role:'user', content:'（开始）'}] : messagesPayload,
         temperature: 0.7
       })
     });
@@ -903,24 +4130,73 @@ async function sendToModel(userText, isFirstTurn, images){
     removeTypingIndicator();
     const replyState = detectReplyState(reply);
     setMascotState(replyState);
-    addBubble('assistant', reply);
+
+    const liveSession = (currentGameId && currentSessionId) ? findSession(currentGameId, currentSessionId) : null;
+    let displayReply = reply;
+    let roleAssignments = [];
+    if(liveSession && liveSession.roomCode && firebaseReady){
+      roleAssignments = parseRoleAssignments(reply);
+      if(roleAssignments.length) displayReply = stripRoleAssignmentBlock(reply);
+    }
+
+    addBubble('assistant', displayReply);
     history.push({role:'assistant', content: reply});
+    speakText(displayReply, () => { if(voiceModeEnabled) startListenTurn(); });
     setTimeout(() => setMascotState('idle'), 2200);
+
+    if(currentGameId && currentSessionId){
+      const actions = parseActions(reply);
+      if(actions.length){
+        attachActionsToLastRound(currentGameId, currentSessionId, actions);
+      }
+      const outcome = parseOutcome(reply);
+      if(outcome){
+        attachOutcomeToLastRound(currentGameId, currentSessionId, outcome);
+      }
+      const roundInfo = parseRoundInfo(reply);
+      if(roundInfo){
+        addRoundEntry(currentGameId, currentSessionId, roundInfo);
+      }
+      if(liveSession){
+        liveSession.transcript = history.slice(-40);
+        liveSession.lastActiveAt = Date.now();
+        saveGamesStore();
+        if(roleAssignments.length){
+          roleAssignments.forEach(r => {
+            assignPrivateRole(liveSession.roomCode, r.player, r.note ? `${r.role}\n${r.note}` : r.role)
+              .catch(e => console.warn('assign private role failed', e));
+          });
+        }
+        if(liveSession.roomCode && firebaseReady){
+          const assistantMsg = {
+            id: 'msg_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
+            role: 'assistant',
+            authorName: findGameById(currentGameId) ? findGameById(currentGameId).name : t('youLabel'),
+            text: displayReply,
+            ts: Date.now()
+          };
+          seenRoomMessageIds.add(assistantMsg.id);
+          sendRoomMessage(liveSession.roomCode, assistantMsg).catch(e => console.warn('mirror assistant msg failed', e));
+        }
+      }
+      updateSessionStatusBar();
+    }
 
     const nums = reply.match(/^\d+\.\s*.+$/gm);
     if(nums && nums.length <= 4){
       showQuickReplies(nums.map(n => n.replace(/^\d+\.\s*/, '').slice(0,14)));
     } else if(/完成了|还没有|我有问题/.test(reply)){
-      showQuickReplies(['完成了','还没有','我有问题']);
+      showQuickReplies([t('quickReplyDone'), t('quickReplyNotYet'), t('quickReplyQuestion')]);
     }
 
   }catch(err){
     removeTypingIndicator();
     let detail = err.message;
     if(/Failed to fetch/i.test(detail)){
-      detail = 'Failed to fetch —— 很可能是浏览器 CORS 限制，浏览器不允许网页直接调用火山方舟接口。需要一个服务器中转（proxy）才能绕开，不是你的 Key 或模型 ID 填错了。';
+      detail = t('corsErrorDetail');
     }
-    addErrorBubble('请求失败', detail);
+    addErrorBubble(t('requestFailedTitle'), detail);
+    if(voiceModeEnabled) startListenTurn();
   } finally {
     el('sendBtn').disabled = false;
   }
@@ -930,17 +4206,36 @@ function handleSend(){
   const text = el('textInput').value.trim();
   if(!text && pendingImages.length === 0) return;
   if(!connected){
-    addErrorBubble('还没连接模型', '请先点右上角 ⚙ 设置并保存你的 API Key');
+    addErrorBubble(t('notConnected'), t('notConnectedDetailShort'));
     drawer.classList.add('open');
     return;
   }
   addBubble('user', text, pendingImages.map(p => p.dataUrl));
+  if(currentGameId && currentSessionId && text){
+    fillLastRoundAction(currentGameId, currentSessionId, text);
+  }
   const imgsToSend = pendingImages.map(p => p.dataUrl);
   el('textInput').value = '';
   autoGrow();
   pendingImages = [];
   renderImgStrip();
-  sendToModel(text, false, imgsToSend);
+
+  let modelText = text;
+  const session = (currentGameId && currentSessionId) ? findSession(currentGameId, currentSessionId) : null;
+  if(session && session.roomCode && firebaseReady){
+    const hostName = hostDisplayNameForCurrentSession(session);
+    modelText = hostName + '：' + text;
+    const hostMsg = {
+      id: 'msg_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
+      role: 'user',
+      authorName: hostName,
+      text,
+      ts: Date.now()
+    };
+    seenRoomMessageIds.add(hostMsg.id);
+    sendRoomMessage(session.roomCode, hostMsg).catch(e => console.warn('mirror host msg failed', e));
+  }
+  sendToModel(modelText, false, imgsToSend);
 }
 
 el('sendBtn').onclick = handleSend;
@@ -977,7 +4272,7 @@ function renderImgStrip(){
   pendingImages.forEach((img, i) => {
     const chip = document.createElement('div');
     chip.className = 'img-chip';
-    chip.innerHTML = `<img src="${img.dataUrl}"><button onclick="removeImg(${i})" aria-label="移除图片">×</button>`;
+    chip.innerHTML = `<img src="${img.dataUrl}"><button onclick="removeImg(${i})" aria-label="${t('removeImgAria')}">×</button>`;
     strip.appendChild(chip);
   });
 }
@@ -988,11 +4283,27 @@ function removeImg(i){
 window.removeImg = removeImg;
 
 /* init */
+el('filterMode').innerHTML = `<option value="">${t('filterModeAll')}</option>` +
+  Object.values(FACILITATION_MODES).map(m => `<option value="${m.id}">${m.icon} ${escapeHTML(modeInfoLocalized(m.id).label)}</option>`).join('');
+
 setMascotState('idle');
 showEmptyState();
 loadSaved();
+updateSessionStatusBar();
+loadVoicePref();
+updateVoiceToggleUI();
+updateVoiceModeUI();
 if(!connected){
   drawer.classList.add('open');
+}
+
+applyStaticTranslations();
+const urlParams = new URLSearchParams(location.search);
+const joinCode = urlParams.get('room');
+if(joinCode){
+  initJoinView(joinCode.toUpperCase());
+} else {
+  showDashboard();
 }
 </script>
 </body>
