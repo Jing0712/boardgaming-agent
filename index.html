@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>小懵 · AI 桌游主持人</title>
+<title>小懵桌游图鉴 · 卡通猫版</title>
 <style>
   :root{
     --bg-deep:#E7DFC9;
@@ -27,6 +27,10 @@
     --success-light:#E5EBDD;
     --line:#DDD0AE;
     --teal:#3A6E76;
+    --atlas-paper:#F7F0DF;
+    --atlas-paper-deep:#EADFC5;
+    --atlas-violet:#5A506F;
+    --atlas-rose:#B76D62;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;height:100%;}
@@ -381,9 +385,13 @@
     flex-shrink:0;
     display:flex;align-items:center;justify-content:center;
   }
-  .mascot-face svg{width:76%;height:76%;}
+  .mascot-face img{
+    height:188%;width:auto;max-width:none;
+    object-fit:contain;transform:translateY(18%);
+    filter:drop-shadow(0 2px 2px rgba(73,54,35,.12));
+  }
 
-  /* chat area + empty state: standalone pixel-cat, no frame/background */
+  /* chat area + empty state: standalone watercolor cat, no frame/background */
   .mascot-body{
     position:relative;
     display:inline-flex;
@@ -391,7 +399,10 @@
     flex-shrink:0;
     aspect-ratio:1;
   }
-  .mascot-body svg{width:100%;height:100%;}
+  .mascot-body img{
+    display:block;width:100%;height:100%;object-fit:contain;
+    filter:drop-shadow(0 3px 3px rgba(73,54,35,.16));
+  }
 
   @keyframes idleBreathe{
     0%,100%{transform:translateY(0) scale(1);}
@@ -478,7 +489,7 @@
     position:absolute;top:0;left:0;width:100%;height:100%;
   }
   .dash-map-compass{
-    position:absolute;top:10px;right:10px;width:15%;height:15%;
+    position:absolute;top:76%;left:1%;width:8%;height:9%;
     opacity:0.7;pointer-events:none;
   }
   .dash-map-pin{
@@ -870,6 +881,272 @@
     padding:8px 0;max-height:100px;color:var(--ink);
     background:transparent;
   }
+
+  /* ===== 2026 Atlas redesign: layered paper, travel journal, tabletop map ===== */
+  .dashboard-view{
+    --atlas-paper:#f7f0df;
+    --atlas-paper-deep:#eadfc5;
+    --atlas-violet:#5a506f;
+    --atlas-rose:#b76d62;
+    background-color:#ded3b9;
+    background-image:
+      radial-gradient(circle at 16% 8%,rgba(255,255,255,.55),transparent 34%),
+      radial-gradient(circle at 86% 68%,rgba(111,93,78,.08),transparent 30%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.72' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)' opacity='.12'/%3E%3C/svg%3E");
+  }
+  .dashboard-inner{
+    max-width:1040px;
+    padding:24px 28px 80px;
+  }
+  .dash-topbar{
+    position:relative;
+    padding:10px 16px 16px;
+    margin-bottom:18px;
+    border-bottom:1px solid rgba(93,78,58,.28);
+  }
+  .atlas-brand-mark{
+    width:43px;height:43px;border:1px solid var(--atlas-violet);border-radius:50%;
+    display:grid;place-items:center;flex:0 0 auto;
+    color:var(--atlas-violet);font:700 12px/1 Georgia,serif;letter-spacing:.08em;
+    box-shadow:inset 0 0 0 4px rgba(90,80,111,.08);
+    transform:rotate(-5deg);
+  }
+  .atlas-brand-copy h1{font:700 18px/1.2 Georgia,"Songti SC",serif;letter-spacing:.02em;}
+  .atlas-brand-copy span{display:block;margin-top:4px;font-size:10px;color:var(--ink-soft);letter-spacing:.18em;}
+  .atlas-top-rule{flex:0 1 260px;height:20px;display:flex;align-items:center;margin:0 10px;opacity:.42;}
+  .atlas-top-rule::before,.atlas-top-rule::after{content:"";height:1px;background:var(--ink-soft);flex:1;}
+  .atlas-top-rule span{width:5px;height:5px;border:1px solid var(--ink-soft);transform:rotate(45deg);margin:0 10px;}
+  .dash-topbar .icon-btn{border-radius:50%;background:rgba(250,246,234,.72);}
+
+  .atlas-hero{
+    min-height:300px;
+    display:grid;grid-template-columns:minmax(0,1.45fr) minmax(250px,.55fr);
+    position:relative;overflow:hidden;
+    background-color:var(--atlas-paper);
+    background-image:
+      linear-gradient(100deg,rgba(255,255,255,.52),transparent 62%),
+      radial-gradient(circle at 76% 50%,rgba(183,109,98,.13),transparent 29%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.78' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.09'/%3E%3C/svg%3E");
+    border:1px solid #cdbf9e;border-radius:4px 14px 5px 11px;
+    box-shadow:0 16px 30px rgba(84,66,42,.12),0 2px 0 rgba(255,255,255,.6) inset;
+    margin-bottom:34px;
+  }
+  .atlas-hero::before,.atlas-hero::after{
+    content:"";position:absolute;width:94px;height:24px;background:rgba(218,202,169,.65);
+    border-left:1px solid rgba(113,94,67,.14);border-right:1px solid rgba(113,94,67,.14);
+    top:8px;z-index:2;filter:drop-shadow(0 1px 1px rgba(0,0,0,.08));
+  }
+  .atlas-hero::before{left:-27px;transform:rotate(-38deg);}
+  .atlas-hero::after{right:-27px;transform:rotate(38deg);}
+  .atlas-hero-copy{position:relative;padding:48px 54px 42px;z-index:2;}
+  .atlas-kicker{display:flex;align-items:center;gap:10px;color:var(--atlas-rose);font-size:10px;letter-spacing:.18em;text-transform:uppercase;}
+  .atlas-kicker span{width:26px;height:1px;background:currentColor;}
+  .atlas-hero h2{
+    max-width:650px;margin:15px 0 13px;
+    font:600 clamp(34px,5vw,58px)/1.12 Georgia,"Songti SC",serif;
+    color:#3b332a;letter-spacing:-.035em;
+  }
+  .atlas-hero-copy>p{max-width:570px;margin:0;color:#6f6657;font-size:14px;line-height:1.8;}
+  .atlas-hero-actions{display:flex;gap:10px;align-items:center;margin-top:25px;}
+  .dash-hero-btn{
+    background:var(--atlas-violet);border-radius:2px 10px 3px 9px;
+    box-shadow:3px 3px 0 rgba(90,80,111,.16);padding:13px 22px;
+  }
+  .atlas-ghost-btn{
+    border:1px solid #b9aa8c;background:rgba(255,255,255,.32);color:var(--ink);
+    padding:12px 20px;border-radius:8px 3px 9px 2px;font:600 13px/1 inherit;cursor:pointer;
+  }
+  .atlas-postmark{
+    position:absolute;right:30px;bottom:24px;width:82px;height:82px;border:2px solid rgba(90,80,111,.32);border-radius:50%;
+    display:grid;place-content:center;text-align:center;color:rgba(90,80,111,.48);font:700 9px/1.4 Georgia,serif;letter-spacing:.12em;
+    transform:rotate(-12deg);
+  }
+  .atlas-postmark small{font-size:7px;}
+  .atlas-hero-mascot{position:relative;display:flex;align-items:flex-end;justify-content:center;min-height:300px;padding:24px 30px 0 0;z-index:1;}
+  .atlas-hero-mascot::before{
+    content:"";position:absolute;width:240px;height:190px;border:1px dashed rgba(90,80,111,.22);border-radius:50%;
+    transform:rotate(-8deg);bottom:24px;
+  }
+  .atlas-hero-mascot img{position:relative;width:min(265px,100%);height:285px;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 9px 8px rgba(69,53,39,.14));}
+  .atlas-speech{
+    position:absolute;top:34px;left:-44px;z-index:3;max-width:160px;padding:9px 12px;
+    background:#fbf7ed;border:1px solid #cdbf9e;border-radius:14px 14px 4px 14px;
+    color:var(--ink-soft);font-size:11px;line-height:1.45;box-shadow:0 3px 10px rgba(80,62,40,.08);
+    transform:rotate(-2deg);
+  }
+
+  .atlas-layout{display:grid;grid-template-columns:minmax(0,1fr) 285px;gap:24px;align-items:start;margin-bottom:34px;}
+  .atlas-map-section,.atlas-tools{min-width:0;}
+  .atlas-section-no{display:block;font:700 9px/1 Georgia,serif;color:var(--atlas-rose);letter-spacing:.16em;margin-bottom:7px;}
+  .atlas-map-head{align-items:end;margin:0 4px 12px;}
+  .atlas-map-head h3,.atlas-tools h3{font:600 22px/1.25 Georgia,"Songti SC",serif;margin:0;color:#3b332a;}
+  .dash-map-card{
+    aspect-ratio:1.42/1;border-radius:2px 11px 3px 8px;border:1px solid #c8b995;
+    background-color:#eee2c7;
+    background-image:
+      radial-gradient(circle at 17% 22%,rgba(255,248,229,.86),transparent 26%),
+      radial-gradient(circle at 74% 66%,rgba(178,149,106,.14),transparent 33%),
+      linear-gradient(90deg,transparent 49.7%,rgba(114,91,61,.10) 50%,rgba(255,255,255,.22) 50.4%,transparent 50.8%),
+      linear-gradient(0deg,transparent 49.5%,rgba(114,91,61,.08) 50%,rgba(255,255,255,.19) 50.4%,transparent 50.9%),
+      repeating-linear-gradient(0deg,transparent 0 34px,rgba(100,83,61,.032) 35px),
+      repeating-linear-gradient(90deg,transparent 0 34px,rgba(100,83,61,.032) 35px),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='170' height='170'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='5'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.14'/%3E%3C/svg%3E");
+    box-shadow:0 12px 26px rgba(85,67,44,.15),inset 0 0 72px rgba(102,76,43,.14),inset 0 0 0 9px rgba(255,249,233,.22);
+  }
+  .dash-map-card::before{
+    content:"";position:absolute;inset:9px;border:1px solid rgba(112,91,64,.18);pointer-events:none;
+    border-radius:48% 3px 45% 2px/4px 50% 3px 48%;z-index:1;
+  }
+  .dash-map-path{z-index:0;}
+  .dash-map-canvas{z-index:3;}
+  .dash-map-path .route-shadow{stroke:rgba(78,62,43,.14);stroke-width:1.45;fill:none;stroke-linecap:round;}
+  .dash-map-path .route{stroke:#756d5d;stroke-width:.7;stroke-dasharray:2.5 2.2;opacity:.74;}
+  .dash-map-path .region{opacity:.28;}
+  .dash-map-path .sparkle{fill:var(--atlas-rose);opacity:.34;}
+  .dash-map-path .terrain-contour{fill:none;stroke:#8e795d;stroke-width:.18;opacity:.22;filter:url(#mapWatercolor);}
+  .dash-map-path .terrain-wash{mix-blend-mode:multiply;filter:url(#mapPigment);}
+  .dash-map-path .terrain-water{fill:#a9c6bd;stroke:#6f9288;stroke-width:.22;opacity:.31;filter:url(#mapWatercolor);}
+  .dash-map-path .terrain-water-glaze{fill:#d6e3db;opacity:.28;filter:url(#mapPigment);}
+  .dash-map-path .terrain-water-line{fill:none;stroke:#668b82;stroke-width:.18;opacity:.34;filter:url(#mapWatercolor);}
+  .dash-map-path .terrain-mountain{fill:#a89577;stroke:#725f49;stroke-width:.14;opacity:.36;filter:url(#mapWatercolor);}
+  .dash-map-path .terrain-mountain-glaze{fill:#cdb998;opacity:.22;filter:url(#mapPigment);}
+  .dash-map-path .terrain-snow{fill:#f6eddc;opacity:.68;filter:url(#mapWatercolor);}
+  .dash-map-path .terrain-tree{fill:#6f866d;stroke:#50634f;stroke-width:.10;opacity:.44;filter:url(#mapWatercolor);}
+  .dash-map-path .terrain-tree-light{fill:#a3ad85;opacity:.26;filter:url(#mapPigment);}
+  .dash-map-path .terrain-town{fill:#b57466;stroke:#765247;stroke-width:.10;opacity:.42;filter:url(#mapWatercolor);}
+  .dash-map-path .terrain-label{fill:#6f6250;font:italic 1.8px Georgia,serif;letter-spacing:.12em;opacity:.58;}
+  .dash-map-path .terrain-frame{fill:none;stroke:#88755a;stroke-width:.2;stroke-dasharray:.7 .65;opacity:.28;}
+  .dash-map-pin{width:168px;gap:2px;z-index:4;}
+  .dash-map-pin-icon,.dash-map-pin-icon.has-image{width:120px;aspect-ratio:1;}
+  .dash-map-pin-icon.has-image img{filter:drop-shadow(0 5px 5px rgba(62,45,31,.25));transition:transform .18s ease;}
+  .dash-map-pin:hover .dash-map-pin-icon.has-image img{transform:translateY(-4px) rotate(-2deg) scale(1.06);}
+  .dash-map-pin-label{
+    font-size:11px;background:#faf5e8;border-color:#cdbf9e;border-radius:10px 4px 9px 3px;
+    padding:3px 9px;box-shadow:1px 2px 0 rgba(94,74,49,.08);letter-spacing:.03em;
+  }
+  .dash-map-compass{opacity:.42;}
+  .atlas-map-note{
+    position:absolute;left:18px;bottom:14px;z-index:6;padding:6px 10px;background:rgba(250,245,232,.86);
+    border-left:2px solid var(--atlas-rose);color:var(--ink-soft);font-size:10px;transform:rotate(-1deg);
+  }
+  .atlas-map-guide{
+    position:absolute;right:2.4%;bottom:2.5%;z-index:5;width:112px;height:145px;
+    pointer-events:none;filter:drop-shadow(0 5px 4px rgba(65,48,32,.2));
+  }
+  .atlas-map-guide img{width:100%;height:100%;object-fit:contain;object-position:center bottom;}
+  .atlas-map-guide::after{
+    content:"";position:absolute;left:45%;bottom:3px;width:34px;height:9px;border-radius:50%;
+    background:rgba(72,55,37,.18);filter:blur(3px);z-index:-1;
+  }
+  .atlas-guide-label{
+    position:absolute;right:76%;top:21%;width:max-content;max-width:105px;padding:5px 8px;
+    background:#fbf5e6;border:1px solid #c2af86;border-radius:9px 9px 2px 9px;
+    color:#6a5c4a;font:italic 9px/1.35 Georgia,"Songti SC",serif;transform:rotate(-3deg);
+  }
+
+  .atlas-tools{
+    position:relative;background:#f6efdf;border:1px solid #c9bb99;border-radius:3px 10px 3px 8px;
+    padding:24px 20px;box-shadow:7px 9px 0 rgba(112,91,61,.08),0 10px 24px rgba(84,66,42,.09);
+  }
+  .atlas-tools::before{content:"";position:absolute;top:-9px;left:50%;width:84px;height:21px;transform:translateX(-50%) rotate(1deg);background:rgba(210,193,158,.62);}
+  .atlas-tools>p{font-size:12px;color:var(--ink-soft);line-height:1.65;margin:9px 0 18px;}
+  .atlas-tools .dash-entry-row{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:0;}
+  .atlas-tools .dash-entry-btn{
+    min-height:92px;align-items:flex-start;text-align:left;padding:13px 12px;border-radius:3px 9px 3px 8px;
+    background:rgba(255,252,244,.65);border-color:#d2c4a3;gap:4px;
+  }
+  .atlas-tools .dash-entry-btn.primary{background:var(--atlas-violet);color:#fff;border-color:var(--atlas-violet);}
+  .atlas-tools .dash-entry-btn .entry-icon{font:400 21px/1 Georgia,serif;}
+  .atlas-tools .dash-entry-btn small{font:700 7px/1 Georgia,serif;letter-spacing:.12em;opacity:.56;margin-top:auto;}
+  .atlas-field-note{display:flex;gap:9px;margin-top:17px;padding:13px 3px 2px;border-top:1px dashed #baa985;color:var(--ink-soft);}
+  .atlas-field-note span{font-size:17px;color:var(--atlas-rose);}
+  .atlas-field-note p{font:italic 11px/1.55 Georgia,"Songti SC",serif;margin:0;}
+
+  #searchSection,#continueSection,#myGamesSection{
+    position:relative;background:rgba(247,240,223,.78);border:1px solid #cbbd9d;border-radius:3px 12px 4px 9px;
+    padding:22px 24px;box-shadow:0 8px 20px rgba(84,66,42,.08);margin-bottom:22px;
+  }
+  #continueSection::before,#myGamesSection::before{content:"";position:absolute;width:68px;height:17px;top:-8px;left:44px;background:rgba(211,194,161,.58);transform:rotate(-2deg);}
+  .dash-section-head h3{font:600 20px/1.3 Georgia,"Songti SC",serif;}
+  .continue-row{gap:14px;padding:3px 2px 8px;}
+  .continue-card{
+    min-width:235px;background:#fbf7ec;border-color:#d0c1a0;border-radius:3px 10px 3px 8px;
+    padding:16px;box-shadow:3px 4px 0 rgba(100,78,51,.06);position:relative;
+  }
+  .continue-card::after{content:"↗";position:absolute;right:12px;top:10px;color:var(--atlas-rose);font:700 14px Georgia,serif;}
+  .games-grid{gap:10px;}
+  .game-item{border-radius:3px 10px 3px 8px;border-color:#d0c1a0;background:rgba(251,247,236,.82);}
+  .game-icon{border-radius:50%;background:#e9e3ef;}
+  .filters-toggle-btn,.filters-bar,.search-box-input{border-radius:4px 9px 4px 8px;}
+
+  /* Carry the atlas material language into chat and modal surfaces. */
+  .app{
+    max-width:840px;background-color:#eee4cf;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.78' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.08'/%3E%3C/svg%3E");
+    box-shadow:0 0 40px rgba(61,47,31,.2);
+  }
+  .header{
+    background:rgba(244,236,218,.94);border-bottom-color:#cdbf9e;
+    box-shadow:0 4px 14px rgba(80,62,41,.07);z-index:2;
+  }
+  .messages{
+    background-color:#eee5d2;
+    background-image:
+      linear-gradient(90deg,transparent 0 45px,rgba(181,106,96,.12) 46px,transparent 47px),
+      repeating-linear-gradient(0deg,transparent 0 31px,rgba(94,80,63,.055) 32px),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.06'/%3E%3C/svg%3E");
+  }
+  .bubble.host{background:#fbf6e9;border-color:#d0c1a0;border-radius:3px 13px 13px 10px;box-shadow:2px 3px 0 rgba(91,69,43,.05);}
+  .bubble.user{background:var(--atlas-violet);border-radius:13px 3px 10px 13px;}
+  .quick-replies{background:rgba(238,229,210,.94);}
+  .input-bar{background:#e8dcc3;border-top-color:#c6b793;}
+  .input-row{background:#fbf7ec;border-color:#cdbf9e;border-radius:4px 14px 5px 12px;}
+  .modal-box,.join-card{
+    border:1px solid #c8b995;border-radius:4px 14px 5px 11px;
+    background-color:#f8f1e1;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.78' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.07'/%3E%3C/svg%3E");
+    box-shadow:0 18px 40px rgba(50,38,25,.2);
+  }
+
+  @media (max-width:860px){
+    .dashboard-inner{padding:18px 18px 60px;}
+    .atlas-layout{grid-template-columns:1fr;}
+    .atlas-tools{display:grid;grid-template-columns:1fr 2fr;column-gap:18px;align-items:start;}
+    .atlas-tools>p{grid-column:1;}
+    .atlas-tools .dash-entry-row{grid-column:2;grid-row:1/4;}
+    .atlas-field-note{grid-column:1;}
+    .dash-map-pin{width:132px;}
+    .dash-map-pin-icon,.dash-map-pin-icon.has-image{width:92px;}
+    .atlas-map-guide{width:98px;height:126px;}
+  }
+  @media (max-width:640px){
+    .dashboard-inner{padding:12px 12px 48px;}
+    .atlas-top-rule{display:none;}
+    .atlas-brand-copy span{letter-spacing:.08em;}
+    .atlas-hero{grid-template-columns:1fr;min-height:470px;}
+    .atlas-hero-copy{padding:38px 25px 20px;}
+    .atlas-hero h2{font-size:38px;}
+    .atlas-postmark{display:none;}
+    .atlas-hero-mascot{min-height:190px;padding:0 12px;justify-content:flex-end;}
+    .atlas-hero-mascot img{height:210px;width:220px;}
+    .atlas-speech{left:22px;top:20px;max-width:130px;}
+    .atlas-layout{gap:18px;}
+    .dash-map-card{aspect-ratio:3/4;}
+    .dash-map-pin{width:106px;}
+    .dash-map-pin-icon,.dash-map-pin-icon.has-image{width:78px;}
+    .dash-map-pin-label{font-size:10px;}
+    .atlas-map-note{display:none;}
+    .atlas-map-guide{right:1%;bottom:1%;width:78px;height:103px;}
+    .atlas-guide-label{display:none;}
+    .atlas-tools{display:block;padding:22px 16px;}
+    .atlas-tools .dash-entry-row{grid-template-columns:1fr 1fr;}
+    .atlas-field-note{margin-top:15px;}
+    #searchSection,#continueSection,#myGamesSection{padding:20px 15px;}
+    .continue-card{min-width:210px;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .dash-map-pin-icon.has-image img{transition:none;}
+  }
 </style>
 </head>
 <body>
@@ -878,42 +1155,82 @@
 <div class="dashboard-view" id="dashboardView">
   <div class="dashboard-inner">
     <div class="dash-topbar">
-      <div class="mascot-wrap" id="dashMascotWrap"></div>
-      <h1 data-i18n="pageTitle">小懵 · AI 桌游主持人</h1>
+      <div class="atlas-brand-mark">XM</div>
+      <div class="atlas-brand-copy">
+        <h1 data-i18n="pageTitle">小懵 · AI 桌游主持人</h1>
+        <span data-i18n="atlasBrandSub">桌上世界探索手册</span>
+      </div>
+      <div class="atlas-top-rule" aria-hidden="true"><span></span></div>
       <div class="dash-topbar-btns">
         <button class="icon-btn" id="dashSettingsBtn" data-i18n-title="settingsBtnTitle" data-i18n-aria="settingsBtnAria" title="设置 API" aria-label="设置">⚙</button>
       </div>
     </div>
 
-    <div class="dash-section">
-      <div class="dash-section-head">
-        <h3 id="genreSectionTitle">按桌游类型找游戏</h3>
-        <div class="lang-toggle" id="langToggle"></div>
+    <section class="atlas-hero">
+      <div class="atlas-hero-copy">
+        <div class="atlas-kicker"><span></span><b data-i18n="atlasKicker">小懵的桌游图鉴 · VOL. 01</b></div>
+        <h2 data-i18n="atlasHeroTitle">想去哪个桌上世界？</h2>
+        <p data-i18n="atlasHeroDesc">从规则讲解、摆盘到逐回合主持，小懵会沿着地图陪你走完整局。</p>
+        <div class="atlas-hero-actions">
+          <button class="dash-hero-btn" id="atlasRecommendBtn" data-i18n="atlasRecommendBtn">✦ 帮我推荐</button>
+          <button class="atlas-ghost-btn" id="atlasSearchBtn" data-i18n="entrySearchLabel">搜索桌游</button>
+        </div>
+        <div class="atlas-postmark" aria-hidden="true">TABLETOP<br>ATLAS<br><small>EST. 2026</small></div>
       </div>
-      <div class="dash-map-card">
-        <svg class="dash-map-path" id="genreMapPath" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
-        <div class="dash-map-canvas" id="genreMap"></div>
-        <svg class="dash-map-compass" viewBox="0 0 100 100">
-          <circle cx="50" cy="50" r="47" fill="none" stroke="var(--dazed)" stroke-width="1.5"/>
-          <polygon points="50.0,8.0 56.1,35.2 79.7,20.3 64.8,43.9 92.0,50.0 64.8,56.1 79.7,79.7 56.1,64.8 50.0,92.0 43.9,64.8 20.3,79.7 35.2,56.1 8.0,50.0 35.2,43.9 20.3,20.3 43.9,35.2" fill="var(--dazed)"/>
-          <circle cx="50" cy="50" r="5" fill="var(--coral)"/>
-        </svg>
+      <div class="atlas-hero-mascot">
+        <div class="atlas-speech" data-i18n="atlasSpeech">规则交给我，选择交给你。</div>
+        <img src="assets/mascot/cat.png" alt="小懵桌游主持猫" id="atlasMascotImage">
       </div>
-    </div>
+    </section>
 
-    <div class="dash-entry-row">
-      <button class="dash-entry-btn" id="entryNewSessionBtn">
-        <span class="entry-icon">🎲</span><span data-i18n="entryNewSessionLabel">新建对局</span>
-      </button>
-      <button class="dash-entry-btn" id="entrySearchBtn">
-        <span class="entry-icon">🔍</span><span data-i18n="entrySearchLabel">搜索</span>
-      </button>
-      <button class="dash-entry-btn" id="entryContinueBtn">
-        <span class="entry-icon">🕐</span><span data-i18n="entryContinueLabel">继续对局</span>
-      </button>
-      <button class="dash-entry-btn" id="entryLibraryBtn">
-        <span class="entry-icon">📚</span><span data-i18n="entryLibraryLabel">我的桌游</span>
-      </button>
+    <div class="atlas-layout">
+      <div class="dash-section atlas-map-section">
+        <div class="dash-section-head atlas-map-head">
+          <div>
+            <span class="atlas-section-no">01 / EXPLORE</span>
+            <h3 id="genreSectionTitle">按桌游类型找游戏</h3>
+          </div>
+          <div class="lang-toggle" id="langToggle"></div>
+        </div>
+        <div class="dash-map-card">
+          <svg class="dash-map-path" id="genreMapPath" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+          <div class="dash-map-canvas" id="genreMap"></div>
+          <div class="atlas-map-guide" aria-hidden="true">
+            <span class="atlas-guide-label" data-i18n="atlasGuideLabel">小懵正在这里带路</span>
+            <img src="assets/mascot/cat.png" alt="">
+          </div>
+          <div class="atlas-map-note" data-i18n="atlasMapNote">点击地图上的地点，查看适合你的游戏</div>
+          <svg class="dash-map-compass" viewBox="0 0 100 100" aria-hidden="true">
+            <circle cx="50" cy="50" r="47" fill="none" stroke="var(--dazed)" stroke-width="1.5"/>
+            <polygon points="50.0,8.0 56.1,35.2 79.7,20.3 64.8,43.9 92.0,50.0 64.8,56.1 79.7,79.7 56.1,64.8 50.0,92.0 43.9,64.8 20.3,79.7 35.2,56.1 8.0,50.0 35.2,43.9 20.3,20.3 43.9,35.2" fill="var(--dazed)"/>
+            <circle cx="50" cy="50" r="5" fill="var(--coral)"/>
+          </svg>
+        </div>
+      </div>
+
+      <aside class="atlas-tools">
+        <span class="atlas-section-no">02 / PREPARE</span>
+        <h3 data-i18n="atlasToolsTitle">出发前的准备</h3>
+        <p data-i18n="atlasToolsDesc">创建新旅程，或回到上一张还没走完的地图。</p>
+        <div class="dash-entry-row">
+          <button class="dash-entry-btn primary" id="entryNewSessionBtn">
+            <span class="entry-icon">✦</span><span data-i18n="entryNewSessionLabel">新建对局</span><small>NEW JOURNEY</small>
+          </button>
+          <button class="dash-entry-btn" id="entrySearchBtn">
+            <span class="entry-icon">⌕</span><span data-i18n="entrySearchLabel">搜索</span><small>FIND A GAME</small>
+          </button>
+          <button class="dash-entry-btn" id="entryContinueBtn">
+            <span class="entry-icon">↻</span><span data-i18n="entryContinueLabel">继续对局</span><small>CONTINUE</small>
+          </button>
+          <button class="dash-entry-btn" id="entryLibraryBtn">
+            <span class="entry-icon">▤</span><span data-i18n="entryLibraryLabel">我的桌游</span><small>COLLECTION</small>
+          </button>
+        </div>
+        <div class="atlas-field-note">
+          <span>✎</span>
+          <p data-i18n="atlasFieldNote">不知道玩什么？告诉小懵人数、时长和偏好，它会替你规划路线。</p>
+        </div>
+      </aside>
     </div>
 
     <div class="dash-section" id="searchSection" style="display:none;">
@@ -1108,6 +1425,22 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="nameOnboardModal">
+  <div class="modal-box">
+    <div class="modal-header-row">
+      <h3 data-i18n="onboardNameTitle">给你的 AI 主持人取个名字</h3>
+    </div>
+    <div class="modal-content">
+      <p style="margin:0 0 14px;font-size:13px;color:var(--ink-soft);line-height:1.6;" data-i18n="onboardNameDesc">以后聊天、语音播报都会用这个名字介绍自己。随时可以在设置里改。</p>
+      <div class="field">
+        <input type="text" id="onboardNameInput" data-i18n-placeholder="agentNamePh" placeholder="小懵" maxlength="12">
+      </div>
+      <button class="save-btn" id="onboardNameSaveBtn" data-i18n="onboardNameSaveBtn" style="width:100%;margin-top:14px;">就这个名字</button>
+      <button id="onboardNameSkipBtn" data-i18n="onboardNameSkipBtn" style="width:100%;margin-top:8px;background:transparent;border:none;color:var(--ink-soft);font-size:12px;cursor:pointer;padding:6px;">先用默认的"小懵"</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="myRoleModal">
   <div class="modal-box">
     <div class="modal-header-row">
@@ -1296,100 +1629,24 @@ function listenToMyRole(roomCode, playerName, cb){
   });
 }
 
-/* ===== Mascot — pixel-art cat, drawn as inline SVG (no image assets) ===== */
-
-/* 16x16 shared silhouette. '.' = transparent. Colors resolved via PIXEL_CAT_PALETTE. */
-const PIXEL_CAT_BASE = [
-  "....B......B....",
-  "...BB......BB...",
-  "..BBBE....EBBB..",
-  ".BBBBB....BBBBB.",
-  "..BBBBBBBBBBBB..",
-  ".BBBBBBBBBBBBBB.",
-  ".BBBBBBBBBBBBBB.",
-  ".BBBBBBBBBBBBBB.",
-  ".BBBBBBBBBBBBBB.",
-  ".BBBBBBBBBBBBBB.",
-  "..BBBBBBBBBBBB..",
-  "..BBBBBBBBBBBB..",
-  "...BBBBBBBBBB...",
-  "....BBBBBBBB....",
-  ".....BBBBBB.....",
-  ".....BBBBBB.....",
-];
-const PIXEL_CAT_PALETTE = {
-  B: 'var(--coral)',
-  E: 'var(--dazed)',
-  K: 'var(--ink)',
-};
-function catRow(setters){
-  const arr = new Array(16).fill('.');
-  Object.keys(setters).forEach(col => { arr[+col] = setters[col]; });
-  return arr.join('');
-}
-function catOverlay(map){
-  const rows = [];
-  for(let y = 0; y < 16; y++) rows.push(map[y] || '');
-  return rows;
-}
-/* per-state eyes/mouth overlay, drawn on top of the shared silhouette */
-const PIXEL_CAT_STATES = {
-  idle: catOverlay({
-    6: catRow({4:'K', 11:'K'}),
-    9: catRow({7:'K', 8:'K'}),
-  }),
-  thinking: catOverlay({
-    6: catRow({4:'K', 5:'K', 10:'K', 11:'K'}),
-    9: catRow({6:'K', 7:'K', 8:'K'}),
-  }),
-  talking: catOverlay({
-    6: catRow({4:'K', 11:'K'}),
-    9: catRow({6:'K', 7:'K', 8:'K', 9:'K'}),
-    10: catRow({7:'K', 8:'K'}),
-  }),
-  error: catOverlay({
-    5: catRow({3:'K', 5:'K', 10:'K', 12:'K'}),
-    6: catRow({4:'K', 11:'K'}),
-    9: catRow({6:'K', 9:'K'}),
-    10: catRow({7:'K', 8:'K'}),
-  }),
-};
-const MASCOT_STATES = ['idle','thinking','talking','explaining','error'];
-function resolveImageKey(state){
-  // 'explaining' reuses the 'talking' expression (no distinct pose for it)
-  if(state === 'explaining') return 'talking';
-  return MASCOT_STATES.includes(state) ? state : 'idle';
-}
-
-function pixelCatSVG(state){
-  const key = resolveImageKey(state);
-  const overlay = PIXEL_CAT_STATES[key] || PIXEL_CAT_STATES.idle;
-  let rects = '';
-  for(let y = 0; y < 16; y++){
-    for(let x = 0; x < 16; x++){
-      const overlayChar = overlay[y] ? overlay[y][x] : undefined;
-      const c = (overlayChar && overlayChar !== '.') ? overlayChar : PIXEL_CAT_BASE[y][x];
-      if(c === '.') continue;
-      rects += `<rect x="${x}" y="${y}" width="1" height="1" fill="${PIXEL_CAT_PALETTE[c]}"/>`;
-    }
-  }
-  return `<svg viewBox="0 0 16 16" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg">${rects}</svg>`;
-}
+/* ===== Mascot — watercolor cartoon cat shared by dashboard and chat.
+   Single static illustration; state only drives the CSS animation
+   (breathing/bobbing/pulsing/wobbling), not the artwork itself. ===== */
 
 function mascotFaceHTML(state){
-  return `<div class="mascot-face anim-${state}" role="img" aria-label="${t('mascotAriaLabel', state)}">${pixelCatSVG(state)}</div>`;
+  return `<div class="mascot-face anim-${state}" role="img" aria-label="${t('mascotAriaLabel', state)}"><img src="assets/mascot/cat.png" alt=""></div>`;
 }
 
 function mascotBodyHTML(state, heightPx){
   const h = heightPx || 56;
-  return `<div class="mascot-body anim-${state}" style="height:${h}px;" role="img" aria-label="${t('mascotAriaLabel', state)}">${pixelCatSVG(state)}</div>`;
+  return `<div class="mascot-body anim-${state}" style="height:${h}px;" role="img" aria-label="${t('mascotAriaLabel', state)}"><img src="assets/mascot/cat.png" alt=""></div>`;
 }
 
 function updateMascotEl(container, state){
   const base = container.classList.contains('mascot-face') ? 'mascot-face' : 'mascot-body';
   container.className = base + ' anim-' + state;
   container.setAttribute('aria-label', t('mascotAriaLabel', state));
-  container.innerHTML = pixelCatSVG(state);
+  container.innerHTML = '<img src="assets/mascot/cat.png" alt="">';
 }
 
 function setMascotState(state){
@@ -1422,6 +1679,23 @@ function setMascotState(state){
 /* static per-message avatar — captures current expression, does not animate/update later */
 function mascotAvatarHTML(state){
   return mascotBodyHTML(state, 56);
+}
+
+/* Curated game catalog fed into the system prompt so "帮我推荐" has concrete
+   options to recommend from instead of guessing. Currently sourced from the
+   hand-picked GENRES.examples lists; swap in a larger dataset here later by
+   feeding it into this same summary instead of touching the prompt. */
+function buildGameCatalogSummary(){
+  return Object.values(GENRES).map(genre => {
+    const examples = (genre.examples || []).map(ex => {
+      const bits = [ex.name];
+      if(ex.playerMin || ex.playerMax) bits.push(`${ex.playerMin || '?'}-${ex.playerMax || '?'}人`);
+      if(ex.duration) bits.push(ex.duration);
+      if(ex.tags && ex.tags.length) bits.push(ex.tags.join('/'));
+      return `  - ${bits.join('，')}${ex.blurb ? '：' + ex.blurb : ''}`;
+    }).join('\n');
+    return `【${genre.label}】${genre.theme || ''}\n${examples}`;
+  }).join('\n\n');
 }
 
 /* ===== System prompt ===== */
@@ -1489,6 +1763,13 @@ return `# 角色设定
 
 玩家可以上传游戏盒封面、规则书页面、当前桌面摆放、卡牌或角色能力、计分板、不认识的组件。
 收到图片后，先说明识别到了什么，再回答问题。如果摆放有误，指出具体位置，一步步指导调整。
+
+# 推荐游戏
+
+玩家如果还没想好玩什么（比如说"帮我推荐"、"不知道玩什么"），先简单问一两句人数、时长、想要的感觉（烧脑策略 / 派对搞笑 / 合作叙事 / 阵营对抗等），然后从下面的收录列表里挑 2-3 款贴合需求的推荐，每款说清楚人数、时长和推荐理由。列表之外的游戏如果你确实了解规则也可以提，但要说明这款不在当前收录列表里。不需要一次问完所有问题，玩家给的信息够用就可以直接推荐。
+
+收录列表（按类型分组）：
+${buildGameCatalogSummary()}
 
 # 主持流程
 
@@ -2102,6 +2383,19 @@ const UI_STRINGS = {
     /* ===== App-wide static UI chrome (dashboard, header, drawer, modals) ===== */
     pageTitle: () => `${agentName} · AI 桌游主持人`,
     settingsBtnTitle: '设置 API', settingsBtnAria: '设置',
+    atlasBrandSub: '桌上世界探索手册',
+    atlasKicker: '小懵的桌游图鉴 · VOL. 01',
+    atlasHeroTitle: '想去哪个桌上世界？',
+    atlasHeroDesc: () => `从规则讲解、摆盘到逐回合主持，${agentName}会沿着地图陪你走完整局。`,
+    atlasSpeech: '规则交给我，选择交给你。',
+    atlasMapNote: '点击地图上的地点，查看适合你的游戏',
+    atlasGuideLabel: () => `${agentName}正在这里带路`,
+    atlasToolsTitle: '出发前的准备',
+    atlasToolsDesc: '创建新旅程，或回到上一张还没走完的地图。',
+    atlasFieldNote: () => `不知道玩什么？告诉${agentName}人数、时长和偏好，它会替你规划路线。`,
+    atlasRecommendBtn: '✦ 帮我推荐',
+    atlasRecommendHint: '告诉我人数、时长或偏好，例如「4 人、轻松、1 小时」',
+    recommendIntroMessage: '我还没想好玩什么，能帮我推荐几款桌游吗？',
     heroTitle: '开始新的一局',
     heroDesc: () => `告诉${agentName}你想玩什么桌游，它会按你选的主持方式带你摆盘、讲规则、走流程。`,
     heroBtn: '+ 新建对局',
@@ -2124,6 +2418,10 @@ const UI_STRINGS = {
     resetBtnTitle: '重新开始',
     agentNameSectionTitle: '给 AI 主持人取个名字',
     agentNamePh: '小懵', agentNameSaveBtn: '改名',
+    onboardNameTitle: '给你的 AI 主持人取个名字',
+    onboardNameDesc: '以后聊天、语音播报都会用这个名字介绍自己。随时可以在设置里改。',
+    onboardNameSaveBtn: '就这个名字',
+    onboardNameSkipBtn: '先用默认的"小懵"',
     drawerTitle: '连接模型（火山方舟 Volcengine Ark）',
     drawerWarn: '你的 API Key 只保存在<strong>这个浏览器标签页</strong>里，直接从浏览器发到火山方舟，不会经过我或 Anthropic。刷新页面后需要重新粘贴（除非勾选"记住"，那样会存在本机浏览器的 localStorage 里，同样不会离开你的设备）。请不要分享这个文件给别人，也不要把 Key 写死在代码里。',
     apiKeyLabel: 'API Key', apiKeyPh: '粘贴你的 Ark API Key',
@@ -2222,6 +2520,19 @@ const UI_STRINGS = {
     /* ===== App-wide static UI chrome (dashboard, header, drawer, modals) ===== */
     pageTitle: () => `${agentName} · AI Board Game Host`,
     settingsBtnTitle: 'API settings', settingsBtnAria: 'Settings',
+    atlasBrandSub: 'A field guide to tabletop worlds',
+    atlasKicker: () => `${agentName}'s tabletop atlas · VOL. 01`,
+    atlasHeroTitle: 'Which tabletop world do you want to explore?',
+    atlasHeroDesc: () => `From setup and rules to every turn, ${agentName} will guide your whole journey across the table.`,
+    atlasSpeech: 'I will handle the rules. You choose the route.',
+    atlasMapNote: 'Select a destination to find games that fit your table',
+    atlasGuideLabel: () => `${agentName} is guiding this route`,
+    atlasToolsTitle: 'Before you depart',
+    atlasToolsDesc: 'Begin a new journey or return to a map you have not finished.',
+    atlasFieldNote: () => `Not sure what to play? Tell ${agentName} your group size, time, and mood for a route recommendation.`,
+    atlasRecommendBtn: '✦ Recommend a game',
+    atlasRecommendHint: 'Tell me your group size, time, or mood — e.g. “4 players, relaxed, 1 hour”',
+    recommendIntroMessage: "I haven't decided what to play yet — can you recommend a few board games?",
     heroTitle: 'Start a new session',
     heroDesc: () => `Tell ${agentName} what board game you want to play — it will set up the table, walk through the rules, and run the session in the mode you pick.`,
     heroBtn: '+ New session',
@@ -2244,6 +2555,10 @@ const UI_STRINGS = {
     resetBtnTitle: 'Start over',
     agentNameSectionTitle: 'Name your AI host',
     agentNamePh: 'Xiaomeng', agentNameSaveBtn: 'Rename',
+    onboardNameTitle: 'Name your AI host',
+    onboardNameDesc: 'This name is used everywhere it introduces itself, in chat and voice replies. You can change it later in settings.',
+    onboardNameSaveBtn: "That's the name",
+    onboardNameSkipBtn: 'Keep the default "Xiaomeng"',
     drawerTitle: 'Connect a model (Volcengine Ark)',
     drawerWarn: 'Your API Key is only kept in <strong>this browser tab</strong> and sent straight to Volcengine Ark — it never passes through us or Anthropic. You\'ll need to paste it again after refreshing (unless you check "Remember", which stores it in this browser\'s local storage, still never leaving your device). Please don\'t share this file with others or hard-code the key.',
     apiKeyLabel: 'API Key', apiKeyPh: 'Paste your Ark API Key',
@@ -2414,7 +2729,7 @@ function renderGenreMap(){
 const GENRE_MAP_REGION_TINTS = ['var(--dazed-light)', 'var(--coral-light)', 'var(--success-light)'];
 /* Sparkle decorations sit at fixed spots chosen to avoid the pins above. */
 const GENRE_MAP_SPARKLES = [
-  { x: 90, y: 30, s: 4 }, { x: 8, y: 40, s: 3 }, { x: 88, y: 78, s: 3.5 }, { x: 12, y: 92, s: 3 },
+  { x: 91, y: 27, s: 2.4 }, { x: 9, y: 43, s: 2 },
 ];
 function sparkleStarPath(cx, cy, s){
   // simple 4-point sparkle: a thin vertical + horizontal diamond cross
@@ -2448,9 +2763,64 @@ function buildGenreMapDecoration(genres){
 
   const sparkles = GENRE_MAP_SPARKLES.map(sp => `<path class="sparkle" d="${sparkleStarPath(sp.x, sp.y, sp.s)}"/>`).join('');
 
+  const terrain = `
+    <rect class="terrain-frame" x="2.2" y="2.5" width="95.6" height="95" rx="1.5"/>
+    <path class="terrain-wash" fill="#d8a89a" opacity=".10" d="M4 19 C10 9 25 8 32 17 C38 25 28 33 17 31 C8 30 0 27 4 19 Z"/>
+    <path class="terrain-wash" fill="#9eae8b" opacity=".12" d="M67 18 C74 9 92 12 96 22 C100 33 90 39 80 35 C70 32 62 26 67 18 Z"/>
+    <path class="terrain-wash" fill="#9bb9b2" opacity=".10" d="M28 51 C37 43 59 43 68 52 C76 61 66 72 51 71 C36 71 19 61 28 51 Z"/>
+    <path class="terrain-wash" fill="#d3b477" opacity=".09" d="M55 76 C65 68 88 70 95 82 C100 92 88 97 73 94 C59 91 48 83 55 76 Z"/>
+    <path class="terrain-contour" d="M4 31 C13 23 19 25 25 31 S40 39 48 32 S64 23 72 30 S88 38 97 31"/>
+    <path class="terrain-contour" d="M3 33 C12 26 18 28 25 34 S39 41 48 35 S64 26 72 33 S88 40 97 34"/>
+    <path class="terrain-contour" d="M7 74 C15 66 25 66 31 73 S47 83 55 75 S68 64 78 71 S91 80 98 73"/>
+    <path class="terrain-contour" d="M8 77 C17 69 25 69 32 76 S47 86 56 78 S69 67 78 74 S91 83 97 77"/>
+
+    <path class="terrain-water" d="M40 54 C43 49 49 48 53 51 C57 54 62 53 66 57 C68 60 64 65 59 67 C54 69 49 66 45 68 C41 69 36 65 37 61 C37 58 39 57 40 54 Z"/>
+    <path class="terrain-water-glaze" d="M39 57 C46 52 53 54 58 55 C63 56 65 59 62 62 C58 65 53 63 48 65 C43 67 38 63 39 57 Z"/>
+    <path class="terrain-water-line" d="M40 58 C46 55 51 59 56 57 C61 55 64 59 66 60"/>
+    <path class="terrain-water-line" d="M40 63 C46 60 51 64 56 62 C60 60 63 63 64 64"/>
+
+    <g transform="translate(43 5)">
+      <path class="terrain-mountain" d="M0 14 C3 11 5.3 4 8 0 C10.7 4.4 13.1 10.7 16 14 C11.6 13.2 5.6 13.6 0 14 Z"/><path class="terrain-snow" d="M5.4 4.8 C6.4 3 7.2 1.2 8 0 C9.2 1.9 10.1 3.7 11.2 5.7 L8.8 4.7 L7.2 6 Z"/>
+      <path class="terrain-mountain" d="M11 15 C14.3 12 17 6.5 20 3 C23.2 6.5 26.3 12.5 29 15 C23 13.8 17.2 14.2 11 15 Z"/><path class="terrain-mountain-glaze" d="M13 14 C16 11 17.4 7.5 20 4.5 C21.2 8.5 23 11.8 27 14 Z"/><path class="terrain-snow" d="M16.5 7.7 C17.6 6 18.7 4.5 20 3 C21.4 4.7 22.5 6 23.6 8 L20.6 7.1 L19 9 Z"/>
+      <path class="terrain-mountain" d="M25 14 C27.4 11 29.2 7.4 31 5 C33.5 7.7 35.7 11.6 38 14 C33.3 13.2 29.2 13.6 25 14 Z"/><path class="terrain-snow" d="M28.5 8.8 C29.4 7.4 30.2 6.1 31 5 C32.1 6.5 33 7.6 34 9 L31.8 8.3 L30.5 10 Z"/>
+    </g>
+
+    <g>
+      <path class="terrain-tree" d="M10 63 C8.1 65.1 8.8 66.2 7.4 68.2 C6.2 70.2 8 70.8 7 73 C9 72.4 11 72.4 13 73 C12 70.8 13.8 70.1 12.5 68.2 C11.2 66.3 11.9 65 10 63 Z"/>
+      <path class="terrain-tree-light" d="M17 69 C15.1 71.3 15.9 72.6 14.2 75 C13 77 15 78 14 80 C16 79.3 18.2 79.4 20 80 C19 77.7 21 77 19.6 74.8 C18.2 72.8 19 71.3 17 69 Z"/>
+      <path class="terrain-tree" d="M8.6 77 C7 79 7.6 80.2 6.2 82 C5.2 84 6.7 84.7 5.8 87 C7.6 86.3 9.7 86.3 11.4 87 C10.5 84.8 12 84 10.9 82 C9.6 80.3 10.3 79 8.6 77 Z"/>
+      <path class="terrain-tree" d="M90.8 31 C89 33.3 89.7 34.5 88.2 36.6 C87 38.7 88.7 39.5 87.8 42 C89.8 41.3 92 41.3 93.8 42 C92.9 39.5 94.7 38.7 93.3 36.5 C92 34.6 92.8 33.2 90.8 31 Z"/>
+      <path class="terrain-tree-light" d="M95.4 37 C93.8 39 94.4 40.2 93 42 C92 44 93.4 44.7 92.6 47 C94.3 46.4 96.4 46.4 98 47 C97.2 44.8 98.7 44 97.5 42 C96.3 40.3 97 39 95.4 37 Z"/>
+      <path class="terrain-tree" d="M86.4 38 C84.8 40 85.4 41 84 43 C83 44.8 84.6 45.7 83.7 48 C85.5 47.3 87.4 47.4 89.2 48 C88.3 45.7 89.8 45 88.6 43 C87.4 41.2 88.1 40 86.4 38 Z"/>
+    </g>
+
+    <g transform="translate(87 29)">
+      <path class="terrain-town" d="M0 5 Q4 .5 8 5 L7.6 11 Q4 10.3 .4 11 Z"/><path class="terrain-town" d="M7 8 Q10 4.6 13 8 L12.7 13 Q10 12.4 7.2 13 Z"/>
+    </g>
+    <circle cx="10" cy="16" r="4.4" fill="none" stroke="#a96d5f" stroke-width=".35" opacity=".22"/>
+    <circle cx="10" cy="16" r="3.1" fill="none" stroke="#a96d5f" stroke-width=".22" opacity=".22"/>
+    <text class="terrain-label" x="42" y="5">MIST RIDGE</text>
+    <text class="terrain-label" x="39" y="71">MOON LAKE</text>
+    <text class="terrain-label" x="5" y="91">OLD WOODS</text>
+  `;
+
   return `
-    <defs><filter id="mapBlur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6"/></filter></defs>
+    <defs>
+      <filter id="mapBlur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6"/></filter>
+      <filter id="mapWatercolor" x="-20%" y="-20%" width="140%" height="140%">
+        <feTurbulence type="fractalNoise" baseFrequency=".045 .09" numOctaves="2" seed="11" result="paperNoise"/>
+        <feDisplacementMap in="SourceGraphic" in2="paperNoise" scale=".55" xChannelSelector="R" yChannelSelector="G" result="wobble"/>
+        <feGaussianBlur in="wobble" stdDeviation=".08"/>
+      </filter>
+      <filter id="mapPigment" x="-20%" y="-20%" width="140%" height="140%">
+        <feTurbulence type="fractalNoise" baseFrequency=".025 .075" numOctaves="3" seed="5" result="washNoise"/>
+        <feDisplacementMap in="SourceGraphic" in2="washNoise" scale="1.1" xChannelSelector="R" yChannelSelector="G"/>
+        <feGaussianBlur stdDeviation=".32"/>
+      </filter>
+    </defs>
+    ${terrain}
     ${regions}
+    <path class="route-shadow" d="${routeD}"/>
     <path class="route" d="${routeD}"/>
     ${sparkles}
   `;
@@ -2995,13 +3365,36 @@ function startNewSession(name, playerNames, mode, createRoom){
 
 el('menuBtn').onclick = () => { stopRoomChatRelay(); stopHostRoleListener(); showDashboard(); };
 el('dashSettingsBtn').onclick = () => { showChat(); drawer.classList.add('open'); };
-el('entryNewSessionBtn').onclick = () => openNewSessionModal('', 'player_led');
-el('entrySearchBtn').onclick = () => {
+const openDashboardNewSession = () => openNewSessionModal('', 'player_led');
+const openDashboardRecommendation = () => {
+  currentGameId = null;
+  currentSessionId = null;
+  updateSessionStatusBar();
+  showChat();
+  history = [];
+  showEmptyState();
+
+  if(!connected){
+    addErrorBubble(t('notConnected'), t('notConnectedDetail'));
+    drawer.classList.add('open');
+    return;
+  }
+  clearEmptyState();
+  const introText = t('recommendIntroMessage');
+  addBubble('user', introText);
+  history.push({role:'user', content: introText});
+  sendToModel(null, false, null, true);
+};
+const toggleDashboardSearch = () => {
   const section = el('searchSection');
   const showing = section.style.display !== 'none';
   section.style.display = showing ? 'none' : '';
   if(!showing) el('gameSearchInput').focus();
 };
+el('entryNewSessionBtn').onclick = openDashboardNewSession;
+el('atlasRecommendBtn').onclick = openDashboardRecommendation;
+el('entrySearchBtn').onclick = toggleDashboardSearch;
+el('atlasSearchBtn').onclick = toggleDashboardSearch;
 el('entryContinueBtn').onclick = () => {
   el('continueSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
 };
@@ -3952,6 +4345,23 @@ el('saveAgentNameBtn').onclick = () => {
   el('agentNameInput').value = agentName;
 };
 
+/* First-run naming prompt: shown once when no name has ever been saved,
+   so people aren't stuck with "小懵" without knowing they can change it. */
+function maybeShowNameOnboarding(){
+  if(localStorage.getItem('xiaomeng_agent_name')) return;
+  el('nameOnboardModal').classList.add('show');
+}
+el('onboardNameSaveBtn').onclick = () => {
+  setAgentName(el('onboardNameInput').value);
+  el('agentNameInput').value = agentName;
+  el('nameOnboardModal').classList.remove('show');
+};
+el('onboardNameSkipBtn').onclick = () => {
+  setAgentName('');
+  el('agentNameInput').value = agentName;
+  el('nameOnboardModal').classList.remove('show');
+};
+
 el('resetBtn').onclick = () => {
   if(confirm(t('resetConfirm'))){
     history = [];
@@ -4304,6 +4714,7 @@ if(joinCode){
   initJoinView(joinCode.toUpperCase());
 } else {
   showDashboard();
+  maybeShowNameOnboarding();
 }
 </script>
 </body>
