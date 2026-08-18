@@ -116,10 +116,13 @@
     border-bottom:1px solid var(--line);
     max-height:0;
     overflow:hidden;
-    transition:max-height 0.25s ease;
+    transition:max-height 0.3s ease;
     flex-shrink:0;
   }
-  .drawer.open{max-height:440px;}
+  /* generous viewport-relative cap + internal scroll — the drawer has grown
+     well past a fixed 440px (voice API + agent-naming sections), so a hard
+     cap with overflow:hidden was clipping the save button out of reach */
+  .drawer.open{max-height:80vh;overflow-y:auto;}
   .drawer-inner{padding:18px 20px;}
   .drawer-inner h3{
     font-size:13px;font-weight:700;margin:0 0 10px;
@@ -661,6 +664,12 @@
     border-radius:8px;padding:2px 7px;margin-bottom:4px;
   }
   .search-empty{color:var(--ink-soft);font-size:12px;text-align:center;padding:14px 0;}
+  .ask-ai-btn{
+    display:block;margin:10px auto 0;padding:8px 16px;
+    background:var(--dazed);color:#fff;border:none;border-radius:10px;
+    font-size:12.5px;font-weight:600;cursor:pointer;
+  }
+  .ask-ai-btn:hover{background:var(--dazed-deep);}
 
   .dash-toolbar{
     display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;
@@ -1401,6 +1410,28 @@
     <div class="modal-actions">
       <button class="modal-cancel-btn" id="cancelNewSessionBtn" data-i18n="cancelBtn">取消</button>
       <button class="save-btn" id="confirmNewSessionBtn" data-i18n="startBtn">开始</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="recommendModal">
+  <div class="modal-box">
+    <h3 data-i18n="recommendModalTitle">帮我推荐</h3>
+    <div class="field">
+      <label data-i18n="recommendPlayersLabel">玩家人数（选填）</label>
+      <input type="text" id="recommendPlayersInput" data-i18n-placeholder="recommendPlayersPh" placeholder="例如：4 人">
+    </div>
+    <div class="field">
+      <label data-i18n="recommendDurationLabel">大概时长（选填）</label>
+      <input type="text" id="recommendDurationInput" data-i18n-placeholder="recommendDurationPh" placeholder="例如：45 分钟">
+    </div>
+    <div class="field">
+      <label data-i18n="recommendMoodLabel">想要的感觉（选填）</label>
+      <input type="text" id="recommendMoodInput" data-i18n-placeholder="recommendMoodPh" placeholder="例如：烧脑策略 / 派对聚会 / 放松合作">
+    </div>
+    <div class="modal-actions">
+      <button class="modal-cancel-btn" id="cancelRecommendBtn" data-i18n="cancelBtn">取消</button>
+      <button class="save-btn" id="confirmRecommendBtn" data-i18n="recommendSubmitBtn">帮我推荐</button>
     </div>
   </div>
 </div>
@@ -2379,6 +2410,9 @@ const UI_STRINGS = {
     searchPh: '搜索桌游名称或标签，比如「UNO」「合作」「烧脑」…',
     searchNoResults: (q) => `没有找到和「${q}」匹配的桌游，换个关键词试试？`,
     searchResultsCount: (n) => `找到 ${n} 款桌游`,
+    askAIBtn: '问问 AI',
+    askAIAboutGame: (q) => `我想玩「${q}」，但收录的桌游库里没有这款——你知道这个游戏吗？能不能帮我讲讲规则、带我玩？`,
+    recommendAskAICriteria: (v) => `我想找${v ? v + '的' : ''}桌游，收录的库里没有很匹配的，你有什么推荐吗？`,
 
     /* ===== App-wide static UI chrome (dashboard, header, drawer, modals) ===== */
     pageTitle: () => `${agentName} · AI 桌游主持人`,
@@ -2396,6 +2430,11 @@ const UI_STRINGS = {
     atlasRecommendBtn: '✦ 帮我推荐',
     atlasRecommendHint: '告诉我人数、时长或偏好，例如「4 人、轻松、1 小时」',
     recommendIntroMessage: '我还没想好玩什么，能帮我推荐几款桌游吗？',
+    recommendModalTitle: '帮我推荐',
+    recommendPlayersLabel: '玩家人数（选填）', recommendPlayersPh: '例如：4 人',
+    recommendDurationLabel: '大概时长（选填）', recommendDurationPh: '例如：45 分钟',
+    recommendMoodLabel: '想要的感觉（选填）', recommendMoodPh: '例如：烧脑策略 / 派对聚会 / 放松合作',
+    recommendSubmitBtn: '帮我推荐',
     heroTitle: '开始新的一局',
     heroDesc: () => `告诉${agentName}你想玩什么桌游，它会按你选的主持方式带你摆盘、讲规则、走流程。`,
     heroBtn: '+ 新建对局',
@@ -2516,6 +2555,9 @@ const UI_STRINGS = {
     searchPh: 'Search by game name or tag, e.g. "UNO", "co-op", "brainy"…',
     searchNoResults: (q) => `No games matched "${q}" — try a different keyword?`,
     searchResultsCount: (n) => `${n} games found`,
+    askAIBtn: 'Ask the AI',
+    askAIAboutGame: (q) => `I want to play "${q}" but it's not in the curated game library — do you know this game? Can you walk me through the rules and host it?`,
+    recommendAskAICriteria: (v) => `I'm looking for a game${v ? ' — ' + v : ''} — nothing in the curated library is a great fit, do you have a recommendation?`,
 
     /* ===== App-wide static UI chrome (dashboard, header, drawer, modals) ===== */
     pageTitle: () => `${agentName} · AI Board Game Host`,
@@ -2533,6 +2575,11 @@ const UI_STRINGS = {
     atlasRecommendBtn: '✦ Recommend a game',
     atlasRecommendHint: 'Tell me your group size, time, or mood — e.g. “4 players, relaxed, 1 hour”',
     recommendIntroMessage: "I haven't decided what to play yet — can you recommend a few board games?",
+    recommendModalTitle: 'Recommend a game',
+    recommendPlayersLabel: 'Player count (optional)', recommendPlayersPh: 'e.g. 4 players',
+    recommendDurationLabel: 'Time available (optional)', recommendDurationPh: 'e.g. 45 minutes',
+    recommendMoodLabel: 'What mood are you after? (optional)', recommendMoodPh: 'e.g. brain-burner / party / relaxed co-op',
+    recommendSubmitBtn: 'Recommend a game',
     heroTitle: 'Start a new session',
     heroDesc: () => `Tell ${agentName} what board game you want to play — it will set up the table, walk through the rules, and run the session in the mode you pick.`,
     heroBtn: '+ New session',
@@ -3005,6 +3052,99 @@ function renderRecommendations(genre){
   });
 }
 
+/* Cross-genre version of renderRecommendations's scoring — same curated
+   database, same scoreExample() ranking, just pooled across every genre
+   instead of one. Used by the dashboard's "帮我推荐" flow so it answers
+   from the actual curated game data instead of just asking the model. */
+function scoreAllGames(playerCount, reqText){
+  const items = [];
+  Object.values(GENRES).forEach(genre => {
+    genre.examples.forEach(ex => {
+      const exx = gx(ex);
+      items.push({ ex, exx, genre, ...scoreExample(ex, playerCount, reqText) });
+    });
+  });
+  items.sort((a, b) => b.score - a.score);
+  return items;
+}
+
+/* Fallback for when the curated database (106 hand-picked titles) doesn't
+   have what someone's looking for — the AI itself knows far more games
+   than the local list, so hand the request off as a chat message instead
+   of leaving them at a dead end. */
+function sendDirectAIRequest(introText){
+  if(!connected){
+    showChat();
+    addErrorBubble(t('notConnected'), t('notConnectedDetail'));
+    drawer.classList.add('open');
+    return;
+  }
+  currentGameId = null;
+  currentSessionId = null;
+  updateSessionStatusBar();
+  showChat();
+  history = [];
+  showEmptyState();
+  clearEmptyState();
+  addBubble('user', introText);
+  history.push({role:'user', content: introText});
+  sendToModel(null, false, null, true);
+}
+function askAIAboutQuery(queryText){
+  sendDirectAIRequest(t('askAIAboutGame', queryText));
+}
+
+function renderRecommendResults(playerCount, reqText){
+  const panel = el('searchResultsPanel');
+  if(!panel) return;
+  const items = scoreAllGames(playerCount, reqText);
+  const matched = items.filter(it => it.score > 0);
+  const shown = (matched.length ? matched : items).slice(0, 9);
+  if(!shown.length){
+    panel.innerHTML = `<div class="search-empty">${t('noExamples')}</div>`;
+    return;
+  }
+  const headNote = (reqText && !matched.length)
+    ? `<div class="search-empty" style="padding:0 0 2px;text-align:left;">${t('noMatchNote', escapeHTML(reqText))}
+       <button type="button" class="ask-ai-btn" id="recommendAskAIBtn">${t('askAIBtn')}</button></div>` : '';
+  panel.innerHTML = headNote + shown.map(({ ex, exx, genre, score, reasons }) => {
+    const nameEn = (ex.en && ex.en.name) || exx.name;
+    const gg = g(genre);
+    return `
+  <div class="recommend-card" data-game="${escapeHTML(exx.name)}">
+    <span class="search-result-genre-badge">${genre.icon} ${escapeHTML(gg.label)}</span>
+    <div class="recommend-card-head">
+      <span class="recommend-cover" style="background:${coverGradient(ex)}" data-cover-for="${escapeHTML(nameEn)}">${ex.cover || '🎲'}</span>
+      <div class="recommend-card-headtext">
+        <span class="rc-title">${escapeHTML(exx.name)}</span>
+        ${score > 0 ? `<span class="mode-badge">${t('pickBadge')}</span>` : ''}
+      </div>
+    </div>
+    <div class="recommend-card-meta">${ex.playerMin}${ex.playerMax !== ex.playerMin ? '-'+ex.playerMax : ''}${t('peopleUnit')} · ${escapeHTML(localizeDuration(ex.duration))}${t('refNote')}</div>
+    <div class="recommend-card-blurb">${escapeHTML(exx.blurb)}</div>
+    ${reasons.length ? `<div class="recommend-reasons">${reasons.map(r => `<span class="reason-chip">✓ ${escapeHTML(r)}</span>`).join('')}</div>` : ''}
+    <button type="button" class="recommend-start-btn" data-game="${escapeHTML(exx.name)}" data-mode="${ex.mode || genre.defaultMode}">${t('startPlaying')}</button>
+  </div>`;
+  }).join('');
+  panel.querySelectorAll('.recommend-start-btn').forEach(btn => {
+    btn.onclick = () => openNewSessionModal(btn.dataset.game, btn.dataset.mode);
+  });
+  if(el('recommendAskAIBtn')){
+    el('recommendAskAIBtn').onclick = () => {
+      const criteria = [playerCount && `${playerCount}人`, reqText].filter(Boolean).join('，');
+      sendDirectAIRequest(t('recommendAskAICriteria', criteria));
+    };
+  }
+  [...new Set(shown.map(({ ex, exx }) => (ex.en && ex.en.name) || exx.name))].forEach(nameEn => {
+    fetchGameImage(nameEn).then(url => {
+      if(!url) return;
+      panel.querySelectorAll(`[data-cover-for="${window.CSS && CSS.escape ? CSS.escape(nameEn) : nameEn}"]`).forEach(coverEl => {
+        coverEl.innerHTML = `<img src="${escapeHTML(url)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:10px;" loading="lazy">`;
+      });
+    });
+  });
+}
+
 let currentGenreModalId = null;
 function openGenreModal(genreId){
   const genre = GENRES[genreId];
@@ -3084,7 +3224,10 @@ function renderSearchResults(){
   if(!query.trim()){ panel.innerHTML = ''; return; }
   const hits = searchAllGames(query);
   if(!hits.length){
-    panel.innerHTML = `<div class="search-empty">${t('searchNoResults', escapeHTML(query.trim()))}</div>`;
+    const trimmedQuery = query.trim();
+    panel.innerHTML = `<div class="search-empty">${t('searchNoResults', escapeHTML(trimmedQuery))}
+      <button type="button" class="ask-ai-btn" id="searchAskAIBtn">${t('askAIBtn')}</button></div>`;
+    el('searchAskAIBtn').onclick = () => askAIAboutQuery(trimmedQuery);
     return;
   }
   const countLine = `<div class="search-empty" style="padding:0 0 2px;text-align:left;">${t('searchResultsCount', hits.length)}</div>`;
@@ -3366,25 +3509,41 @@ function startNewSession(name, playerNames, mode, createRoom){
 el('menuBtn').onclick = () => { stopRoomChatRelay(); stopHostRoleListener(); showDashboard(); };
 el('dashSettingsBtn').onclick = () => { showChat(); drawer.classList.add('open'); };
 const openDashboardNewSession = () => openNewSessionModal('', 'player_led');
-const openDashboardRecommendation = () => {
-  currentGameId = null;
-  currentSessionId = null;
-  updateSessionStatusBar();
-  showChat();
-  history = [];
-  showEmptyState();
 
-  if(!connected){
-    addErrorBubble(t('notConnected'), t('notConnectedDetail'));
-    drawer.classList.add('open');
+function openDashboardRecommendation(){
+  // Scoring against the curated game database is local/instant and needs
+  // no API connection — only the "nothing filled in" fallback (asking the
+  // model directly) does, and that's checked at submit time instead.
+  el('recommendPlayersInput').value = '';
+  el('recommendDurationInput').value = '';
+  el('recommendMoodInput').value = '';
+  el('recommendModal').classList.add('show');
+  window.setTimeout(() => el('recommendPlayersInput').focus(), 150);
+}
+el('cancelRecommendBtn').onclick = () => el('recommendModal').classList.remove('show');
+el('recommendModal').addEventListener('click', e => {
+  if(e.target.id === 'recommendModal') el('recommendModal').classList.remove('show');
+});
+el('confirmRecommendBtn').onclick = () => {
+  const players = el('recommendPlayersInput').value.trim();
+  const duration = el('recommendDurationInput').value.trim();
+  const mood = el('recommendMoodInput').value.trim();
+  el('recommendModal').classList.remove('show');
+
+  if(!players && !duration && !mood){
+    // nothing to score against — fall back to just asking the model directly
+    sendDirectAIRequest(t('recommendIntroMessage'));
     return;
   }
-  clearEmptyState();
-  const introText = t('recommendIntroMessage');
-  addBubble('user', introText);
-  history.push({role:'user', content: introText});
-  sendToModel(null, false, null, true);
+
+  const reqText = [duration, mood].filter(Boolean).join(' ');
+  showDashboard();
+  el('searchSection').style.display = '';
+  el('gameSearchInput').value = '';
+  renderRecommendResults(players, reqText);
+  el('searchSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
 };
+
 const toggleDashboardSearch = () => {
   const section = el('searchSection');
   const showing = section.style.display !== 'none';
