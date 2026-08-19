@@ -304,6 +304,18 @@
     cursor:pointer;
     font-family:inherit;
     transition:all 0.15s;
+    max-width:100%;
+    white-space:normal;
+    text-align:left;
+    line-height:1.4;
+  }
+  .qr-btn.selected{
+    background:var(--dazed);
+    border-color:var(--dazed);
+    color:#fff;
+  }
+  .qr-btn.selected::before{
+    content:"✓ ";
   }
   .qr-btn:hover{background:var(--dazed-light);border-color:var(--dazed);}
 
@@ -1576,7 +1588,8 @@ async function ensureRoom(game, session){
     createdAt: Date.now(),
     status: 'open',
     players: session.players.map(p => ({ name: p.name, ready: !!p.ready, isHost: !!p.isHost })),
-    messages: []
+    messages: [],
+    rolesAssigned: false
   };
   session.roomCode = roomCode;
   if(firebaseReady){
@@ -1630,6 +1643,16 @@ async function sendRoomMessage(roomCode, message){
     messages: firebase.firestore.FieldValue.arrayUnion(message)
   });
   return true;
+}
+
+/* Persisted (not just in-memory) guard so auto role-assignment fires only
+   once per room, even if the host reloads mid-game and the listener
+   re-subscribes while every player is still marked ready. */
+async function markRoomRolesAssigned(roomCode){
+  if(!firebaseReady) return;
+  try{
+    await fbDb.collection('rooms').doc(roomCode).update({ rolesAssigned: true });
+  }catch(e){ console.warn('mark rolesAssigned failed', e); }
 }
 
 function listenToRoom(roomCode, cb){
@@ -2430,6 +2453,7 @@ const UI_STRINGS = {
     atlasRecommendBtn: '✦ 帮我推荐',
     atlasRecommendHint: '告诉我人数、时长或偏好，例如「4 人、轻松、1 小时」',
     recommendIntroMessage: '我还没想好玩什么，能帮我推荐几款桌游吗？',
+    autoRoleAssignPrompt: (n, names) => `所有玩家（共${n}人：${names}）都已准备就绪，请开始给每位玩家私下分配身份。`,
     recommendModalTitle: '帮我推荐',
     recommendPlayersLabel: '玩家人数（选填）', recommendPlayersPh: '例如：4 人',
     recommendDurationLabel: '大概时长（选填）', recommendDurationPh: '例如：45 分钟',
@@ -2575,6 +2599,7 @@ const UI_STRINGS = {
     atlasRecommendBtn: '✦ Recommend a game',
     atlasRecommendHint: 'Tell me your group size, time, or mood — e.g. “4 players, relaxed, 1 hour”',
     recommendIntroMessage: "I haven't decided what to play yet — can you recommend a few board games?",
+    autoRoleAssignPrompt: (n, names) => `All ${n} players (${names}) are ready — please assign each player their private role now.`,
     recommendModalTitle: 'Recommend a game',
     recommendPlayersLabel: 'Player count (optional)', recommendPlayersPh: 'e.g. 4 players',
     recommendDurationLabel: 'Time available (optional)', recommendDurationPh: 'e.g. 45 minutes',
@@ -3600,6 +3625,7 @@ let roomChatUnsub = null;
 const seenRoomMessageIds = new Set();
 let relayInFlight = false;
 let relayQueue = [];
+const autoRoleAssignStarted = new Set();
 
 function hostDisplayNameForCurrentSession(session){
   return (session.players[0] && session.players[0].name) || '房主';
@@ -3608,7 +3634,10 @@ function hostDisplayNameForCurrentSession(session){
 function startRoomChatRelay(session){
   if(!firebaseReady || !session.roomCode) return;
   stopRoomChatRelay();
-  roomChatUnsub = listenToRoom(session.roomCode, roomData => handleIncomingRoomMessages(session, roomData));
+  roomChatUnsub = listenToRoom(session.roomCode, roomData => {
+    handleIncomingRoomMessages(session, roomData);
+    maybeAutoAssignRoles(session, roomData);
+  });
 }
 
 function stopRoomChatRelay(){
@@ -3627,6 +3656,40 @@ function handleIncomingRoomMessages(session, roomData){
   const fromJoiners = fresh.filter(m => m.role === 'user' && m.authorName !== hostName);
   fromJoiners.forEach(m => addBubble('user', m.text, null, m.authorName));
   if(fromJoiners.length) queueRelayToModel(fromJoiners);
+}
+
+/* Only hidden-identity games (阿瓦隆/狼人杀/血染钟楼 etc. — the "ai_hosted"
+   facilitation mode) need private role cards at all, so this only fires for
+   rooms created in that mode. Once every joined player has marked ready,
+   automatically ask 小懵 to run the 【身份分配】 flow instead of making the
+   host type a prompt for it. Guarded both in-memory (seenRoomMessageIds-style,
+   against the same snapshot firing twice) and persisted on the room doc
+   itself as `rolesAssigned` (so a host page reload mid-game — where every
+   player is still marked ready from before — doesn't re-trigger it). */
+function maybeAutoAssignRoles(session, roomData){
+  const roomCode = session.roomCode;
+  if(!roomCode || roomData.rolesAssigned || autoRoleAssignStarted.has(roomCode)) return;
+  if(roomData.mode !== 'ai_hosted') return;
+  const players = roomData.players || [];
+  if(players.length < 2 || !players.every(p => p.ready)) return;
+
+  autoRoleAssignStarted.add(roomCode);
+  markRoomRolesAssigned(roomCode);
+
+  const names = players.map(p => p.name).join('、');
+  const prompt = t('autoRoleAssignPrompt', players.length, names);
+  addBubble('user', prompt);
+  history.push({role:'user', content: prompt});
+
+  const hostName = hostDisplayNameForCurrentSession(session);
+  const msg = {
+    id: 'msg_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
+    role: 'user', authorName: hostName, text: prompt, ts: Date.now()
+  };
+  seenRoomMessageIds.add(msg.id);
+  sendRoomMessage(roomCode, msg).catch(e => console.warn('mirror auto-role-assign msg failed', e));
+
+  sendToModel(null, false, null, true);
 }
 
 function queueRelayToModel(msgs){
@@ -4599,16 +4662,33 @@ function addErrorBubble(title, detail){
   setTimeout(() => setMascotState('idle'), 1500);
 }
 
+/* Quick-reply chips behave like checkboxes: tapping one toggles it in/out of
+   the compose box (joined by spaces) instead of sending immediately, so a
+   multi-part AI question ("几位玩家？都是第一次玩吗？带扩展吗？") can be
+   answered by tapping several chips before pressing send — same as typing
+   the combined answer by hand, just faster. */
 function showQuickReplies(options){
   const qr = el('quickReplies');
   qr.innerHTML = '';
+  const selected = [];
+  const syncInput = () => {
+    el('textInput').value = selected.join(' ');
+    autoGrow();
+  };
   options.forEach(opt => {
     const btn = document.createElement('button');
     btn.className = 'qr-btn';
     btn.textContent = opt;
     btn.onclick = () => {
-      el('textInput').value = opt;
-      handleSend();
+      const idx = selected.indexOf(opt);
+      if(idx === -1){
+        selected.push(opt);
+        btn.classList.add('selected');
+      } else {
+        selected.splice(idx, 1);
+        btn.classList.remove('selected');
+      }
+      syncInput();
     };
     qr.appendChild(btn);
   });
@@ -4753,7 +4833,7 @@ async function sendToModel(userText, isFirstTurn, images, skipPush){
 
     const nums = reply.match(/^\d+\.\s*.+$/gm);
     if(nums && nums.length <= 4){
-      showQuickReplies(nums.map(n => n.replace(/^\d+\.\s*/, '').slice(0,14)));
+      showQuickReplies(nums.map(n => n.replace(/^\d+\.\s*/, '').trim()));
     } else if(/完成了|还没有|我有问题/.test(reply)){
       showQuickReplies([t('quickReplyDone'), t('quickReplyNotYet'), t('quickReplyQuestion')]);
     }
