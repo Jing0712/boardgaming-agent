@@ -1776,13 +1776,17 @@ function buildGameCatalogSummary(){
 }
 
 /* ===== System prompt ===== */
+function currentFacilitationMode(){
+  const game = currentGameId ? findGameById(currentGameId) : null;
+  return game ? (game.mode || 'player_led') : null;
+}
+
 /* Facilitation mode changes *how* the host behaves, not just its label —
    the rigid 【行动】/【第X轮】/【结算】 round-block format in "主持流程" below
    is built for scored round-based games and actively hurts narrative/party
    modes if used unmodified, so each mode gets its own override block here. */
 function buildModeSection(){
-  const game = currentGameId ? findGameById(currentGameId) : null;
-  const modeId = game ? (game.mode || 'player_led') : null;
+  const modeId = currentFacilitationMode();
   if(!modeId) return '';
   const blocks = {
     ai_hosted: `# 当前主持模式：AI 全程主持
@@ -1838,6 +1842,16 @@ return `# 角色设定
 - 不要在同一条消息里预告后面还有哪些阶段或规则，那些留到需要的时候再说。
 - 规则问答（第六阶段）也要精简：结论 1 行，原因最多 1-2 句，下一步 1 行，不需要每次都写满三段。
 - 如果玩家明确要求"讲详细一点/完整规则"，才可以展开成更长的说明，否则默认精简模式。
+
+参照下面的例子校准长度，不要写得比"好的回复"更长：
+
+玩家："我们要玩阿瓦隆，5个人"
+好的回复：5人局，忠臣3、反抗军2。目标：完成3次任务，反抗军会暗中搞砸。准备好了我就开始分配身份～
+不好的回复：（大段介绍阿瓦隆的背景故事、逐条列出所有角色的完整技能说明、提前讲后面才用得到的规则）
+
+玩家："卡坦岛怎么算赢"
+好的回复：先达到10分获胜。城镇1分、城市2分、最长贸易路线2分、最大骑士力量2分。
+不好的回复：（逐条展开每种建筑的完整规则、给出策略建议、复述整本规则书相关章节）
 
 ## 其他原则
 
@@ -4845,13 +4859,22 @@ async function sendToModel(userText, isFirstTurn, images, skipPush){
     const requestHeaders = usingHostedProxy
       ? { 'Content-Type':'application/json', 'X-App-Token': HOSTED_APP_TOKEN }
       : { 'Content-Type':'application/json', 'Authorization':'Bearer ' + apiKey };
+    /* Backstop against runaway-long replies: the prompt asks for short
+       answers, but that's a soft instruction. This is a hard ceiling, sized
+       generously above what a well-behaved reply needs (including this
+       model's reasoning_content, which also counts against the limit) so it
+       only ever kicks in on genuinely rambling output, never truncates a
+       normal one. co_op_narrative gets more room since it needs real scene
+       description, not just a few lines. */
+    const maxTokens = currentFacilitationMode() === 'co_op_narrative' ? 1500 : 800;
     const res = await fetch(usingHostedProxy ? HOSTED_PROXY_URL : baseUrl, {
       method:'POST',
       headers: requestHeaders,
       body: JSON.stringify({
         model: modelId,
         messages: isFirstTurn ? [{role:'system', content: systemPrompt},{role:'user', content:'（开始）'}] : messagesPayload,
-        temperature: 0.7
+        temperature: 0.7,
+        max_tokens: maxTokens
       })
     });
 

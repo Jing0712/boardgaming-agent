@@ -74,6 +74,9 @@ export default {
         model: body.model || DEFAULT_MODEL,
         messages: body.messages,
         temperature: typeof body.temperature === "number" ? body.temperature : 0.7,
+        // clamp regardless of what the client sends — this is also a cost
+        // control on top of the per-IP rate limit above
+        max_tokens: Math.min(Math.max(parseInt(body.max_tokens) || 800, 100), 2000),
       }),
     });
 
