@@ -1067,6 +1067,8 @@
 
   .atlas-tools{
     position:relative;background:#f6efdf;border:1px solid #c9bb99;border-radius:3px 10px 3px 8px;
+    /* offsets the missing header row so this box top lines up with .dash-map-card's top */
+    margin-top:54px;
     padding:24px 20px;box-shadow:7px 9px 0 rgba(112,91,61,.08),0 10px 24px rgba(84,66,42,.09);
   }
   .atlas-tools::before{content:"";position:absolute;top:-9px;left:50%;width:84px;height:21px;transform:translateX(-50%) rotate(1deg);background:rgba(210,193,158,.62);}
@@ -1132,7 +1134,7 @@
   @media (max-width:860px){
     .dashboard-inner{padding:18px 18px 60px;}
     .atlas-layout{grid-template-columns:1fr;}
-    .atlas-tools{display:grid;grid-template-columns:1fr 2fr;column-gap:18px;align-items:start;}
+    .atlas-tools{display:grid;grid-template-columns:1fr 2fr;column-gap:18px;align-items:start;margin-top:0;}
     .atlas-tools>p{grid-column:1;}
     .atlas-tools .dash-entry-row{grid-column:2;grid-row:1/4;}
     .atlas-field-note{grid-column:1;}
@@ -2175,6 +2177,15 @@ let history = [];
 let pendingImages = [];
 let connected = false;
 
+/* ===== Hosted proxy: lets visitors chat without their own Ark API key =====
+   Leave both blank to keep the app exactly as before (everyone fills in their
+   own key). Fill both in after deploying cf-worker/ (see cf-worker/README.md)
+   to let visitors use a shared, rate-limited key you control server-side.
+   A user-supplied key in Settings always takes priority over this. */
+const HOSTED_PROXY_URL = '';   // e.g. "https://xiaomeng-ai-proxy.you.workers.dev/chat"
+const HOSTED_APP_TOKEN = '';   // must match the APP_TOKEN secret set on the worker
+let usingHostedProxy = false;
+
 const el = id => document.getElementById(id);
 const messagesEl = el('messages');
 const drawer = el('drawer');
@@ -2511,6 +2522,7 @@ const UI_STRINGS = {
     myRoleBtnTitle: '我的身份',
     roundLabel: (n) => `第 ${n} 轮`, playersCountLabel: (n) => `${n} 位玩家`,
     connectedAs: (id) => `已连接 · ${id}`,
+    connectedHosted: '已连接 · 公共试用额度（不用填 Key）',
     micNotSupportedTitle: '这个浏览器不支持语音输入（建议用 Chrome / Edge）',
     removeImgAria: '移除图片',
     emptyStateTitle: () => `${agentName}还在等你连接模型`,
@@ -2657,6 +2669,7 @@ const UI_STRINGS = {
     myRoleBtnTitle: 'My role',
     roundLabel: (n) => `Round ${n}`, playersCountLabel: (n) => `${n} players`,
     connectedAs: (id) => `Connected · ${id}`,
+    connectedHosted: 'Connected · shared trial quota (no key needed)',
     micNotSupportedTitle: 'Voice input isn\'t supported in this browser (try Chrome / Edge)',
     removeImgAria: 'Remove image',
     emptyStateTitle: () => `${agentName} is waiting for you to connect a model`,
@@ -4546,6 +4559,7 @@ function applyConfig(showDrawerAfter){
     localStorage.removeItem('xiaomeng_config');
   }
   if(apiKey && modelId && baseUrl){
+    usingHostedProxy = false;
     connected = true;
     el('statusLine').textContent = t('connectedAs', modelId);
     el('statusDot').classList.add('on');
@@ -4555,6 +4569,21 @@ function applyConfig(showDrawerAfter){
   }
   if(showDrawerAfter === false){
     drawer.classList.remove('open');
+  }
+}
+
+/* If the visitor hasn't configured their own key and this build has a hosted
+   proxy set up (see cf-worker/), connect through that instead of blocking on
+   the settings drawer. A user-supplied key always wins over this. */
+function tryHostedProxyFallback(){
+  if(connected) return;
+  if(!HOSTED_PROXY_URL || !HOSTED_APP_TOKEN) return;
+  usingHostedProxy = true;
+  connected = true;
+  el('statusLine').textContent = t('connectedHosted');
+  el('statusDot').classList.add('on');
+  if(history.length === 0){
+    sendToModel(null, true);
   }
 }
 
@@ -4752,12 +4781,12 @@ async function sendToModel(userText, isFirstTurn, images, skipPush){
   ];
 
   try{
-    const res = await fetch(baseUrl, {
+    const requestHeaders = usingHostedProxy
+      ? { 'Content-Type':'application/json', 'X-App-Token': HOSTED_APP_TOKEN }
+      : { 'Content-Type':'application/json', 'Authorization':'Bearer ' + apiKey };
+    const res = await fetch(usingHostedProxy ? HOSTED_PROXY_URL : baseUrl, {
       method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'Authorization':'Bearer ' + apiKey
-      },
+      headers: requestHeaders,
       body: JSON.stringify({
         model: modelId,
         messages: isFirstTurn ? [{role:'system', content: systemPrompt},{role:'user', content:'（开始）'}] : messagesPayload,
@@ -4938,6 +4967,7 @@ el('filterMode').innerHTML = `<option value="">${t('filterModeAll')}</option>` +
 setMascotState('idle');
 showEmptyState();
 loadSaved();
+tryHostedProxyFallback();
 updateSessionStatusBar();
 loadVoicePref();
 updateVoiceToggleUI();
