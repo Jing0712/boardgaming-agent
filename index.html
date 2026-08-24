@@ -1697,8 +1697,8 @@ function listenToMyRole(roomCode, playerName, cb){
    Single static illustration; state only drives the CSS animation
    (breathing/bobbing/pulsing/wobbling), not the artwork itself. ===== */
 
-function mascotFaceHTML(state){
-  return `<div class="mascot-face anim-${state}" role="img" aria-label="${t('mascotAriaLabel', state)}"><img src="assets/mascot/cat.png" alt=""></div>`;
+function mascotFaceHTML(state, imgSrc){
+  return `<div class="mascot-face anim-${state}" role="img" aria-label="${t('mascotAriaLabel', state)}"><img src="${imgSrc || 'assets/mascot/cat.png'}" alt=""></div>`;
 }
 
 function mascotBodyHTML(state, heightPx){
@@ -1706,20 +1706,24 @@ function mascotBodyHTML(state, heightPx){
   return `<div class="mascot-body anim-${state}" style="height:${h}px;" role="img" aria-label="${t('mascotAriaLabel', state)}"><img src="assets/mascot/cat.png" alt=""></div>`;
 }
 
-function updateMascotEl(container, state){
+function updateMascotEl(container, state, imgSrc){
   const base = container.classList.contains('mascot-face') ? 'mascot-face' : 'mascot-body';
   container.className = base + ' anim-' + state;
   container.setAttribute('aria-label', t('mascotAriaLabel', state));
-  container.innerHTML = '<img src="assets/mascot/cat.png" alt="">';
+  container.innerHTML = `<img src="${imgSrc || 'assets/mascot/cat.png'}" alt="">`;
 }
+
+/* Chat header avatar uses the dice app icon instead of the cat mascot used
+   everywhere else (dashboard, empty state) — a deliberate, narrower swap. */
+const HEADER_MASCOT_IMG = 'assets/icons/icon-512.png';
 
 function setMascotState(state){
   const headerWrap = document.getElementById('mascotWrap');
   if(headerWrap){
     if(!headerWrap.querySelector('.mascot-face')){
-      headerWrap.innerHTML = mascotFaceHTML(state);
+      headerWrap.innerHTML = mascotFaceHTML(state, HEADER_MASCOT_IMG);
     } else {
-      updateMascotEl(headerWrap.querySelector('.mascot-face'), state);
+      updateMascotEl(headerWrap.querySelector('.mascot-face'), state, HEADER_MASCOT_IMG);
     }
   }
   const emptyMascot = document.getElementById('emptyMascotSlot');
