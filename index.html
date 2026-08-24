@@ -1776,6 +1776,15 @@ function buildGameCatalogSummary(){
 }
 
 /* ===== System prompt ===== */
+/* Injects the current game's rules text (see rules/README.md) if one was
+   found for it — most games have none and this returns ''. Grounds the
+   "禁止编造规则" instruction above in an actual source instead of asking the
+   model to just try harder not to hallucinate. */
+function buildRulesSection(){
+  if(!currentGameRulesText || currentGameRulesFor !== (currentGameId ? (findGameById(currentGameId) || {}).name : null)) return '';
+  return `# 官方规则参考\n\n以下是这款游戏的规则文本，回答规则问题、计算数值时优先依据这份文本，不要凭记忆编造；文本里没覆盖到的细节，仍然按"不确定就说不确定"处理。\n\n${currentGameRulesText}\n\n`;
+}
+
 function currentFacilitationMode(){
   const game = currentGameId ? findGameById(currentGameId) : null;
   return game ? (game.mode || 'player_led') : null;
@@ -1881,7 +1890,7 @@ return `# 角色设定
 
 禁止编造规则、卡牌效果、组件数量或胜利条件。
 
-# 图片识别
+${buildRulesSection()}# 图片识别
 
 玩家可以上传游戏盒封面、规则书页面、当前桌面摆放、卡牌或角色能力、计分板、不认识的组件。
 收到图片后，先说明识别到了什么，再回答问题。如果摆放有误，指出具体位置，一步步指导调整。
@@ -2263,6 +2272,25 @@ migrateGamesStore();
 let currentGameId = null;
 let currentSessionId = null;
 let sidebarExpanded = {};
+
+/* ===== Optional per-game rules grounding (see rules/README.md) =====
+   Most games have no entry here and are unaffected — this only kicks in
+   for games someone has explicitly added a rules text file for. */
+let rulesManifest = null;
+let currentGameRulesText = null;
+let currentGameRulesFor = null;
+fetch('rules/manifest.json').then(r => r.ok ? r.json() : {}).then(m => { rulesManifest = m; }).catch(() => { rulesManifest = {}; });
+
+function loadRulesForGame(gameName){
+  currentGameRulesText = null;
+  currentGameRulesFor = gameName;
+  if(!rulesManifest) return;
+  const file = rulesManifest[(gameName || '').trim()];
+  if(!file) return;
+  fetch('rules/' + file).then(r => r.ok ? r.text() : null).then(text => {
+    if(text && currentGameRulesFor === gameName) currentGameRulesText = text;
+  }).catch(() => {});
+}
 
 /* Backward-compat migration: early versions stored session.players as a
    plain string[]; the invite/room system needs objects with ready/host
@@ -3488,6 +3516,8 @@ function resumeSession(gameId, sessionId){
   if(!session){ showDashboard(); return; }
   currentGameId = gameId;
   currentSessionId = sessionId;
+  const resumedGame = findGameById(gameId);
+  loadRulesForGame(resumedGame ? resumedGame.name : '');
   session.lastActiveAt = Date.now();
   saveGamesStore();
   updateSessionStatusBar();
@@ -3594,6 +3624,7 @@ function startNewSession(name, playerNames, mode, createRoom){
   const { game, session } = createSession(name, playerNames, mode);
   currentGameId = game.id;
   currentSessionId = session.id;
+  loadRulesForGame(name);
   sidebarExpanded[game.id] = true;
   updateSessionStatusBar();
   showChat();
