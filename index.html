@@ -413,6 +413,13 @@
     object-fit:contain;transform:translateY(18%);
     filter:drop-shadow(0 2px 2px rgba(73,54,35,.12));
   }
+  /* the 188%/translateY crop above is tuned for the cat's tall portrait
+     illustration (zooms into its face); a square icon just needs to fill
+     the circle plainly */
+  .mascot-face.icon-fit img{
+    height:100%;width:100%;max-width:100%;
+    object-fit:cover;transform:none;
+  }
 
   /* chat area + empty state: standalone watercolor cat, no frame/background */
   .mascot-body{
@@ -1698,7 +1705,8 @@ function listenToMyRole(roomCode, playerName, cb){
    (breathing/bobbing/pulsing/wobbling), not the artwork itself. ===== */
 
 function mascotFaceHTML(state, imgSrc){
-  return `<div class="mascot-face anim-${state}" role="img" aria-label="${t('mascotAriaLabel', state)}"><img src="${imgSrc || 'assets/mascot/cat.png'}" alt=""></div>`;
+  const iconCls = imgSrc ? ' icon-fit' : '';
+  return `<div class="mascot-face${iconCls} anim-${state}" role="img" aria-label="${t('mascotAriaLabel', state)}"><img src="${imgSrc || 'assets/mascot/cat.png'}" alt=""></div>`;
 }
 
 function mascotBodyHTML(state, heightPx){
@@ -1708,7 +1716,8 @@ function mascotBodyHTML(state, heightPx){
 
 function updateMascotEl(container, state, imgSrc){
   const base = container.classList.contains('mascot-face') ? 'mascot-face' : 'mascot-body';
-  container.className = base + ' anim-' + state;
+  const iconCls = imgSrc ? ' icon-fit' : '';
+  container.className = base + iconCls + ' anim-' + state;
   container.setAttribute('aria-label', t('mascotAriaLabel', state));
   container.innerHTML = `<img src="${imgSrc || 'assets/mascot/cat.png'}" alt="">`;
 }
