@@ -8,9 +8,9 @@
  * Deploy: see cf-worker/README.md.
  */
 
-const ALLOWED_ORIGIN = "https://REPLACE-WITH-YOUR-GITHUB-PAGES-ORIGIN"; // e.g. "https://jing0712.github.io"
+const ALLOWED_ORIGIN = "https://aiboardgamehost.com";
 const ARK_URL = "https://ark.cn-beijing.volces.com/api/v3/chat/completions";
-const DEFAULT_MODEL = "REPLACE-WITH-YOUR-ARK-ENDPOINT-ID"; // used when the client doesn't send one
+const DEFAULT_MODEL = "deepseek-v4-flash-ga-260731"; // used when the client doesn't send one
 const RATE_LIMIT_PER_HOUR = 20; // requests per visitor IP — tune to your budget
 
 function corsHeaders(origin) {

@@ -3,5 +3,5 @@ main = "worker.js"
 compatibility_date = "2024-01-01"
 
 kv_namespaces = [
-  { binding = "RATE_LIMIT", id = "REPLACE-AFTER-RUNNING-kv-namespace-create" }
+  { binding = "RATE_LIMIT", id = "630556e107c64feb9ef2e785d1c12174" }
 ]

@@ -2182,8 +2182,8 @@ let connected = false;
    own key). Fill both in after deploying cf-worker/ (see cf-worker/README.md)
    to let visitors use a shared, rate-limited key you control server-side.
    A user-supplied key in Settings always takes priority over this. */
-const HOSTED_PROXY_URL = '';   // e.g. "https://xiaomeng-ai-proxy.you.workers.dev/chat"
-const HOSTED_APP_TOKEN = '';   // must match the APP_TOKEN secret set on the worker
+const HOSTED_PROXY_URL = 'https://xiaomeng-ai-proxy.aiboardgamehost.workers.dev/chat';
+const HOSTED_APP_TOKEN = 'b840b0779e451610ea253937dcfda267';
 let usingHostedProxy = false;
 
 const el = id => document.getElementById(id);
@@ -2772,6 +2772,15 @@ function applyStaticTranslations(){
     const val = t(key);
     if(val !== undefined) node.setAttribute('aria-label', val);
   });
+  /* #statusLine has data-i18n="notConnected" so the sweep above just reset it
+     to the default not-connected wording, even if we're actually connected
+     (this runs again later via renderDashboard/setAppLang/setAgentName) —
+     reassert the real connection state on top of it. */
+  if(usingHostedProxy){
+    el('statusLine').textContent = t('connectedHosted');
+  } else if(connected){
+    el('statusLine').textContent = t('connectedAs', modelId);
+  }
 }
 
 /* Hand-placed positions (% of the map card) for each genre's pin.
