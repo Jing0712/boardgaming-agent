@@ -1797,6 +1797,18 @@ function currentFacilitationMode(){
 function buildModeSection(){
   const modeId = currentFacilitationMode();
   if(!modeId) return '';
+  /* Full chat history isn't persisted across reloads, so a multi-session
+     campaign would otherwise lose all narrative memory. The AI is asked to
+     periodically emit a 【剧情摘要】 block (parsed out and saved in
+     sendToModel); feed the latest saved one back in here so a resumed
+     session picks up where it left off instead of starting cold. */
+  let savedSummarySection = '';
+  if(modeId === 'co_op_narrative' && currentGameId && currentSessionId){
+    const session = findSession(currentGameId, currentSessionId);
+    if(session && session.storySummary){
+      savedSummarySection = `# 上次进度摘要（继续这局跑团用，不是新剧情）\n\n${session.storySummary}\n\n`;
+    }
+  }
   const blocks = {
     ai_hosted: `# 当前主持模式：AI 全程主持
 
@@ -1814,10 +1826,10 @@ function buildModeSection(){
 - 用讲故事的方式主持，不是列步骤清单。场景描写、NPC 对话可以比平时写得更完整一些（不受"4-5行"的硬性篇幅限制），但每次仍然只推进到一个选择点就停下，把决定权交还给玩家。
 - 扮演 NPC 时保持这个角色一贯的性格和说话方式，前后不要变来变去。
 - 玩家做出有不确定性的关键行动（战斗、判定等）时，如果游戏本身有骰子/判定机制，明确说清楚需要什么判定（比如"这里需要一次敏捷检定，麻烦骰一个 D20 告诉我点数"），根据结果描述后果——不要替玩家决定要不要冒险，也不要跳过判定直接编结果。
-- 每隔几个场景，或者玩家问"我们现在什么情况"时，主动给一段独立的【剧情摘要】：当前所在场景、队伍状态、正在进行的目标、上次结束时的悬念。这份摘要很重要——完整对话记录不会一直保留，摘要是玩家事后能找回剧情线索的唯一依据。
+- 每隔几个场景，或者玩家问"我们现在什么情况"时，主动给一段独立的【剧情摘要】：当前所在场景、队伍状态、正在进行的目标、上次结束时的悬念。这份摘要很重要——完整对话记录不会一直保留，摘要是玩家事后能找回剧情线索的唯一依据，也是下次重新打开浏览器时唯一能帮你自己接上剧情的东西，所以要写得足够完整、别人（包括未来的你）单看这一段就能懂现在是什么情况。
 - 不需要输出分数或"结算"，除非玩家明确要求。`,
   };
-  return (blocks[modeId] || '') + '\n\n';
+  return savedSummarySection + (blocks[modeId] || '') + '\n\n';
 }
 
 function buildSystemPrompt(){
@@ -2456,6 +2468,22 @@ function parseRoundInfo(text){
     phase: phaseMatch ? phaseMatch[1].trim() : '',
     prompt: promptMatch ? promptMatch[1].trim() : ''
   };
+}
+
+/* co_op_narrative campaign memory: the model periodically emits a
+   【剧情摘要】 block per the mode instructions in buildModeSection(). Save
+   the latest one on the session so a resumed/reloaded session can feed it
+   back into the prompt instead of starting the campaign cold. */
+function parseStorySummary(text){
+  const m = text.match(/【剧情摘要】\s*([\s\S]*?)(?=\n\s*【(?!剧情摘要)|$)/);
+  return m ? m[1].trim() : null;
+}
+function attachStorySummaryToSession(gameId, sessionId, summary){
+  const session = findSession(gameId, sessionId);
+  if(!session) return;
+  session.storySummary = summary;
+  session.storySummaryAt = Date.now();
+  saveGamesStore();
 }
 
 /* Hidden-identity role delivery (Avalon / Werewolf / Secret Hitler style):
@@ -4949,6 +4977,10 @@ async function sendToModel(userText, isFirstTurn, images, skipPush){
       const roundInfo = parseRoundInfo(reply);
       if(roundInfo){
         addRoundEntry(currentGameId, currentSessionId, roundInfo);
+      }
+      const storySummary = parseStorySummary(reply);
+      if(storySummary){
+        attachStorySummaryToSession(currentGameId, currentSessionId, storySummary);
       }
       if(liveSession){
         liveSession.transcript = history.slice(-40);
