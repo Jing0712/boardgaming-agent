@@ -888,6 +888,12 @@
   }
   .my-role-box .mr-label{font-size:11px;color:var(--dazed-deep);margin-bottom:6px;}
   .my-role-box .mr-role{font-size:19px;font-weight:700;color:var(--ink);}
+  .private-action-box .mr-role{font-size:15px;font-weight:600;margin-bottom:10px;}
+  .private-action-box textarea{
+    width:100%;box-sizing:border-box;border:1px solid var(--dazed);border-radius:10px;
+    padding:9px 11px;font-family:inherit;font-size:13.5px;color:var(--ink);
+    background:var(--cream);resize:vertical;min-height:38px;
+  }
   .ready-toggle-btn{
     width:100%;padding:11px;border-radius:10px;border:1px solid var(--dazed);
     background:var(--cream);color:var(--dazed-deep);font-size:13.5px;font-weight:700;
@@ -1511,6 +1517,22 @@
   </div>
 </div>
 
+<!-- Private per-round question (Werewolf night action / Avalon mission
+     card etc.) for the HOST's own device — see askPrivateAction()/
+     listenToMyPrivateAction() and renderPrivateActionStatus() in the
+     script. Auto-opens itself (no button to click) since these need a
+     timely answer, unlike myRoleModal above which is just informational.
+     Doubles as the "waiting on other players" status view + manual
+     "直接继续" fallback when the host wasn't personally asked this round. -->
+<div class="modal-overlay" id="privateActionModal">
+  <div class="modal-box">
+    <div class="modal-header-row">
+      <h3 data-i18n="privateActionModalTitle">私密行动</h3>
+    </div>
+    <div class="modal-content" id="privateActionModalContent"></div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="genreModal">
   <div class="modal-box modal-box-wide">
     <div class="modal-header-row">
@@ -1697,6 +1719,41 @@ function listenToMyRole(roomCode, playerName, cb){
   if(!firebaseReady) return () => {};
   return fbDb.collection('rooms').doc(roomCode).collection('roles').doc(playerName).onSnapshot(doc => {
     if(doc.exists) cb(doc.data());
+  });
+}
+
+/* Private per-player question/answer channel — the reverse direction of
+   assignPrivateRole/listenToMyRole above. Same "one document per player"
+   convention, but this one gets written from BOTH sides: the host writes
+   `question`/`actionRound` to ask something only that player should see
+   (Werewolf night actions, Avalon mission-card submissions), and that
+   player's own device writes `answer`/`answeredAt` back onto the same
+   document once they respond. See maybeContinueAfterPrivateActions()
+   for how the host aggregates answers once everyone expected has replied. */
+async function askPrivateAction(roomCode, playerName, question, actionRound){
+  if(!firebaseReady) return;
+  await fbDb.collection('rooms').doc(roomCode).collection('privateActions').doc(playerName).set({
+    question, actionRound, answer: null, answeredAt: null
+  });
+}
+async function submitPrivateAction(roomCode, playerName, answer){
+  if(!firebaseReady) return;
+  await fbDb.collection('rooms').doc(roomCode).collection('privateActions').doc(playerName).set({
+    answer, answeredAt: Date.now()
+  }, { merge: true });
+}
+function listenToMyPrivateAction(roomCode, playerName, cb){
+  if(!firebaseReady) return () => {};
+  return fbDb.collection('rooms').doc(roomCode).collection('privateActions').doc(playerName).onSnapshot(doc => {
+    if(doc.exists) cb(doc.data());
+  });
+}
+function listenToAllPrivateActions(roomCode, cb){
+  if(!firebaseReady) return () => {};
+  return fbDb.collection('rooms').doc(roomCode).collection('privateActions').onSnapshot(snap => {
+    const byPlayer = {};
+    snap.forEach(doc => { byPlayer[doc.id] = doc.data(); });
+    cb(byPlayer);
   });
 }
 
@@ -1969,6 +2026,17 @@ ${buildModeSection()}${buildGenreSkillSection()}${buildPartyContentSection()}${b
 - 这个区块不是可选项，也不是"稍后再补"——只要判断到需要分配身份的这一刻，必须在当轮回复里把每一位玩家的区块完整写出来，哪怕回复因此变长也必须写。不允许只说"身份已分配/请查看私信"之类的话却不附带真实区块内容——那样等于没有分配，玩家会永远收不到自己的身份。系统会不会真的摘除、有没有私信通道，跟你要不要写这个区块无关，你只管照格式写。
 - 中途如果需要私下提醒某位玩家的身份信息（而不是重新分配），同样用这个格式，只写这一位玩家的区块即可。
 
+游戏进行中如果需要某几位玩家私下做一个选择、且这个选择的具体内容不能被其他玩家看到（狼人杀夜晚各角色的行动、阿瓦隆任务牌的提交、预言家查验目标等），用另一个格式：
+【私密提问】
+玩家：<玩家名字>
+问题：<只需要这位玩家看到、需要私密回答的问题，一句话>
+
+同样一位玩家一个区块，需要问几位玩家就写几个区块。这个区块也会被系统摘除，不会出现在公共聊天里；对应玩家会在自己的界面上看到问题并私下提交答案，你不需要、也没办法在当前这轮回复里直接拿到他们的答案。
+
+提交上来之后，你会在之后的一轮收到一条格式为"【私密行动结果】\n玩家名（回答"问题"）：答案"的系统消息，把每一位被问到的玩家和对应答案汇总在一起——这不是玩家自己发的话，是系统自动汇总喂给你的，收到后据此继续主持：该向所有人公开的结论正常公开说（比如"这次任务出现了1票失败"、"昨晚有人死了"），但具体是谁提交了什么答案、谁投了失败票这类细节，除非游戏规则本身要求公开，否则不能说出来——跟身份信息一样保密。
+- 如果这局游戏不需要任何私密提交（大多数游戏都不需要），永远不要输出这个区块。
+- 不要用这个格式去问不需要保密的问题（比如"你想怎么做"这种大家都能公开讨论的问题）——只有答案必须保密时才用。
+
 # 模式设置
 
 快速教学模式 / 完整主持模式 / 规则助手模式。玩家未选择时默认推荐快速教学模式。
@@ -2176,6 +2244,8 @@ const GENRES = {
         en:{ name:"One Night Ultimate Werewolf", blurb:"One night, one day, one vote — no eliminations, and all the deduction and bluffing compressed into just a few minutes.", tags:["Light & simple","Quick round","Deduction","Great for big groups"] } },
       { name:"谁是卧底", cover:"🎭", playerMin:4, playerMax:12, duration:"约 15 分钟", blurb:"每人拿到一个词语，卧底的词语略有不同，靠描述和投票把卧底揪出来，零道具就能玩。", tags:["极速一局","适合大团","聚会","推理","零道具","国产"], mode:'ai_hosted',
         en:{ name:"Who's the Undercover", blurb:"Everyone gets a word — the undercover players' word is slightly different. Describe and vote to find them out. No components needed.", tags:["Quick round","Great for big groups","Party","Deduction","No components","Made in China"] } },
+      { name:"阿瓦隆", cover:"🗡️", playerMin:5, playerMax:10, duration:"约 30 分钟", blurb:"亚瑟王阵营对抗，好人组队执行任务，坏人潜伏其中暗中破坏，梅林知道真相却不能明说。", tags:["中等策略","短时间","好评高","推理","适合大团","阵营"], mode:'ai_hosted',
+        en:{ name:"The Resistance: Avalon", blurb:"Arthurian faction warfare — good players form teams to complete quests while evil players secretly sabotage them, and Merlin knows the truth but can't say so.", tags:["Medium strategy","Short session","Highly rated","Deduction","Great for big groups","Faction"] } },
     ],
   },
   trpg: {
@@ -2600,7 +2670,12 @@ function parseRoleAssignments(text){
   const roles = [];
   const blockMatch = text.match(/【身份分配】([\s\S]*?)(?=\n\s*【(?!身份分配)|$)/);
   if(!blockMatch) return roles;
-  const re = /玩家[:：]\s*(.+?)\s*\n\s*身份[:：]\s*(.+?)\s*\n(?:\s*说明[:：]\s*(.+?)\s*\n)?(?=\s*玩家[:：]|\s*$)/gs;
+  /* [^\n]+? instead of a lazy dotAll .+? — with the /s flag, '.' matches
+     newlines too, so the old lookahead-bounded version could swallow a
+     whole extra block (or trailing narration after the last block) into
+     `note` whenever the immediate end-of-line lookahead failed to match
+     first. Bounding each field to its own line makes that impossible. */
+  const re = /玩家[:：]\s*([^\n]+?)\s*\n\s*身份[:：]\s*([^\n]+?)\s*\n(?:\s*说明[:：]\s*([^\n]+))?/g;
   let m;
   while((m = re.exec(blockMatch[1] + '\n')) !== null){
     roles.push({ player: m[1].trim(), role: m[2].trim(), note: m[3] ? m[3].trim() : '' });
@@ -2608,7 +2683,47 @@ function parseRoleAssignments(text){
   return roles;
 }
 function stripRoleAssignmentBlock(text){
-  return text.replace(/【身份分配】[\s\S]*?(?=\n\s*【(?!身份分配)|$)/, '').replace(/\n{3,}/g, '\n\n').trim();
+  /* Matches one-or-more CONSECUTIVE well-formed 【身份分配】 blocks as a
+     single bounded run, using [^\n]* fields instead of a lazy dotAll .*?
+     up to "the next differently-tagged 【 or end of string" — that lookahead
+     approach silently swallowed any trailing narration after the last
+     block whenever nothing else followed it (a real, previously-untested
+     bug: it only ever ran in a real room, and every earlier test session
+     happened to use a room-less local session, so it never actually
+     exercised this path). Appending '\n' first lets the last field match
+     even when the reply ends right after it, no trailing newline needed. */
+  return (text + '\n')
+    .replace(/(?:【身份分配】\s*\n\s*玩家[:：][^\n]*\n\s*身份[:：][^\n]*\n(?:\s*说明[:：][^\n]*\n)?\s*)+/, '')
+    .replace(/\n{3,}/g, '\n\n').trim();
+}
+
+/* Private mid-round questions (Werewolf night actions, Avalon mission-card
+   submissions): unlike 【身份分配】 which only ever delivers info AI→player
+   once, this is for moments that need an answer PRIVATELY submitted back
+   player→AI — see rooms/{roomCode}/privateActions/{playerName} and
+   maybeContinueAfterPrivateActions() below. Same block-per-player format
+   and same "parse it out before it reaches the shared chat" treatment as
+   parseRoleAssignments/stripRoleAssignmentBlock above. */
+function parsePrivateQuestions(text){
+  const questions = [];
+  const blockMatch = text.match(/【私密提问】([\s\S]*?)(?=\n\s*【(?!私密提问)|$)/);
+  if(!blockMatch) return questions;
+  /* [^\n]+ instead of .+? — a lazy dotAll .+? can cross into the next
+     line (and even swallow a whole trailing 【私密提问】/narration chunk)
+     when the immediate end-of-line lookahead fails to match, since dotAll
+     lets '.' match newlines too. Bounding the field to its own line makes
+     that impossible regardless of what follows. */
+  const re = /玩家[:：]\s*([^\n]+?)\s*\n\s*问题[:：]\s*([^\n]+)/g;
+  let m;
+  while((m = re.exec(blockMatch[1])) !== null){
+    questions.push({ player: m[1].trim(), question: m[2].trim() });
+  }
+  return questions;
+}
+function stripPrivateQuestionBlock(text){
+  return (text + '\n')
+    .replace(/(?:【私密提问】\s*\n\s*玩家[:：][^\n]*\n\s*问题[:：][^\n]*\n\s*)+/, '')
+    .replace(/\n{3,}/g, '\n\n').trim();
 }
 
 /* ===== Dashboard rendering ===== */
@@ -2792,6 +2907,14 @@ const UI_STRINGS = {
     yourRoleLabel: '你的身份 · 仅你自己可见',
     waitingForRole: '等待房主分配身份…',
     readyBtnDone: '已准备 ✓', readyBtnPending: '点击表示准备好了',
+    privateActionModalTitle: '私密行动',
+    privateActionLabel: '只有你能看到 · 私下回答',
+    privateActionInputPh: '打字告诉小懵你的选择…',
+    privateActionSubmitBtn: '提交（其他人看不到）',
+    privateActionSubmitFailedAlert: '提交失败，再试一次',
+    privateActionWaitingTitle: '私密行动进行中',
+    privateActionWaitingNote: (done, total) => `等待所有人私下提交，${done}/${total} 人已完成`,
+    privateActionForceContinueBtn: '直接继续（跳过还没交的人）',
     joinChatInputPh: () => `给${agentName}发消息…`, joinChatSendBtn: '发送',
     crossDeviceUnavailableTitle: '这个邀请链接还不能跨设备使用',
     roomCodeIs: (code) => `房间码：${code}`,
@@ -2939,6 +3062,14 @@ const UI_STRINGS = {
     yourRoleLabel: 'Your role · only visible to you',
     waitingForRole: 'Waiting for the host to assign roles…',
     readyBtnDone: 'Ready ✓', readyBtnPending: 'Tap when you\'re ready',
+    privateActionModalTitle: 'Private action',
+    privateActionLabel: 'Only you can see this · answer privately',
+    privateActionInputPh: 'Type your choice…',
+    privateActionSubmitBtn: 'Submit (others can\'t see this)',
+    privateActionSubmitFailedAlert: 'Submit failed, try again',
+    privateActionWaitingTitle: 'Private action in progress',
+    privateActionWaitingNote: (done, total) => `Waiting on private submissions — ${done}/${total} done`,
+    privateActionForceContinueBtn: 'Continue anyway (skip who hasn\'t answered)',
     joinChatInputPh: () => `Message ${agentName}…`, joinChatSendBtn: 'Send',
     crossDeviceUnavailableTitle: 'This invite link doesn\'t work across devices yet',
     roomCodeIs: (code) => `Room code: ${code}`,
@@ -3662,6 +3793,7 @@ function resumeSession(gameId, sessionId){
     clearEmptyState();
     history = session.transcript.slice();
     history.forEach(m => {
+      if(m.silent) return; // carries other players' private answers, never rendered — see finishPrivateActionRound()
       if(typeof m.content === 'string') addBubble(m.role === 'user' ? 'user' : 'assistant', m.content);
     });
   } else {
@@ -3883,6 +4015,14 @@ let relayInFlight = false;
 let relayQueue = [];
 const autoRoleAssignStarted = new Set();
 
+/* Tracks, per room, which players were asked a 【私密提问】 this round and
+   what they were asked — set in sendToModel() right after dispatching the
+   questions via askPrivateAction(). maybeContinueAfterPrivateActions()
+   below checks against this to know when everyone expected has answered. */
+const pendingPrivateActionPlayers = new Map(); // roomCode -> {round, players:Set, questions:{}}
+const privateActionRoundStarted = new Set();   // `${roomCode}:${round}` dedup guard, same idea as autoRoleAssignStarted
+let privateActionsUnsub = null;
+
 function hostDisplayNameForCurrentSession(session){
   return (session.players[0] && session.players[0].name) || '房主';
 }
@@ -3894,10 +4034,15 @@ function startRoomChatRelay(session){
     handleIncomingRoomMessages(session, roomData);
     maybeAutoAssignRoles(session, roomData);
   });
+  privateActionsUnsub = listenToAllPrivateActions(session.roomCode, byPlayer => {
+    maybeContinueAfterPrivateActions(session, byPlayer);
+    renderPrivateActionStatus(session, byPlayer);
+  });
 }
 
 function stopRoomChatRelay(){
   if(roomChatUnsub){ roomChatUnsub(); roomChatUnsub = null; }
+  if(privateActionsUnsub){ privateActionsUnsub(); privateActionsUnsub = null; }
   seenRoomMessageIds.clear();
   relayInFlight = false;
   relayQueue = [];
@@ -3945,6 +4090,51 @@ function maybeAutoAssignRoles(session, roomData){
   seenRoomMessageIds.add(msg.id);
   sendRoomMessage(roomCode, msg).catch(e => console.warn('mirror auto-role-assign msg failed', e));
 
+  sendToModel(null, false, null, true);
+}
+
+/* Mirrors maybeAutoAssignRoles() above: once every player named in the
+   current round's 【私密提问】 batch has written an answer back, compile
+   them into one synthetic turn and let the model continue — this is how a
+   private Werewolf night action / Avalon mission submission gets fed back
+   without ever appearing in the shared chat. Same double guard (in-memory
+   Set, keyed by room+round) as the role-assignment auto-trigger, since
+   onSnapshot can re-fire the same "everyone's done" state more than once. */
+function maybeContinueAfterPrivateActions(session, byPlayer){
+  const roomCode = session.roomCode;
+  if(!roomCode) return;
+  const pending = pendingPrivateActionPlayers.get(roomCode);
+  if(!pending) return;
+  const allAnswered = [...pending.players].every(name => {
+    const doc = byPlayer[name];
+    return doc && doc.actionRound === pending.round && doc.answeredAt;
+  });
+  if(!allAnswered) return;
+  finishPrivateActionRound(roomCode, pending, byPlayer);
+}
+
+/* Shared by the automatic path above (everyone answered) and the manual
+   "直接继续" fallback (someone never answered — see renderPrivateActionStatus)
+   so both end up feeding the model the exact same shape of summary. */
+function finishPrivateActionRound(roomCode, pending, byPlayer){
+  const guardKey = roomCode + ':' + pending.round;
+  if(privateActionRoundStarted.has(guardKey)) return;
+  privateActionRoundStarted.add(guardKey);
+  pendingPrivateActionPlayers.delete(roomCode);
+  hidePrivateActionStatus();
+
+  const summary = [...pending.players].map(name => {
+    const doc = byPlayer[name];
+    const answer = (doc && doc.actionRound === pending.round && doc.answeredAt) ? doc.answer : '（没有及时回应，可能掉线了）';
+    return `${name}（回答"${pending.questions[name]}"）：${answer}`;
+  }).join('\n');
+  /* `silent: true` so this never gets rendered as a visible bubble — the
+     host device is usually just player 1, not a neutral game master, so
+     this can't be shown on-screen even locally without leaking other
+     players' private answers to whoever's sitting at the host's device.
+     resumeSession()'s transcript replay skips silent entries for the
+     same reason. */
+  history.push({role:'user', content: `【私密行动结果】\n${summary}`, silent: true});
   sendToModel(null, false, null, true);
 }
 
@@ -4017,6 +4207,72 @@ el('myRoleBtn').onclick = () => {
 el('closeMyRoleModalBtn').onclick = () => el('myRoleModal').classList.remove('show');
 el('myRoleModal').addEventListener('click', e => {
   if(e.target.id === 'myRoleModal') el('myRoleModal').classList.remove('show');
+});
+
+/* Host-side view for the current 【私密提问】 round — see
+   maybeContinueAfterPrivateActions()/finishPrivateActionRound() above.
+   Auto-opens itself (unlike myRoleModal, which only opens on click)
+   because these need a timely response. Serves two different states
+   depending on whether the host themself was one of the players asked:
+   - host was asked, hasn't answered yet → show the question + an input
+     to answer it (same private-submission flow as the join screen)
+   - host wasn't asked (or already answered), others still pending →
+     show "X/N submitted" + a manual "continue anyway" fallback, since
+     nothing else on the host's screen indicates a round is in progress
+     if they personally have nothing to answer. */
+function renderPrivateActionStatus(session, byPlayer){
+  const roomCode = session.roomCode;
+  const pending = pendingPrivateActionPlayers.get(roomCode);
+  const content = el('privateActionModalContent');
+  if(!pending || !content){ hidePrivateActionStatus(); return; }
+
+  const hostName = hostDisplayNameForCurrentSession(session);
+  const isAnswered = name => {
+    const doc = byPlayer[name];
+    return !!(doc && doc.actionRound === pending.round && doc.answeredAt);
+  };
+
+  if(pending.players.has(hostName) && !isAnswered(hostName)){
+    content.innerHTML = `
+      <div class="my-role-box private-action-box">
+        <div class="mr-label">${t('privateActionLabel')}</div>
+        <div class="mr-role">${escapeHTML(pending.questions[hostName])}</div>
+        <textarea id="hostPrivateActionInput" rows="1" placeholder="${t('privateActionInputPh')}"></textarea>
+        <button class="save-btn" id="hostPrivateActionSubmitBtn" style="width:100%;margin-top:8px;">${t('privateActionSubmitBtn')}</button>
+      </div>`;
+    const btn = el('hostPrivateActionSubmitBtn');
+    if(btn){
+      btn.onclick = async () => {
+        const answer = el('hostPrivateActionInput').value.trim();
+        if(!answer) return;
+        btn.disabled = true;
+        try{
+          await submitPrivateAction(roomCode, hostName, answer);
+        }catch(e){
+          alert(t('privateActionSubmitFailedAlert'));
+          btn.disabled = false;
+        }
+      };
+    }
+  } else {
+    const total = pending.players.size;
+    const done = [...pending.players].filter(isAnswered).length;
+    content.innerHTML = `
+      <div class="dash-empty-note">${t('privateActionWaitingNote', done, total)}</div>
+      <button class="save-btn" id="privateActionForceContinueBtn" style="width:100%;margin-top:10px;">${t('privateActionForceContinueBtn')}</button>`;
+    const forceBtn = el('privateActionForceContinueBtn');
+    if(forceBtn){
+      forceBtn.onclick = () => finishPrivateActionRound(roomCode, pending, byPlayer);
+    }
+  }
+  el('privateActionModal').classList.add('show');
+}
+function hidePrivateActionStatus(){
+  const modal = el('privateActionModal');
+  if(modal) modal.classList.remove('show');
+}
+el('privateActionModal').addEventListener('click', e => {
+  if(e.target.id === 'privateActionModal') el('privateActionModal').classList.remove('show');
 });
 
 async function openInviteModal(){
@@ -4103,9 +4359,11 @@ el('inviteModal').addEventListener('click', e => {
    role, without touching the host's chat/dashboard state. ===== */
 let joinRoomUnsub = null;
 let joinRoleUnsub = null;
+let joinPrivateActionUnsub = null;
 let joinedPlayerName = null;
 
 let lastMyRole = null;
+let lastMyPrivateAction = null;
 let joinShellRendered = false;
 const joinRenderedMsgIds = new Set();
 
@@ -4262,6 +4520,7 @@ function renderJoinShell(roomCode, room){
     <p class="jc-sub">${mi.icon} ${escapeHTML(mi.label)} · ${t('helloPlayer', escapeHTML(joinedPlayerName))}</p>
     <div id="jcPlayersSection"></div>
     <div id="jcRoleSection"></div>
+    <div id="jcPrivateActionSection"></div>
     <div id="jcReadySection"></div>
     <div class="join-messages" id="jcMessages"></div>
     <div class="join-input-row">
@@ -4292,6 +4551,35 @@ function updateJoinShell(roomCode, room, myRole){
         <div class="mr-label">${t('yourRoleLabel')}</div>
         <div class="mr-role">${escapeHTML(lastMyRole.role)}</div>
       </div>` : `<div class="dash-empty-note">${t('waitingForRole')}</div>`;
+
+  /* Private per-round question (Werewolf night action / Avalon mission
+     card etc.) — separate from the role box above, since this one needs
+     input+submit UI, not just display. Only shown while there's a question
+     with no answer yet; disappears once submitPrivateAction() writes the
+     answer back and the listener re-fires with answeredAt set. */
+  const pa = lastMyPrivateAction;
+  const paPending = pa && pa.question && !pa.answeredAt;
+  el('jcPrivateActionSection').innerHTML = paPending ? `
+      <div class="my-role-box private-action-box">
+        <div class="mr-label">${t('privateActionLabel')}</div>
+        <div class="mr-role">${escapeHTML(pa.question)}</div>
+        <textarea id="jcPrivateActionInput" rows="1" placeholder="${t('privateActionInputPh')}"></textarea>
+        <button class="save-btn" id="jcPrivateActionSubmitBtn" style="width:100%;margin-top:8px;">${t('privateActionSubmitBtn')}</button>
+      </div>` : '';
+  const paSubmitBtn = el('jcPrivateActionSubmitBtn');
+  if(paSubmitBtn){
+    paSubmitBtn.onclick = async () => {
+      const answer = el('jcPrivateActionInput').value.trim();
+      if(!answer) return;
+      paSubmitBtn.disabled = true;
+      try{
+        await submitPrivateAction(roomCode, joinedPlayerName, answer);
+      }catch(e){
+        alert(t('privateActionSubmitFailedAlert'));
+        paSubmitBtn.disabled = false;
+      }
+    };
+  }
 
   el('jcReadySection').innerHTML = `<button class="ready-toggle-btn${me && me.ready ? ' on' : ''}" id="readyToggleBtn">${me && me.ready ? t('readyBtnDone') : t('readyBtnPending')}</button>`;
   const readyBtn = el('readyToggleBtn');
@@ -4352,6 +4640,11 @@ function renderJoinCard(roomCode, room, myRole){
         if(joinRoleUnsub) joinRoleUnsub();
         joinRoleUnsub = listenToMyRole(roomCode, name, (roleData) => {
           renderJoinCard(roomCode, lastJoinRoomData, roleData);
+        });
+        if(joinPrivateActionUnsub) joinPrivateActionUnsub();
+        joinPrivateActionUnsub = listenToMyPrivateAction(roomCode, name, (actionData) => {
+          lastMyPrivateAction = actionData;
+          renderJoinCard(roomCode, lastJoinRoomData, lastMyRole);
         });
       }catch(e){
         alert(t('joinFailedAlert', e.message));
@@ -5064,9 +5357,12 @@ async function sendToModel(userText, isFirstTurn, images, skipPush){
     const liveSession = (currentGameId && currentSessionId) ? findSession(currentGameId, currentSessionId) : null;
     let displayReply = reply;
     let roleAssignments = [];
+    let privateQuestions = [];
     if(liveSession && liveSession.roomCode && firebaseReady){
       roleAssignments = parseRoleAssignments(reply);
-      if(roleAssignments.length) displayReply = stripRoleAssignmentBlock(reply);
+      if(roleAssignments.length) displayReply = stripRoleAssignmentBlock(displayReply);
+      privateQuestions = parsePrivateQuestions(reply);
+      if(privateQuestions.length) displayReply = stripPrivateQuestionBlock(displayReply);
     }
 
     addBubble('assistant', displayReply);
@@ -5099,6 +5395,18 @@ async function sendToModel(userText, isFirstTurn, images, skipPush){
           roleAssignments.forEach(r => {
             assignPrivateRole(liveSession.roomCode, r.player, r.note ? `${r.role}\n${r.note}` : r.role)
               .catch(e => console.warn('assign private role failed', e));
+          });
+        }
+        if(privateQuestions.length){
+          const actionRound = Date.now();
+          pendingPrivateActionPlayers.set(liveSession.roomCode, {
+            round: actionRound,
+            players: new Set(privateQuestions.map(q => q.player)),
+            questions: Object.fromEntries(privateQuestions.map(q => [q.player, q.question]))
+          });
+          privateQuestions.forEach(q => {
+            askPrivateAction(liveSession.roomCode, q.player, q.question, actionRound)
+              .catch(e => console.warn('ask private action failed', e));
           });
         }
         if(liveSession.roomCode && firebaseReady){
