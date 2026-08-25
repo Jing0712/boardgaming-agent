@@ -1914,7 +1914,7 @@ ${buildRulesSection()}# 图片识别
 收录列表（按类型分组）：
 ${buildGameCatalogSummary()}
 
-${buildModeSection()}# 主持流程
+${buildModeSection()}${buildPartyContentSection()}${buildStorySeedSection()}# 主持流程
 
 第一阶段（识别游戏）：先确认玩家人数、版本、扩展、是否第一次玩，再决定教学模式。
 第二阶段（30秒介绍）：角色、目标、胜利条件、大致轮次、每回合做什么。
@@ -2302,6 +2302,65 @@ function loadRulesForGame(gameName){
   fetch('rules/' + file).then(r => r.ok ? r.text() : null).then(text => {
     if(text && currentGameRulesFor === gameName) currentGameRulesText = text;
   }).catch(() => {});
+}
+
+/* ===== Optional per-game party content banks (see party-content/) =====
+   For party_team games where the AI has to generate content on the fly
+   (word pairs, draw prompts, codewords) with no rulebook to ground it —
+   gives it a curated pool to draw from instead of ad-libbing everything,
+   so quality/fairness/variety don't depend on the model improvising well. */
+let partyContentManifest = null;
+let currentPartyContent = null;
+let currentPartyContentFor = null;
+fetch('party-content/manifest.json').then(r => r.ok ? r.json() : {}).then(m => { partyContentManifest = m; }).catch(() => { partyContentManifest = {}; });
+
+function loadPartyContentForGame(gameName){
+  currentPartyContent = null;
+  currentPartyContentFor = gameName;
+  if(!partyContentManifest) return;
+  const entry = partyContentManifest[(gameName || '').trim()];
+  if(!entry) return;
+  fetch('party-content/' + entry.file).then(r => r.ok ? r.json() : null).then(data => {
+    if(data && currentPartyContentFor === gameName) currentPartyContent = { type: entry.type, data };
+  }).catch(() => {});
+}
+
+function buildPartyContentSection(){
+  if(!currentPartyContent || currentPartyContentFor !== (currentGameId ? (findGameById(currentGameId) || {}).name : null)) return '';
+  const { type, data } = currentPartyContent;
+  if(type === 'word_pairs' && data.pairs && data.pairs.length){
+    const list = data.pairs.map(p => `${p.civilian} / ${p.undercover}`).join('\n');
+    return `# 词语库（平民词 / 卧底词）\n\n每局从下面挑1对，不要自己现编——自编的词语难度经常失衡（要么太像分不出卧底，要么太不像一眼看穿）。同一场对局里不要重复用过的词对。\n\n${list}\n\n`;
+  }
+  if(type === 'words' && data.words && data.words.length){
+    const list = data.words.map(w => `${w.word}（${w.difficulty}）`).join('、');
+    return `# 题目词库\n\n每轮从下面挑1个词，不要自己现编——照顾好难度搭配，简单/中等/较难穿插着来，不要连续出好几个较难的。同一场对局里不要重复用过的词。\n\n${list}\n\n`;
+  }
+  if(type === 'codewords' && data.words && data.words.length){
+    return `# 代号词库\n\n组词盘时从下面挑词，不要自己现编。\n\n${data.words.join('、')}\n\n`;
+  }
+  return '';
+}
+
+/* ===== TRPG story-seed bank (co_op_narrative mode only, any game name) =====
+   Loaded once — this is generic material (opening hooks, NPC archetypes,
+   twists) useful for any tabletop RPG/story game, not tied to one specific
+   game's name the way rules/ or party-content/ are. */
+let storySeedsData = null;
+fetch('story-seeds/co_op_narrative.json').then(r => r.ok ? r.json() : null).then(d => { storySeedsData = d; }).catch(() => {});
+
+function buildStorySeedSection(){
+  if(currentFacilitationMode() !== 'co_op_narrative' || !storySeedsData) return '';
+  const hooks = storySeedsData.opening_hooks || [];
+  const npcs = storySeedsData.npc_archetypes || [];
+  const twists = storySeedsData.twist_events || [];
+  if(!hooks.length && !npcs.length && !twists.length) return '';
+  const npcLine = n => `${n.role}——${n.trait}；动机：${n.motive}；暗藏：${n.secret}`;
+  return `# 剧情素材库（卡壳/需要灵感时用，不是必须照搬）\n\n`
+    + `不需要每次都从零生造场景、NPC 或转折——手头没有明确剧情走向、或者需要临场加一个 NPC/意外时，可以从下面挑一个改一改用；已经在这局用过的不要重复。\n\n`
+    + `开场钩子：\n${hooks.map(h => '- ' + h).join('\n')}\n\n`
+    + `NPC 原型：\n${npcs.map(npcLine).map(t => '- ' + t).join('\n')}\n\n`
+    + `转折 / 意外事件：\n${twists.map(t => '- ' + t).join('\n')}\n\n`;
 }
 
 /* Backward-compat migration: early versions stored session.players as a
@@ -3546,6 +3605,7 @@ function resumeSession(gameId, sessionId){
   currentSessionId = sessionId;
   const resumedGame = findGameById(gameId);
   loadRulesForGame(resumedGame ? resumedGame.name : '');
+  loadPartyContentForGame(resumedGame ? resumedGame.name : '');
   session.lastActiveAt = Date.now();
   saveGamesStore();
   updateSessionStatusBar();
@@ -3653,6 +3713,7 @@ function startNewSession(name, playerNames, mode, createRoom){
   currentGameId = game.id;
   currentSessionId = session.id;
   loadRulesForGame(name);
+  loadPartyContentForGame(name);
   sidebarExpanded[game.id] = true;
   updateSessionStatusBar();
   showChat();

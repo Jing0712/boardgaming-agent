@@ -1,0 +1,5 @@
+{
+  "谁是卧底": { "type": "word_pairs", "file": "who_is_undercover.json" },
+  "你画我猜": { "type": "words", "file": "draw_and_guess.json" },
+  "代号": { "type": "codewords", "file": "codenames.json" }
+}
