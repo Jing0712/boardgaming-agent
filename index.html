@@ -1915,7 +1915,7 @@ ${buildRulesSection()}# 图片识别
 收录列表（按类型分组）：
 ${buildGameCatalogSummary()}
 
-${buildModeSection()}${buildPartyContentSection()}${buildStorySeedSection()}# 主持流程
+${buildModeSection()}${buildGenreSkillSection()}${buildPartyContentSection()}${buildStorySeedSection()}# 主持流程
 
 第一阶段（识别游戏）：先确认玩家人数、版本、扩展、是否第一次玩，再决定教学模式。
 第二阶段（30秒介绍）：角色、目标、胜利条件、大致轮次、每回合做什么。
@@ -2257,6 +2257,19 @@ const GENRES = {
   },
 };
 
+/* Which of the 6 GENRES keys a game name belongs to, resolved purely by
+   scanning the catalog — no need to thread genre through every click
+   handler that starts a session, since this works uniformly whether the
+   session came from a catalog recommendation or a manually typed name. */
+function resolveGenreForGame(name){
+  const trimmed = (name || '').trim();
+  if(!trimmed) return null;
+  for(const genre of Object.values(GENRES)){
+    if(genre.examples.some(ex => ex.name === trimmed)) return genre.id;
+  }
+  return null;
+}
+
 let apiKey = '';
 let modelId = '';
 let baseUrl = '';
@@ -2304,6 +2317,32 @@ function loadRulesForGame(gameName){
   fetch('rules/' + file).then(r => r.ok ? r.text() : null).then(text => {
     if(text && currentGameRulesFor === gameName) currentGameRulesText = text;
   }).catch(() => {});
+}
+
+/* ===== Genre skill (see skills/README.md) =====
+   Adds behavior that's specific to one of the 6 browsing categories
+   (美式/德式/毛线/跑团/战棋/TCG), distinct from buildModeSection()'s
+   "how much to intervene" — this is "what this style of game tends to
+   trip the AI up on." Deterministic: the genre is resolved from the
+   game name by resolveGenreForGame(), never left for the model to guess
+   at runtime, so behavior doesn't depend on the model choosing to look
+   something up correctly. */
+let currentGenreSkillText = null;
+let currentGenreSkillFor = null;
+
+function loadGenreSkillForGame(gameName){
+  currentGenreSkillText = null;
+  currentGenreSkillFor = gameName;
+  const genre = resolveGenreForGame(gameName);
+  if(!genre) return;
+  fetch('skills/' + genre + '.md').then(r => r.ok ? r.text() : null).then(text => {
+    if(text && currentGenreSkillFor === gameName) currentGenreSkillText = text;
+  }).catch(() => {});
+}
+
+function buildGenreSkillSection(){
+  if(!currentGenreSkillText || currentGenreSkillFor !== (currentGameId ? (findGameById(currentGameId) || {}).name : null)) return '';
+  return `# 这类桌游的主持要点\n\n${currentGenreSkillText}\n\n`;
 }
 
 /* ===== Optional per-game party content banks (see party-content/) =====
@@ -2419,10 +2458,15 @@ function findSession(gameId, sessionId){
 function getOrCreateGame(name, mode){
   let g = findGameByName(name);
   if(!g){
-    g = { id:'game_'+Date.now()+'_'+Math.random().toString(36).slice(2,7), name, mode: mode || 'player_led', playCount:0, lastPlayed:null, sessions:[] };
+    g = { id:'game_'+Date.now()+'_'+Math.random().toString(36).slice(2,7), name, mode: mode || 'player_led', genre: resolveGenreForGame(name), playCount:0, lastPlayed:null, sessions:[] };
     gamesStore.games.unshift(g);
-  } else if(mode && g.mode !== mode){
-    g.mode = mode;
+  } else {
+    if(mode && g.mode !== mode){
+      g.mode = mode;
+    }
+    if(!g.genre){
+      g.genre = resolveGenreForGame(name);
+    }
   }
   return g;
 }
@@ -3608,6 +3652,7 @@ function resumeSession(gameId, sessionId){
   const resumedGame = findGameById(gameId);
   loadRulesForGame(resumedGame ? resumedGame.name : '');
   loadPartyContentForGame(resumedGame ? resumedGame.name : '');
+  loadGenreSkillForGame(resumedGame ? resumedGame.name : '');
   session.lastActiveAt = Date.now();
   saveGamesStore();
   updateSessionStatusBar();
@@ -3716,6 +3761,7 @@ function startNewSession(name, playerNames, mode, createRoom){
   currentSessionId = session.id;
   loadRulesForGame(name);
   loadPartyContentForGame(name);
+  loadGenreSkillForGame(name);
   sidebarExpanded[game.id] = true;
   updateSessionStatusBar();
   showChat();
