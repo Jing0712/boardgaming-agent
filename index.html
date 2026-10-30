@@ -792,6 +792,8 @@
     max-height:80vh;overflow-y:auto;
   }
   .modal-box-wide{max-width:480px;}
+  .hero-journey-img{grid-column:1/-1;width:calc(100% - 108px);height:auto;max-height:80px;object-fit:contain;object-position:left center;display:block;margin:6px 0 0 54px;position:relative;z-index:2;}
+  @media (max-width:900px){ .hero-journey-img{width:calc(100% - 50px);max-height:56px;margin:8px 0 0 25px;} }
   .modal-box h3{margin:0 0 14px;font-size:15px;color:var(--ink);}
   .modal-header-row{
     display:flex;align-items:center;justify-content:space-between;
@@ -980,7 +982,7 @@
   }
   .atlas-hero::before{left:-27px;transform:rotate(-38deg);}
   .atlas-hero::after{right:-27px;transform:rotate(38deg);}
-  .atlas-hero-copy{position:relative;padding:48px 54px 42px;z-index:2;}
+  .atlas-hero-copy{position:relative;padding:10px 54px 42px;z-index:2;}
   .atlas-kicker{display:flex;align-items:center;gap:10px;color:var(--atlas-rose);font-size:10px;letter-spacing:.18em;text-transform:uppercase;}
   .atlas-kicker span{width:26px;height:1px;background:currentColor;}
   .atlas-hero h2{
@@ -1168,7 +1170,7 @@
     .atlas-top-rule{display:none;}
     .atlas-brand-copy span{letter-spacing:.08em;}
     .atlas-hero{grid-template-columns:1fr;min-height:470px;}
-    .atlas-hero-copy{padding:38px 25px 20px;}
+    .atlas-hero-copy{padding:12px 25px 20px;}
     .atlas-hero h2{font-size:38px;}
     .atlas-postmark{display:none;}
     .atlas-hero-mascot{min-height:190px;padding:0 12px;justify-content:flex-end;}
@@ -1211,6 +1213,7 @@
     </div>
 
     <section class="atlas-hero">
+      <img class="hero-journey-img" src="assets/illustrations/journey-cats.png" alt="小懵怎么带你走完一局：讲清规则、掷骰裁定、私发身份、全程主持、记分收尾">
       <div class="atlas-hero-copy">
         <div class="atlas-kicker"><span></span><b data-i18n="atlasKicker">小懵的桌游图鉴 · VOL. 01</b></div>
         <h2 data-i18n="atlasHeroTitle">想去哪个桌上世界？</h2>
@@ -1565,12 +1568,12 @@
    shows a setup banner and falls back to a local-only (this device only)
    room so nothing breaks. */
 const firebaseConfig = {
-  apiKey: "AIzaSyBhc6z7dgU-pwD9sCpG_NL1Lb38e9qxrHE",
-  authDomain: "boardgame-2c64c.firebaseapp.com",
-  projectId: "boardgame-2c64c",
-  storageBucket: "boardgame-2c64c.firebasestorage.app",
-  messagingSenderId: "273207734322",
-  appId: "1:273207734322:web:262d7e7947c3eda0320c2b",
+  apiKey: "AIzaSyC7-O5Nh35pe-uentrZKVJZn8VJYFZLL7I",
+  authDomain: "boardgame-79e56.firebaseapp.com",
+  projectId: "boardgame-79e56",
+  storageBucket: "boardgame-79e56.firebasestorage.app",
+  messagingSenderId: "591569154155",
+  appId: "1:591569154155:web:cf0a4e3b40efbc5932812e",
 };
 let fbDb = null;
 let firebaseReady = false;
